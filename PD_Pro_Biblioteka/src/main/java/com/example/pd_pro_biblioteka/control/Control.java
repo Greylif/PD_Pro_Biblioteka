@@ -18,4 +18,28 @@ public class Control {
     public String getPlacowki() {
         return supabaseService.getPlacowki();
     }
+    @GetMapping
+    public String getWypozyczenia() {
+        return supabaseService.getWypozyczenia();
+    }
+    @GetMapping
+    public String getKary() {
+        return supabaseService.getKary();
+    }
+    @GetMapping
+    public String getKsiazki() {
+        return supabaseService.getKsiazki();
+    }
+    @GetMapping
+    public String getUzytkownicy() {
+        return supabaseService.getUzytkownicy();
+    }
+    @GetMapping
+    public String getAdmini() {
+        return supabaseService.getAdmini();
+    }
+    @GetMapping
+    public String getAutorzy() {
+        return supabaseService.getAutorzy();
+    }
 }

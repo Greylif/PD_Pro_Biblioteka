@@ -19,10 +19,38 @@ public class SupabaseClient {
     }
 
     public String getPlacowki() {
+        return fetchData("Placowka", "id, Adres");
+    }
+
+    public String getWypozyczenia() {
+        return fetchData("Wypozyczenia", "id, Uzytkownik_id, Ksiazka_id, Data_wypozyczenia, Data_zwrotu");
+    }
+
+    public String getKary() {
+        return fetchData("Kary", "id, Uzytkownik_id, Kwota, Status");
+    }
+
+    public String getKsiazki() {
+        return fetchData("Ksiazka", "id, Tytul, Autor_id, Rok_wydania");
+    }
+
+    public String getUzytkownicy() {
+        return fetchData("Uzytkownik", "id, Imie, Nazwisko, Email, Telefon");
+    }
+
+    public String getAdmini() {
+        return fetchData("Admin", "id, Imie, Nazwisko, Email");
+    }
+
+    public String getAutorzy() {
+        return fetchData("Autorzy", "id, Imie, Nazwisko, Kraj_pochodzenia");
+    }
+
+    private String fetchData(String table, String columns) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/Placowka")
-                        .queryParam("select", "id, Adres")
+                        .path("/" + table)
+                        .queryParam("select", columns)
                         .build())
                 .retrieve()
                 .bodyToMono(String.class)
