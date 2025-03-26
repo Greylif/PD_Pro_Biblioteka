@@ -30,7 +30,7 @@ public class Control {
     }
 
     @PutMapping("/placowki/{id}")
-    public String updatePlacowka(@PathVariable int id, @RequestParam String adres) {
+    public String updatePlacowka(@PathVariable int id, @RequestParam(required = false) String adres) {
         return supabaseService.updatePlacowka(id, adres);
     }
 
@@ -60,11 +60,11 @@ public class Control {
 
     @PutMapping("/wypozyczenia/{id}")
     public String updateWypozyczenie(@PathVariable int id,
-                                     @RequestParam String dataWypozyczenia,
-                                     @RequestParam String dataOddania,
-                                     @RequestParam String terminOddania,
-                                     @RequestParam int idKsiazki,
-                                     @RequestParam int idUzytkownika) {
+                                     @RequestParam(required = false) String dataWypozyczenia,
+                                     @RequestParam(required = false) String dataOddania,
+                                     @RequestParam(required = false) String terminOddania,
+                                     @RequestParam(required = false) Integer idKsiazki,
+                                     @RequestParam(required = false) Integer idUzytkownika) {
         return supabaseService.updateWypozyczenie(id, dataWypozyczenia, dataOddania, terminOddania, idKsiazki, idUzytkownika);
     }
 
@@ -89,11 +89,11 @@ public class Control {
 
     @PutMapping("/kary/{id}")
     public String updateKara(@PathVariable int id,
-                             @RequestParam double kwota,
-                             @RequestParam String dataWydaniaKary,
-                             @RequestParam String terminZaplaty,
-                             @RequestParam boolean czyZaplacono,
-                             @RequestParam int idUzytkownika) {
+                             @RequestParam(required = false) Double kwota,
+                             @RequestParam(required = false) String dataWydaniaKary,
+                             @RequestParam(required = false) String terminZaplaty,
+                             @RequestParam(required = false) Boolean czyZaplacono,
+                             @RequestParam(required = false) Integer idUzytkownika) {
         return supabaseService.updateKara(id, kwota, dataWydaniaKary, terminZaplaty, czyZaplacono, idUzytkownika);
     }
 
@@ -119,12 +119,12 @@ public class Control {
 
     @PutMapping("/ksiazki/{id}")
     public String updateKsiazka(@PathVariable int id,
-                                @RequestParam String tytul,
-                                @RequestParam String gatunek,
-                                @RequestParam String dataWydania,
-                                @RequestParam String dodano,
-                                @RequestParam int idAutora,
-                                @RequestParam int idPlacowki) {
+                                @RequestParam(required = false) String tytul,
+                                @RequestParam(required = false) String gatunek,
+                                @RequestParam(required = false) String dataWydania,
+                                @RequestParam(required = false) String dodano,
+                                @RequestParam(required = false) Integer idAutora,
+                                @RequestParam(required = false) Integer idPlacowki) {
         return supabaseService.updateKsiazka(id, tytul, gatunek, dataWydania, dodano, idAutora, idPlacowki);
     }
 
@@ -147,9 +147,9 @@ public class Control {
 
     @PutMapping("/uzytkownicy/{id}")
     public String updateUzytkownik(@PathVariable int id,
-                                   @RequestParam String imie,
-                                   @RequestParam String nazwisko,
-                                   @RequestParam int wiek) {
+                                   @RequestParam(required = false) String imie,
+                                   @RequestParam(required = false) String nazwisko,
+                                   @RequestParam(required = false) Integer wiek) {
         return supabaseService.updateUzytkownik(id, imie, nazwisko, wiek);
     }
 
@@ -174,11 +174,11 @@ public class Control {
 
     @PutMapping("/admini/{id}")
     public String updateAdmin(@PathVariable int id,
-                              @RequestParam String imie,
-                              @RequestParam String nazwisko,
-                              @RequestParam String nazwaUzytkownika,
-                              @RequestParam String haslo,
-                              @RequestParam int idPlacowki) {
+                              @RequestParam(required = false) String imie,
+                              @RequestParam(required = false) String nazwisko,
+                              @RequestParam(required = false) String nazwaUzytkownika,
+                              @RequestParam(required = false) String haslo,
+                              @RequestParam(required = false) Integer idPlacowki) {
         return supabaseService.updateAdmin(id, imie, nazwisko, nazwaUzytkownika, haslo, idPlacowki);
     }
 
@@ -201,9 +201,9 @@ public class Control {
 
     @PutMapping("/autorzy/{id}")
     public String updateAutor(@PathVariable int id,
-                              @RequestParam String imie,
-                              @RequestParam String nazwisko,
-                              @RequestParam int rokUrodzenia) {
+                              @RequestParam(required = false) String imie,
+                              @RequestParam(required = false) String nazwisko,
+                              @RequestParam(required = false) Integer rokUrodzenia) {
         return supabaseService.updateAutor(id, imie, nazwisko, rokUrodzenia);
     }
 }
