@@ -20,7 +20,7 @@ class ValidatorTest {
         @DisplayName("Powinien zwrócić TRUE dla poprawnego wieku")
         @ValueSource(ints = {18, 25, 99, 100})
         void testValidWiek(int wiek) {
-            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", wiek);
+            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", wiek, "username", "password", "s092677@student.tu.kielce.pl");
             assertThat(Validator.walidujUzytkownika(uzytkownik))
                     .as("Wiek %d powinien być poprawny", wiek)
                     .isTrue();
@@ -30,7 +30,7 @@ class ValidatorTest {
         @DisplayName("Powinien zwrócić FALSE dla niepoprawnego wieku")
         @ValueSource(ints = {17, 101, -5})
         void testInvalidWiek(int wiek) {
-            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", wiek);
+            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", wiek, "username", "password", "s092677@student.tu.kielce.pl");
             assertThat(Validator.walidujUzytkownika(uzytkownik))
                     .as("Wiek %d powinien być niepoprawny", wiek)
                     .isFalse();

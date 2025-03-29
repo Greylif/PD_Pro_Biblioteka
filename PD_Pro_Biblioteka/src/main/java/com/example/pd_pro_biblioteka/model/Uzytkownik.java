@@ -18,19 +18,32 @@ public class Uzytkownik {
     @Setter
     @Getter
     private int Wiek;
+    @Setter
+    @Getter
+    private String Haslo;
+    @Setter
+    @Getter
+    private String Nazwa_Uzytkownika;
+    @Setter
+    @Getter
+    private String Email;
 
     public Uzytkownik() {}
 
-    public Uzytkownik(int id, String Imie, String Nazwisko, int Wiek) {
+    public Uzytkownik(int id, String Imie, String Nazwisko, int Wiek, String Nazwa_Uzytkownika, String Haslo, String Email) {
         this.id = id;
         this.Imie = Imie;
         this.Nazwisko = Nazwisko;
         this.Wiek = Wiek;
+        this.Nazwa_Uzytkownika = Nazwa_Uzytkownika;
+        this.Haslo = Haslo;
+        this.Email = Email;
     }
 
 
     @Override
     public String toString() {
-        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Wiek=" + Wiek + "}";
+        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Wiek='" + Wiek + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email='" + Email + "}";
     }
+
 }

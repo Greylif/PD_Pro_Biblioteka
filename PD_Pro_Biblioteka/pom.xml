@@ -66,8 +66,8 @@
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.8.1</version>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.3</version>
         </dependency>
         <dependency>
             <groupId>org.assertj</groupId>
@@ -75,9 +75,13 @@
             <version>3.24.2</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.8.1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
         </dependency>
     </dependencies>
 
