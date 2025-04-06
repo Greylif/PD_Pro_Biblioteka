@@ -26,10 +26,11 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 30 17 * * ?")
     public void scheduledEmail() throws MessagingException {
+        System.out.println("Email scheduled");
         if (1 == 1) {
-            sendEmail("odbiorca@gmail.com", "Codzienny Raport", "To jest automatyczna wiadomość.");
+            sendEmail("s092677@student.tu.kielce.pl", "Codzienny Raport", "To jest automatyczna wiadomość.");
         }
     }
 }

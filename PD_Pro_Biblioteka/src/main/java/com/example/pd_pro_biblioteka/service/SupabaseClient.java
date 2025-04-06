@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Map;
 import java.util.HashMap;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +17,7 @@ import java.util.List;
 
 @Service
 public class SupabaseClient {
+
     private final WebClient webClient;
     private static final String PLACOWKA = "Placowka";
     private static final String AUTORZY = "Autorzy";
@@ -28,6 +28,8 @@ public class SupabaseClient {
     private static final String NAZWISKO = "Nazwisko";
     private static final String HASLO = "Haslo";
     private static final String NAZWA_UZYTKOWNIKA = "Nazwa_Uzytkownika";
+    private static final String ID_AUTORA = "id_autora";
+    private static final String ID_PLACOWKI = "id_placowki";
 
     public SupabaseClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
@@ -82,8 +84,8 @@ public class SupabaseClient {
                 "Tytul", tytul,
                 "Gatunek", gatunek,
                 "Data_Wydania", dataWydania,
-                "id_autora", idAutora,
-                "id_placowki", idPlacowki
+                ID_AUTORA, idAutora,
+                ID_PLACOWKI, idPlacowki
         ));
     }
 
@@ -135,7 +137,7 @@ public class SupabaseClient {
                 NAZWISKO, nazwisko,
                 NAZWA_UZYTKOWNIKA, NazwaUzytkownika,
                 HASLO, haslo,
-                "id_placowki", idPlacowki
+                ID_PLACOWKI, idPlacowki
         ));
     }
 
@@ -183,18 +185,18 @@ public class SupabaseClient {
         if (gatunek != null) data.put("Gatunek", gatunek);
         if (dataWydania != null) data.put("Data_Wydania", dataWydania);
         if (dodano != null) data.put("Dodano", dodano);
-        if (idAutora != null) data.put("ID_Autora", idAutora);
-        if (idPlacowki != null) data.put("ID_Placowki", idPlacowki);
+        if (idAutora != null) data.put(ID_AUTORA, idAutora);
+        if (idPlacowki != null) data.put(ID_PLACOWKI, idPlacowki);
         return updateData(KSIAZKA, id, data);
     }
 
     public String updateUzytkownik(int id, String imie, String nazwisko, Integer wiek, String nazwaUzytkownika, String haslo, String email) {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
-        if (nazwisko != null) data.put("Nazwisko", nazwisko);
+        if (nazwisko != null) data.put(NAZWISKO, nazwisko);
         if (wiek != null) data.put("Wiek", wiek);
-        if (nazwaUzytkownika != null) data.put("Nazwa_Uzytkownika", nazwaUzytkownika);
-        if (haslo != null) data.put("Haslo", haslo);
+        if (nazwaUzytkownika != null) data.put(NAZWA_UZYTKOWNIKA, nazwaUzytkownika);
+        if (haslo != null) data.put(HASLO, haslo);
         if (email != null) data.put("Email", email);
         return updateData(UZYTKOWNIK, id, data);
     }
@@ -202,17 +204,17 @@ public class SupabaseClient {
     public String updateAdmin(int id, String imie, String nazwisko, String nazwaUzytkownika, String haslo, Integer idPlacowki) {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
-        if (nazwisko != null) data.put("Nazwisko", nazwisko);
-        if (nazwaUzytkownika != null) data.put("Nazwa_Uzytkownika", nazwaUzytkownika);
-        if (haslo != null) data.put("Haslo", haslo);
-        if (idPlacowki != null) data.put("ID_Placowki", idPlacowki);
+        if (nazwisko != null) data.put(NAZWISKO, nazwisko);
+        if (nazwaUzytkownika != null) data.put(NAZWA_UZYTKOWNIKA, nazwaUzytkownika);
+        if (haslo != null) data.put(HASLO, haslo);
+        if (idPlacowki != null) data.put(ID_PLACOWKI, idPlacowki);
         return updateData(ADMIN, id, data);
     }
 
     public String updateAutor(int id, String imie, String nazwisko, Integer rokUrodzenia) {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
-        if (nazwisko != null) data.put("Nazwisko", nazwisko);
+        if (nazwisko != null) data.put(NAZWISKO, nazwisko);
         if (rokUrodzenia != null) data.put("Rok_Urodzenia", rokUrodzenia);
         return updateData(AUTORZY, id, data);
     }
@@ -281,7 +283,7 @@ public class SupabaseClient {
         String autor = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/" + AUTORZY)
-                        .queryParam("id", "eq." + data.substring(data.indexOf("id_autora") + 11,(data.indexOf("id_placowki") - 2)))
+                        .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11,(data.indexOf(ID_PLACOWKI) - 2)))
                         .queryParam("and", a_statement)
                         .build())
                 .retrieve()
@@ -289,9 +291,8 @@ public class SupabaseClient {
                 .block();
 
         List<Integer> autorIds = extractAutorIds(autor);
-        String filteredBooks = filterKsiazkiByAutor(data, autorIds);
+        return filterKsiazkiByAutor(data, autorIds);
 
-        return filteredBooks;
     }
 
     private List<Integer> extractAutorIds(String autorzyData) {
@@ -314,7 +315,7 @@ public class SupabaseClient {
             JSONArray jsonArray = new JSONArray(ksiazkiData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject ksiazka = jsonArray.getJSONObject(i);
-                int idAutora = ksiazka.getInt("id_autora");
+                int idAutora = ksiazka.getInt(ID_AUTORA);
                 if (autorIds.contains(idAutora)) {
                     filteredArray.put(ksiazka);
                 }
@@ -324,7 +325,7 @@ public class SupabaseClient {
         }
         return filteredArray.toString();
     }
-
+/*
     private String fetchAnyFiltr(String collumn, String statement) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
@@ -336,7 +337,7 @@ public class SupabaseClient {
                 .block();
 
     }
-
+*/
 
     private String fetchDatalogin(String table, String columns, String login_data, String password_data) {
         return webClient.get()
