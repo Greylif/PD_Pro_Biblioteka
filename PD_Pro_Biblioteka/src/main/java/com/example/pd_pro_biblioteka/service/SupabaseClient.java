@@ -1,6 +1,9 @@
 package com.example.pd_pro_biblioteka.service;
 
 
+import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
+import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
+import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -32,15 +35,21 @@ public class SupabaseClient {
     private static final String ID_PLACOWKI = "id_placowki";
 
     public SupabaseClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder
-                .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co/rest/v1")
-                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjM5MTczNCwiZXhwIjoyMDU3OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
-                .defaultHeader("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4cCI6MjA1Nzk2NzczNH0.xdr4z5_udXpL4sbJpccFQrOPj_7_6w1bIs-FMGcdn1U")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build();
+        try {
+            this.webClient = webClientBuilder
+                    .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co/rest/v1")
+                    .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjM5MTczNCwiZXhwIjoyMDU3OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
+                    .defaultHeader("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4cCI6MjA1Nzk2NzczNH0.xdr4z5_udXpL4sbJpccFQrOPj_7_6w1bIs-FMGcdn1U")
+                    .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .build();
+        }
+        catch (Exception e)
+        {
+            throw new SupabaseConnectionException("Failed to connect to Supabase: " + e.getMessage());
+        }
     }
     public String getPlacowki() {
-        return fetchData(PLACOWKA, "id, Adres");
+            return fetchData(PLACOWKA, "id, Adres");
     }
 
     public String addPlacowka(String adres) {
@@ -248,14 +257,20 @@ public class SupabaseClient {
     }
 
     private String fetchData(String table, String columns) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/" + table)
-                        .queryParam("select", columns)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/" + table)
+                            .queryParam("select", columns)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        }
+        catch (Exception e)
+    {
+        throw new SupabaseConnectionException("Failed to fetch" + table + ": " + e.getMessage());
+    }
     }
 /*
     private String fetchData(String table, String columns) {
@@ -271,27 +286,32 @@ public class SupabaseClient {
     }
 */
     private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
-        String data = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/" + KSIAZKA)
-                        .queryParam("and", k_statement)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            String data = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/" + KSIAZKA)
+                            .queryParam("and", k_statement)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
-        String autor = webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/" + AUTORZY)
-                        .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11,(data.indexOf(ID_PLACOWKI) - 2)))
-                        .queryParam("and", a_statement)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+
+            String autor = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/" + AUTORZY)
+                            .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11, (data.indexOf(ID_PLACOWKI) - 2)))
+                            .queryParam("and", a_statement)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
         List<Integer> autorIds = extractAutorIds(autor);
         return filterKsiazkiByAutor(data, autorIds);
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to fetch filtered data: " + e.getMessage());
+        }
 
     }
 
@@ -303,8 +323,8 @@ public class SupabaseClient {
                 JSONObject autor = jsonArray.getJSONObject(i);
                 autorIds.add(autor.getInt("id"));
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new JsonFileException("Failed work on JSON", e);
         }
         return autorIds;
     }
@@ -320,8 +340,8 @@ public class SupabaseClient {
                     filteredArray.put(ksiazka);
                 }
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new JsonFileException("Failed work on JSON", e);
         }
         return filteredArray.toString();
     }
@@ -340,47 +360,69 @@ public class SupabaseClient {
 */
 
     private String fetchDatalogin(String table, String columns, String login_data, String password_data) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/" + table)
-                        .queryParam("select", columns)
-                        .queryParam("or", "(Nazwa_Uzytkownika.eq." + login_data + ",Email.eq." + login_data + ")")
-                        .queryParam(HASLO, "eq." + password_data)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            String login = webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/" + table)
+                            .queryParam("select", columns)
+                            .queryParam("or", "(Nazwa_Uzytkownika.eq." + login_data + ",Email.eq." + login_data + ")")
+                            .queryParam(HASLO, "eq." + password_data)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
 
+        if(login == null)
+        {
+            throw new InstanceNotFoundException(table, ": brak uzytkownika");
+        }
+        return login;
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to fetch user: " + e.getMessage());
+        }
     }
 
 
     private String postData(String table, Map<String, Object> requestBody) {
-        return webClient.post()
-                .uri("/" + table)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            return webClient.post()
+                    .uri("/" + table)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to post to table " + table + ": " + e.getMessage());
+        }
     }
 
     private String updateData(String table, int id, Map<String, Object> requestBody) {
-        return webClient.patch()
-                .uri(uriBuilder -> uriBuilder.path("/" + table)
-                .queryParam("id", "eq." + id).build())
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(requestBody)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        try {
+            return webClient.patch()
+                    .uri(uriBuilder -> uriBuilder.path("/" + table)
+                            .queryParam("id", "eq." + id).build())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to update to table " + table + ": " + e.getMessage());
+        }
+
     }
 
     private String deleteData(String table, int id) {
+        try{
         return webClient.delete()
                 .uri(uriBuilder -> uriBuilder.path("/" + table)
                 .queryParam("id", "eq." + id).build())
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to delete in table " + table + ": " + e.getMessage());
+        }
     }
 }

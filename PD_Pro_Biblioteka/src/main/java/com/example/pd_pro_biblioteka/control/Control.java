@@ -45,8 +45,8 @@ public class Control {
     }
 
     @PostMapping("/wypozyczenia")
-    public String addWypozyczenie(@RequestParam String dataWypozyczenia,
-                                  @RequestParam String dataOddania,
+    public String addWypozyczenie(@RequestParam(required = false) String dataWypozyczenia,
+                                  @RequestParam(required = false) String dataOddania,
                                   @RequestParam String terminOddania,
                                   @RequestParam int idKsiazki,
                                   @RequestParam int idUzytkownika) {
@@ -75,7 +75,7 @@ public class Control {
 
     @PostMapping("/kary")
     public String addKara(@RequestParam double kwota,
-                          @RequestParam String dataWydaniaKary,
+                          @RequestParam(required = false) String dataWydaniaKary,
                           @RequestParam String terminZaplaty,
                           @RequestParam boolean czyZaplacono,
                           @RequestParam int idUzytkownika) {

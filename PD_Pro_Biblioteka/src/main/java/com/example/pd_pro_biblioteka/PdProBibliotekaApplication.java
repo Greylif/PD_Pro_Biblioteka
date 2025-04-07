@@ -7,9 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class PdProBibliotekaApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(PdProBibliotekaApplication.class, args);
 	}
-
 }
