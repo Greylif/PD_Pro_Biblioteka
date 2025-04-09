@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.LoginController"
+      alignment="TOP_CENTER" style="-fx-background-color: #726C6C; -fx-padding: 20;">
+
+    <Region prefHeight="20"/>
+
+    <Label text="Logowanie:" style="-fx-font-size: 32px; -fx-text-fill: #FFFFFF"/>
+
+    <Region prefHeight="130"/>
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Email/Login"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+    </HBox>
+    <TextField fx:id="user_login" prefHeight="20" style="-fx-font-size: 18px;"/>
+
+    <Region prefHeight="20"/>
+
+    <HBox alignment="CENTER_LEFT">
+        <Label text="Hasło" style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+    </HBox>
+    <PasswordField fx:id="user_pass" prefHeight="20" style="-fx-font-size: 18px;"/>
+
+    <Region prefHeight="30"/>
+
+    <HBox alignment="CENTER" spacing="20">
+        <Button fx:id="login" text="Zaloguj"
+                style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5"/>
+        <Button fx:id="register" text="Zarejestruj" onAction="#register_act"
+                style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #726C6C; -fx-text-fill: #2C2C2C"/>
+    </HBox>
+
+    <Region prefHeight="150"/>
+
+    <Button fx:id="pass_rem" text="Zapomniałeś hasła?" onAction="#rem_act"
+            style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #726C6C; -fx-text-fill: #2C2C2C; -fx-underline: true"/>
+
+</VBox>
