@@ -12,6 +12,6 @@
     <Label text="Rejestracja zakończona pomyślnie!" style="-fx-font-size: 18px; -fx-text-fill: #FFFFFF;"/>
 
     <Button text="Zamknij" onAction="#closePopup"
-            style="-fx-font-size: 14px; -fx-background-radius: 10; -fx-text-fill: #2C2C2C; -fx-background-color: #F5F5F5;"/>
+            style="-fx-font-size: 14px; -fx-background-radius: 10; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5"/>
 
 </VBox>
