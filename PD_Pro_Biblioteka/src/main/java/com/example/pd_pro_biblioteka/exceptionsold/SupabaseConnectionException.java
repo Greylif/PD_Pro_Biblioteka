@@ -1,4 +1,4 @@
-package com.example.pd_pro_biblioteka.exceptions;
+package com.example.pd_pro_biblioteka.exceptionsold;
 
 public class SupabaseConnectionException extends RuntimeException {
     public SupabaseConnectionException(String message) {
