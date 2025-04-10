@@ -1,9 +1,7 @@
 package com.example.pd_pro_biblioteka.service;
 
 
-import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
-import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
-import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
+import com.example.pd_pro_biblioteka.exceptions.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -11,7 +9,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.Map;
 import java.util.HashMap;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;

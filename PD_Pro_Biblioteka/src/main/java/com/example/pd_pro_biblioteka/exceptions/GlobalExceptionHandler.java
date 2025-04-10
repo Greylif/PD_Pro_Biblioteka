@@ -10,18 +10,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.HashMap;
 import java.util.Map;
-/**
- * Global exception handler for the student banking application.
- * This class centralizes exception handling across all controllers
- * and provides consistent error responses.
- */
+
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(InstanceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse>
-    handleAccountNotFoundException(InstanceNotFoundException ex) {
+    handleInstanceNotFoundException(InstanceNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Account Not Found",
@@ -49,7 +46,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse>
-    handleValidationExceptions(MethodArgumentNotValidException ex) {
+    handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Error",
@@ -65,6 +62,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse,
                 HttpStatus.BAD_REQUEST);
     }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception
@@ -78,10 +76,10 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(SupabaseConnectionException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleSupabaseConnectionException(Exception
-                                                                        ex) {
+    public ResponseEntity<ErrorResponse>
+    handleSupabaseConnectionException(SupabaseConnectionException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Internal Server Error with Supabase connection",
