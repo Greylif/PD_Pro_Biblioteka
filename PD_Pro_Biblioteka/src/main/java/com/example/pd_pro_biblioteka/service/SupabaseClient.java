@@ -1,7 +1,11 @@
 package com.example.pd_pro_biblioteka.service;
 
 
-import com.example.pd_pro_biblioteka.exceptionsold.*;
+import com.example.pd_pro_biblioteka.exceptions.AccountValidationException;
+import com.example.pd_pro_biblioteka.exceptions.InvalidTransactionException;
+import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
+import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
+import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -42,7 +46,7 @@ public class SupabaseClient {
         }
         catch (Exception e)
         {
-            throw new SupabaseConnectionException("Failed to connect to Supabase: " + e.getMessage());
+            throw new SupabaseConnectionException("Failed to connect to Supabase: ", e);
         }
     }
     public String getPlacowki() {
@@ -266,7 +270,7 @@ public class SupabaseClient {
         }
         catch (Exception e)
     {
-        throw new SupabaseConnectionException("Failed to fetch" + table + ": " + e.getMessage());
+        throw new SupabaseConnectionException("Failed to fetch" + table + ": ", e);
     }
     }
 /*
@@ -307,7 +311,7 @@ public class SupabaseClient {
         List<Integer> autorIds = extractAutorIds(autor);
         return filterKsiazkiByAutor(data, autorIds);
         } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to fetch filtered data: " + e.getMessage());
+            throw new SupabaseConnectionException("Failed to fetch filtered data: ", e);
         }
 
     }
@@ -375,7 +379,7 @@ public class SupabaseClient {
         }
         return login;
         } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to fetch user: " + e.getMessage());
+            throw new SupabaseConnectionException("Failed to fetch user: ", e);
         }
     }
 
@@ -390,7 +394,7 @@ public class SupabaseClient {
                     .bodyToMono(String.class)
                     .block();
         } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to post to table " + table + ": " + e.getMessage());
+            throw new SupabaseConnectionException("Failed to post to table " + table + ": ", e);
         }
     }
 
@@ -405,7 +409,7 @@ public class SupabaseClient {
                     .bodyToMono(String.class)
                     .block();
         } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to update to table " + table + ": " + e.getMessage());
+            throw new SupabaseConnectionException("Failed to update to table " + table + ": ", e);
         }
 
     }
@@ -419,7 +423,7 @@ public class SupabaseClient {
                 .bodyToMono(String.class)
                 .block();
         } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to delete in table " + table + ": " + e.getMessage());
+            throw new SupabaseConnectionException("Failed to delete in table " + table + ": ", e);
         }
     }
 }

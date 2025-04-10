@@ -16,10 +16,10 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
 
-    @ExceptionHandler(AccountNotFoundException.class)
+    @ExceptionHandler(InstanceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorResponse>
-    handleAccountNotFoundException(AccountNotFoundException ex) {
+    handleInstanceNotFoundException(InstanceNotFoundException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND.value(),
                 "Account Not Found",
@@ -27,25 +27,6 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
-
-
-    @ExceptionHandler(InsufficientFundsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse>
-    handleInsufficientFundsException(InsufficientFundsException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Insufficient Funds",
-                ex.getMessage()
-        );
-        Map<String, String> details = new HashMap<>();
-        details.put("accountNumber", ex.getAccountNumber());
-        details.put("operation", ex.getOperation());
-        errorResponse.setDetails(details);
-        return new ResponseEntity<>(errorResponse,
-                HttpStatus.BAD_REQUEST);
-    }
-
 
     @ExceptionHandler(InvalidTransactionException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -78,18 +59,36 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(FileOperationException.class)
+    @ExceptionHandler(SupabaseConnectionException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse>
-    handleFileOperationException(FileOperationException ex) {
+    handleSupabaseConnectionException(SupabaseConnectionException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "File Operation Error",
+                "Supabase Operation Error",
                 ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse,
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
+    @ExceptionHandler(JsonFileException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse>
+    handleJsonFileException(JsonFileException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Json Operation Error",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse>
