@@ -19,7 +19,7 @@ public class MainApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/logowanie.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
         fxmlLoader.setControllerFactory(springContext::getBean);
 
         primaryStage.setTitle("Logowanie");
@@ -31,9 +31,5 @@ public class MainApp extends Application {
     public void stop() throws Exception {
         springContext.close();
         Platform.exit();
-    }
-
-    public static void main(String[] args) {
-        launch(); // <-- startuje JavaFX
     }
 }

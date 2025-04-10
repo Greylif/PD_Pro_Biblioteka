@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.pd_pro_biblioteka_client.controller.ReminderPop"
+      alignment="CENTER" spacing="20"
+      style="-fx-padding: 20; -fx-background-color: #726C6C;">
+
+
+    <Label text="Zmiana hasła zakończona pomyślnie!" style="-fx-font-size: 18px; -fx-text-fill: #FFFFFF;"/>
+    <Region prefWidth="10"/>
+    <Label text="Sprawdź E-mail'a" style="-fx-font-size: 18px; -fx-text-fill: #FFFFFF;"/>
+
+    <Button text="Zamknij" onAction="#closePopup"
+            style="-fx-font-size: 14px; -fx-background-radius: 10; -fx-text-fill: #2C2C2C; -fx-background-color: #F5F5F5;"/>
+
+</VBox>

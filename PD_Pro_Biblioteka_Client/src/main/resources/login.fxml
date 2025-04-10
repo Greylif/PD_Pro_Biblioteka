@@ -6,8 +6,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.LoginController"
-      alignment="TOP_CENTER" style="-fx-background-color: #726C6C; -fx-padding: 20;">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.Login"
+      alignment="TOP_CENTER" style="-fx-background-color: #726C6C; -fx-padding: 20;" prefHeight="600.0" prefWidth="600.0">
 
     <Region prefHeight="20"/>
 

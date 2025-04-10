@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.Register"
+      alignment="TOP_CENTER" style="-fx-background-color: #726C6C; -fx-padding: 20;" prefHeight="600.0" prefWidth="600.0">
+
+    <Region prefHeight="20"/>
+
+    <Label text="Rejestracja:" style="-fx-font-size: 32px; -fx-text-fill: #FFFFFF"/>
+
+    <Region prefHeight="20"/>
+
+
+    <HBox spacing="50">
+        <VBox alignment="CENTER_LEFT" spacing="5">
+            <Label text="Imię"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+            <TextField fx:id="user_name" prefWidth="300" style="-fx-font-size: 16px;"/>
+        </VBox>
+        <VBox alignment="CENTER_LEFT" spacing="5">
+            <Label text="Nazwisko"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+            <TextField fx:id="user_surname" prefWidth="300" style="-fx-font-size: 16px;"/>
+        </VBox>
+    </HBox>
+
+    <Region prefHeight="20"/>
+
+    <VBox alignment="CENTER_LEFT" spacing="5">
+        <Label text="Data urodzenia"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+        <DatePicker fx:id="user_date" prefWidth="600" style="-fx-font-size: 16px;"/>
+    </VBox>
+
+    <Region prefHeight="20"/>
+
+    <VBox alignment="CENTER_LEFT" spacing="5">
+        <Label text="E-Mail"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+        <TextField fx:id="user_email" prefWidth="300" style="-fx-font-size: 16px;"/>
+    </VBox>
+
+    <Region prefHeight="20"/>
+
+    <VBox alignment="CENTER_LEFT" spacing="5">
+        <Label text="Login"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+        <TextField fx:id="user_login" prefWidth="300" style="-fx-font-size: 16px;"/>
+    </VBox>
+
+    <Region prefHeight="20"/>
+
+    <VBox alignment="CENTER_LEFT" spacing="5">
+        <Label text="Hasło"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+        <TextField fx:id="user_password" prefWidth="300" style="-fx-font-size: 16px;"/>
+    </VBox>
+
+    <Region prefHeight="25"/>
+
+    <Button fx:id="register" text="Zarejestruj" onAction="#reg_act"
+            style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5"/>
+
+</VBox>
