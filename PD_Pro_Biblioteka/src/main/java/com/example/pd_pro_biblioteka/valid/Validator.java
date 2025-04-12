@@ -3,6 +3,10 @@ package com.example.pd_pro_biblioteka.valid;
 import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import com.example.pd_pro_biblioteka.model.Placowka;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 public class Validator {
@@ -15,7 +19,14 @@ public class Validator {
     private Validator() {}
 
     public static boolean walidujUzytkownika(Uzytkownik uzytkownik) {
-        return uzytkownik.getWiek() >= MIN_WIEK && uzytkownik.getWiek() <= MAX_WIEK;
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dataUrodzenia = LocalDate.parse(uzytkownik.getData_Urodzenia(), formatter);
+            int wiek = Period.between(dataUrodzenia, LocalDate.now()).getYears();
+            return wiek >= MIN_WIEK && wiek <= MAX_WIEK;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
     }
 
     public static boolean walidujPlacowke(Placowka placowka) {

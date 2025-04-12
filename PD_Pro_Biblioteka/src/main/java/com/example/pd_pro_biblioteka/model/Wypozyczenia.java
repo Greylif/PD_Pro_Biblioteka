@@ -12,13 +12,13 @@ public class Wypozyczenia {
     private int id;
     @Setter
     @Getter
-    private LocalDateTime Data_Wypozyczenia;
+    private String Data_Wypozyczenia;
     @Setter
     @Getter
-    private LocalDateTime Data_Oddania;
+    private String Data_Oddania;
     @Setter
     @Getter
-    private LocalDateTime Termin_Oddania;
+    private String Termin_Oddania;
     @Setter
     @Getter
     private int id_ksiazki;
@@ -28,7 +28,7 @@ public class Wypozyczenia {
 
     public Wypozyczenia() {}
 
-    public Wypozyczenia(int id, LocalDateTime Data_Wypozyczenia, LocalDateTime Data_Oddania, LocalDateTime Termin_Oddania, int id_ksiazki, int id_uzytkownika) {
+    public Wypozyczenia(int id, String Data_Wypozyczenia, String Data_Oddania, String Termin_Oddania, int id_ksiazki, int id_uzytkownika) {
         this.id = id;
         this.Data_Wypozyczenia = Data_Wypozyczenia;
         this.Data_Oddania = Data_Oddania;

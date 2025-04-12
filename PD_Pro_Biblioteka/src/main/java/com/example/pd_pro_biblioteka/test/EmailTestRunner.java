@@ -20,8 +20,6 @@ public class EmailTestRunner implements CommandLineRunner {
             emailService.sendEmail("s092677@student.tu.kielce.pl", "Testowy Email", "To jest testowa wiadomość wysyłana po starcie aplikacji.");
         } catch (MessagingException e) {
             e.printStackTrace();
-
-
         }
         */
 

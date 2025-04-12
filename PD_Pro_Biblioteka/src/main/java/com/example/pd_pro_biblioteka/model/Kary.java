@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Kary {
@@ -16,10 +15,10 @@ public class Kary {
     private double Kwota;
     @Setter
     @Getter
-    private LocalDateTime Data_Wydania_Kary;
+    private String Data_Wydania_Kary;
     @Setter
     @Getter
-    private LocalDateTime Termin_Zaplaty;
+    private String Termin_Zaplaty;
     @Setter
     @Getter
     private boolean Czy_Zaplacono;
@@ -29,7 +28,7 @@ public class Kary {
 
     public Kary() {}
 
-    public Kary(int id, double Kwota, LocalDateTime Data_Wydania_Kary, LocalDateTime Termin_Zaplaty, boolean Czy_Zaplacono, int id_uzytkownika) {
+    public Kary(int id, double Kwota, String Data_Wydania_Kary, String Termin_Zaplaty, boolean Czy_Zaplacono, int id_uzytkownika) {
         this.id = id;
         this.Kwota = Kwota;
         this.Data_Wydania_Kary = Data_Wydania_Kary;

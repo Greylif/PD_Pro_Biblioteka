@@ -65,7 +65,20 @@ public class GlobalExceptionHandler {
     handleSupabaseConnectionException(SupabaseConnectionException ex) {
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Supabase Operation Error",
+                "Supabase operation Error",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse,
+                HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(EmailSendException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<ErrorResponse>
+    handleEmailSendException(EmailSendException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Email sending Error",
                 ex.getMessage()
         );
         return new ResponseEntity<>(errorResponse,

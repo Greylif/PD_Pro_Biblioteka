@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Uzytkownik {
     @Setter
@@ -17,7 +18,7 @@ public class Uzytkownik {
     private String Nazwisko;
     @Setter
     @Getter
-    private int Wiek;
+    private String Data_Urodzenia;
     @Setter
     @Getter
     private String Haslo;
@@ -30,11 +31,11 @@ public class Uzytkownik {
 
     public Uzytkownik() {}
 
-    public Uzytkownik(int id, String Imie, String Nazwisko, int Wiek, String Nazwa_Uzytkownika, String Haslo, String Email) {
+    public Uzytkownik(int id, String Imie, String Nazwisko, String Data_Urodzenia, String Nazwa_Uzytkownika, String Haslo, String Email) {
         this.id = id;
         this.Imie = Imie;
         this.Nazwisko = Nazwisko;
-        this.Wiek = Wiek;
+        this.Data_Urodzenia = Data_Urodzenia;
         this.Nazwa_Uzytkownika = Nazwa_Uzytkownika;
         this.Haslo = Haslo;
         this.Email = Email;
@@ -43,7 +44,7 @@ public class Uzytkownik {
 
     @Override
     public String toString() {
-        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Wiek='" + Wiek + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email='" + Email + "}";
+        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Data_Urodzenia='" + Data_Urodzenia + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email='" + Email + "}";
     }
 
 }

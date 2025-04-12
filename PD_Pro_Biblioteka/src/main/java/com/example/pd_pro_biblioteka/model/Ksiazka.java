@@ -1,8 +1,6 @@
 package com.example.pd_pro_biblioteka.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +17,10 @@ public class Ksiazka {
     private String Gatunek;
     @Setter
     @Getter
-    private LocalDate Data_Wydania;
+    private String Data_Wydania;
     @Setter
     @Getter
-    private LocalDateTime Dodano;
+    private String Dodano;
     @Setter
     @Getter
     private int id_autora;
@@ -32,7 +30,7 @@ public class Ksiazka {
 
     public Ksiazka() {}
 
-    public Ksiazka(int id, String Tytul, String Gatunek, LocalDate Data_Wydania, LocalDateTime Dodano, int id_autora, int id_placowki) {
+    public Ksiazka(int id, String Tytul, String Gatunek, String Data_Wydania, String Dodano, int id_autora, int id_placowki) {
         this.id = id;
         this.Tytul = Tytul;
         this.Gatunek = Gatunek;
