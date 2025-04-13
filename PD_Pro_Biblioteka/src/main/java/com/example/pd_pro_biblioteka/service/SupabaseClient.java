@@ -10,13 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import java.util.Map;
-import java.util.HashMap;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.util.ArrayList;
-import java.util.List;
-
 
 
 @Service
@@ -49,6 +48,7 @@ public class SupabaseClient {
             throw new SupabaseConnectionException("Failed to connect to Supabase: ", e);
         }
     }
+
     public String getPlacowki() {
             return fetchData(PLACOWKA, "id, Adres");
     }
@@ -84,9 +84,7 @@ public class SupabaseClient {
                 "id_uzytkownika", idUzytkownika
         ));
     }
-
-    public String getKsiazki() {
-        return fetchData(KSIAZKA, "*");
+    public String getKsiazki() { return fetchData(KSIAZKA, "*");
     }
 
     public String addKsiazka(String tytul, String gatunek, String dataWydania, int idAutora, int idPlacowki) {
@@ -426,4 +424,5 @@ public class SupabaseClient {
             throw new SupabaseConnectionException("Failed to delete in table " + table + ": ", e);
         }
     }
+
 }

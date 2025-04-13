@@ -98,9 +98,7 @@ public class Control {
     }
 
     @GetMapping("/ksiazki")
-    public String getKsiazki() {
-        return supabaseService.getKsiazki();
-    }
+    public String getKsiazki() { return supabaseService.getKsiazki(); }
 
     @PostMapping("/ksiazki")
     public String addKsiazka(@RequestParam String tytul,
