@@ -8,6 +8,7 @@ class PdProBibliotekaApplicationTests {
 
 	@Test
 	void contextLoads() {
+		//Context load test
 	}
 
 }

@@ -1,24 +1,52 @@
 package com.example.pd_pro_biblioteka;
 
+import com.example.pd_pro_biblioteka.exceptions.AccountValidationException;
 import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import com.example.pd_pro_biblioteka.model.Placowka;
 import com.example.pd_pro_biblioteka.valid.Validator;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @DisplayName("Testy walidatora")
 class ValidatorTest {
+
+    @Nested
+    @DisplayName("Testy walidacji poprawnej daty")
+    class DataValidationTest {
+
+        @Test
+        @DisplayName("Powinien zadzialac poprawnie dla poprawnej daty")
+        void testDataTrue()
+        {
+            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","2000-12-12","Username","Pass","s092677@student.tu.kielce.pl");
+            assertDoesNotThrow(() -> Validator.walidujUzytkownika(user));
+        }
+
+        @Test
+        @DisplayName("Powinien zakonczyc sie bledem dla niepoprawnej daty")
+        void testDataFalse()
+        {
+            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","NOT_A_DATE","Username","Pass","s092677@student.tu.kielce.pl");
+            assertThatThrownBy(() -> Validator.walidujUzytkownika(user))
+                    .as("Niepoprawne tworzenie uzytkownika")
+                    .isInstanceOf(AccountValidationException.class);
+        }
+    }
+
 
     @Nested
     @DisplayName("Testy walidacji wieku użytkownika")

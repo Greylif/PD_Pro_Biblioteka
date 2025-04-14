@@ -44,7 +44,7 @@ public class Uzytkownik {
 
     @Override
     public String toString() {
-        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Data_Urodzenia='" + Data_Urodzenia + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email='" + Email + "}";
+        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Data_Urodzenia='" + Data_Urodzenia + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email=" + Email + "}";
     }
 
 }

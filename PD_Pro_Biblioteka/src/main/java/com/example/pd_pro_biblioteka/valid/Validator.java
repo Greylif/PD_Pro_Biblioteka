@@ -1,5 +1,6 @@
 package com.example.pd_pro_biblioteka.valid;
 
+import com.example.pd_pro_biblioteka.exceptions.AccountValidationException;
 import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import com.example.pd_pro_biblioteka.model.Placowka;
 
@@ -24,8 +25,8 @@ public class Validator {
             LocalDate dataUrodzenia = LocalDate.parse(uzytkownik.getData_Urodzenia(), formatter);
             int wiek = Period.between(dataUrodzenia, LocalDate.now()).getYears();
             return wiek >= MIN_WIEK && wiek <= MAX_WIEK;
-        } catch (DateTimeParseException e) {
-            return false;
+        } catch (Exception e) {
+            throw new AccountValidationException("Blad walidowania uzytkownika: ", e.getMessage());
         }
     }
 
