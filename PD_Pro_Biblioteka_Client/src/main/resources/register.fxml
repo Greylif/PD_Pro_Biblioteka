@@ -52,7 +52,7 @@
 
     <VBox alignment="CENTER_LEFT" spacing="5">
         <Label text="Hasło"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <TextField fx:id="user_password" prefWidth="300" style="-fx-font-size: 16px;"/>
+        <PasswordField fx:id="user_password" prefWidth="300" style="-fx-font-size: 16px;"/>
     </VBox>
 
     <Region prefHeight="25"/>

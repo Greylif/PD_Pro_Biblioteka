@@ -28,7 +28,7 @@ public class Reminder {
             //jeśli rejestracja jest poprawna
             Stage popupStage = new Stage();
             popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-            popupStage.setTitle("Rejestracja");
+            popupStage.setTitle("Przypomnij hasło");
             popupStage.setScene(new Scene(popupRoot));
             popupStage.showAndWait();
 

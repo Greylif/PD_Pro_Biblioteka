@@ -24,9 +24,24 @@ public class Login {
 
 
     @FXML
-    public void initialize() {
-        login.setOnAction(e ->
-                System.out.println("Kliknięto LOGIN w GUI" + user_login.getText() + user_pass.getText()));
+    public void login_act(javafx.event.ActionEvent actionEvent) {
+        try {
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/client.fxml"));
+            Parent regRoot = fxmlLoader.load();
+
+            Stage regStage = new Stage();
+            regStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            regStage.setTitle("Klient");
+            regStage.setScene(new Scene(regRoot));
+            regStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @FXML
@@ -53,7 +68,7 @@ public class Login {
 
     @FXML
     public void rem_act(ActionEvent actionEvent) {
-        System.out.println("Kliknięto REMINDER w GUI");
+        //System.out.println("Kliknięto REMINDER w GUI");
 
         try {
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -73,4 +88,22 @@ public class Login {
         }
     }
 
+    public void login_act_adm(ActionEvent actionEvent) {
+        try {
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/admin.fxml"));
+            Parent regRoot = fxmlLoader.load();
+
+            Stage regStage = new Stage();
+            regStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            regStage.setTitle("Admin");
+            regStage.setScene(new Scene(regRoot));
+            regStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

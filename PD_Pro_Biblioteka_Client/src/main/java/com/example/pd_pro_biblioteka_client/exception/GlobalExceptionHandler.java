@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ClientException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String handleClientException(ClientException ex, Model model) {
-        model.addAttribute(ERRORTITLE, "Client Error");
+        model.addAttribute(ERRORTITLE, "com.example.pd_pro_biblioteka_client.controller.Client Error");
         model.addAttribute(ERRORMESSAGE, ex.getMessage());
         return ERROR;
     }

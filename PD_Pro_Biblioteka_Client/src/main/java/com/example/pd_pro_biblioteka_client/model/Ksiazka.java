@@ -28,6 +28,7 @@ public class Ksiazka {
     @NotNull(message = "Ksiazka musi byc przypisana do placowki")
     private int id_placowki;
 
+
     @Override
     public String toString() {
         return "Ksiazka{id=" + id + ", Tytul='" + Tytul + "', Gatunek='" + Gatunek + "', Data_Wydania=" + Data_Wydania + ", Dodano=" + Dodano + ", id_autora=" + id_autora + ", id_placowki=" + id_placowki + '}';
