@@ -32,7 +32,7 @@ class ValidatorTest {
         @DisplayName("Powinien zadzialac poprawnie dla poprawnej daty")
         void testDataTrue()
         {
-            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","2000-12-12","Username","Pass","s092677@student.tu.kielce.pl");
+            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","2000-12-12","Username","Pass","s092677@student.tu.kielce.pl", Boolean.FALSE);
             assertDoesNotThrow(() -> Validator.walidujUzytkownika(user));
         }
 
@@ -40,7 +40,7 @@ class ValidatorTest {
         @DisplayName("Powinien zakonczyc sie bledem dla niepoprawnej daty")
         void testDataFalse()
         {
-            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","NOT_A_DATE","Username","Pass","s092677@student.tu.kielce.pl");
+            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","NOT_A_DATE","Username","Pass","s092677@student.tu.kielce.pl", Boolean.FALSE);
             assertThatThrownBy(() -> Validator.walidujUzytkownika(user))
                     .as("Niepoprawne tworzenie uzytkownika")
                     .isInstanceOf(AccountValidationException.class);
@@ -74,7 +74,7 @@ class ValidatorTest {
         @DisplayName("Powinien zwrócić TRUE dla poprawnego wieku")
         @MethodSource("poprawnedaty")
         void testValidWiek(String data_urodzenia) {
-            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", data_urodzenia, "username", "password", "s092677@student.tu.kielce.pl");
+            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", data_urodzenia, "username", "password", "s092677@student.tu.kielce.pl", Boolean.FALSE);
             assertThat(Validator.walidujUzytkownika(uzytkownik))
                     .as("Wiek %d powinien być poprawny", data_urodzenia)
                     .isTrue();
@@ -84,7 +84,7 @@ class ValidatorTest {
         @DisplayName("Powinien zwrócić FALSE dla niepoprawnego wieku")
         @MethodSource("niepoprawnedaty")
         void testInvalidWiek(String data_urodzenia) {
-            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", data_urodzenia, "username", "password", "s092677@student.tu.kielce.pl");
+            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", data_urodzenia, "username", "password", "s092677@student.tu.kielce.pl", Boolean.FALSE);
             assertThat(Validator.walidujUzytkownika(uzytkownik))
                     .as("Wiek %d powinien być niepoprawny", data_urodzenia)
                     .isFalse();

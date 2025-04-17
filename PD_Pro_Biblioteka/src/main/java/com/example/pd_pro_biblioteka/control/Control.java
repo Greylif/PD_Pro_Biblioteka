@@ -77,9 +77,9 @@ public class Control {
     public String addKara(@RequestParam double kwota,
                           @RequestParam(required = false) String dataWydaniaKary,
                           @RequestParam String terminZaplaty,
-                          @RequestParam boolean czyZaplacono,
+                          @RequestParam(required = false) Boolean czyZaplacono,
                           @RequestParam int idUzytkownika) {
-        return supabaseService.addKara(kwota, dataWydaniaKary, terminZaplaty, czyZaplacono, idUzytkownika);
+        return supabaseService.addKara(kwota, dataWydaniaKary, terminZaplaty, idUzytkownika);
     }
 
     @DeleteMapping("/kary/{id}")
@@ -146,11 +146,11 @@ public class Control {
     @PostMapping("/uzytkownicy")
     public String addUzytkownik(@RequestParam String imie,
                                 @RequestParam String nazwisko,
-                                @RequestParam int wiek,
+                                @RequestParam String Data_Urodzenia,
                                 @RequestParam String Nazwa_Uzytkownika,
                                 @RequestParam String Haslo,
                                 @RequestParam String Email) {
-        return supabaseService.addUzytkownik(imie, nazwisko, wiek, Nazwa_Uzytkownika, Haslo, Email);
+        return supabaseService.addUzytkownik(imie, nazwisko, Data_Urodzenia, Nazwa_Uzytkownika, Haslo, Email);
     }
 
     @DeleteMapping("/uzytkownicy/{id}")
@@ -162,11 +162,12 @@ public class Control {
     public String updateUzytkownik(@PathVariable int id,
                                    @RequestParam(required = false) String imie,
                                    @RequestParam(required = false) String nazwisko,
-                                   @RequestParam(required = false) Integer wiek,
+                                   @RequestParam(required = false) String Data_Urodzenia,
                                    @RequestParam(required = false) String Nazwa_Uzytkownika,
                                    @RequestParam(required = false) String Haslo,
-                                   @RequestParam(required = false) String Email) {
-        return supabaseService.updateUzytkownik(id, imie, nazwisko, wiek, Nazwa_Uzytkownika, Haslo, Email);
+                                   @RequestParam(required = false) String Email,
+                                   @RequestParam(required = false) Boolean Zablokowany) {
+        return supabaseService.updateUzytkownik(id, imie, nazwisko, Data_Urodzenia, Nazwa_Uzytkownika, Haslo, Email, Zablokowany);
     }
 
     @GetMapping("/uzytkownicy/{login_1}/{password}")

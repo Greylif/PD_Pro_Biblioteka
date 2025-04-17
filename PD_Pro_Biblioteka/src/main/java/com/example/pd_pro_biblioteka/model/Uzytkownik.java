@@ -28,10 +28,13 @@ public class Uzytkownik {
     @Setter
     @Getter
     private String Email;
+    @Setter
+    @Getter
+    private Boolean Zablokowany;
 
     public Uzytkownik() {}
 
-    public Uzytkownik(int id, String Imie, String Nazwisko, String Data_Urodzenia, String Nazwa_Uzytkownika, String Haslo, String Email) {
+    public Uzytkownik(int id, String Imie, String Nazwisko, String Data_Urodzenia, String Nazwa_Uzytkownika, String Haslo, String Email, Boolean Zablokowany) {
         this.id = id;
         this.Imie = Imie;
         this.Nazwisko = Nazwisko;
@@ -39,12 +42,13 @@ public class Uzytkownik {
         this.Nazwa_Uzytkownika = Nazwa_Uzytkownika;
         this.Haslo = Haslo;
         this.Email = Email;
+        this.Zablokowany = Zablokowany;
     }
 
 
     @Override
     public String toString() {
-        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Data_Urodzenia='" + Data_Urodzenia + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email=" + Email + "}";
+        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Data_Urodzenia='" + Data_Urodzenia + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email=" + Email + ", Zablokowany=" + Zablokowany + "}";
     }
 
 }

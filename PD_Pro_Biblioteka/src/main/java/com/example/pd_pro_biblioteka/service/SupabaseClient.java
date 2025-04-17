@@ -62,27 +62,38 @@ public class SupabaseClient {
     }
 
     public String addWypozyczenie(String dataWypozyczenia, String dataOddania, String terminOddania, int idKsiazki, int idUzytkownika) {
-        return postData(WYPOZYCZENIA, Map.of(
-                "Data_Wypozyczenia", dataWypozyczenia,
-                "Data_Oddania", dataOddania,
-                "Termin_Oddania", terminOddania,
-                "id_ksiazki", idKsiazki,
-                "id_uzytkownika", idUzytkownika
-        ));
+        Map<String, Object> data = new HashMap<>();
+
+        if (dataWypozyczenia != null) {
+            data.put("Data_Wypozyczenia", dataWypozyczenia);
+        }
+        if (dataOddania != null) {
+            data.put("Data_Oddania", dataOddania);
+        }
+        data.put("Termin_Oddania", terminOddania);
+        data.put("id_ksiazki", idKsiazki);
+        data.put("id_uzytkownika", idUzytkownika);
+
+        return postData(WYPOZYCZENIA, data);
     }
 
     public String getKary() {
         return fetchData("Kary", "*");
     }
 
-    public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty, boolean czyZaplacono, int idUzytkownika) {
-        return postData("Kary", Map.of(
-                "Kwota", kwota,
-                "Data_Wydania_Kary", dataWydaniaKary,
-                "Termin_Zaplaty", terminZaplaty,
-                "Czy_Zaplacono", czyZaplacono,
-                "id_uzytkownika", idUzytkownika
-        ));
+    public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty, int idUzytkownika) {
+
+        Map<String, Object> data = new HashMap<>();
+
+        if (dataWydaniaKary != null) {
+            data.put("Data_Wydania_Kary", dataWydaniaKary);
+        }
+
+        data.put("Kwota", kwota);
+        data.put("Termin_Zaplaty", terminZaplaty);
+        data.put("id_uzytkownika", idUzytkownika);
+
+        return postData("Kary", data);
     }
     public String getKsiazki() { return fetchData(KSIAZKA, "*");
     }
@@ -124,11 +135,11 @@ public class SupabaseClient {
         return fetchKsiazkaFiltr(k_statement, a_statement);
     }
 
-    public String addUzytkownik(String imie, String nazwisko, Integer wiek, String Nazwa_Uzytkownika, String Haslo, String Email) {
+    public String addUzytkownik(String imie, String nazwisko, String Data_Urodzenia, String Nazwa_Uzytkownika, String Haslo, String Email) {
         return postData(UZYTKOWNIK, Map.of(
                 "Imie", imie,
                 NAZWISKO, nazwisko,
-                "Wiek", wiek,
+                "Data_Urodzenia", Data_Urodzenia,
                 NAZWA_UZYTKOWNIKA, Nazwa_Uzytkownika,
                 HASLO, Haslo,
                 "Email", Email
@@ -198,14 +209,15 @@ public class SupabaseClient {
         return updateData(KSIAZKA, id, data);
     }
 
-    public String updateUzytkownik(int id, String imie, String nazwisko, Integer wiek, String nazwaUzytkownika, String haslo, String email) {
+    public String updateUzytkownik(int id, String imie, String nazwisko, String Data_Urodzenia, String nazwaUzytkownika, String haslo, String email, Boolean Zablokowany) {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
         if (nazwisko != null) data.put(NAZWISKO, nazwisko);
-        if (wiek != null) data.put("Wiek", wiek);
+        if (Data_Urodzenia != null) data.put("Data_Urodzenia", Data_Urodzenia);
         if (nazwaUzytkownika != null) data.put(NAZWA_UZYTKOWNIKA, nazwaUzytkownika);
         if (haslo != null) data.put(HASLO, haslo);
         if (email != null) data.put("Email", email);
+        if (Zablokowany != null) data.put("Zablokowany", Zablokowany);
         return updateData(UZYTKOWNIK, id, data);
     }
 
@@ -268,7 +280,7 @@ public class SupabaseClient {
         }
         catch (Exception e)
     {
-        throw new SupabaseConnectionException("Failed to fetch" + table + ": ", e);
+        throw new SupabaseConnectionException("Failed to fetch " + table + ": ", e);
     }
     }
 /*
@@ -323,7 +335,7 @@ public class SupabaseClient {
                 autorIds.add(autor.getInt("id"));
             }
         } catch (Exception e) {
-            throw new JsonFileException("Failed work on JSON", e);
+            throw new JsonFileException("Failed work on JSON ", e);
         }
         return autorIds;
     }
@@ -340,7 +352,7 @@ public class SupabaseClient {
                 }
             }
         } catch (Exception e) {
-            throw new JsonFileException("Failed work on JSON", e);
+            throw new JsonFileException("Failed work on JSON ", e);
         }
         return filteredArray.toString();
     }
@@ -373,7 +385,7 @@ public class SupabaseClient {
 
         if(login == null)
         {
-            throw new InstanceNotFoundException(table, ": brak uzytkownika");
+            throw new InstanceNotFoundException(table, ": brak uzytkownika ");
         }
         return login;
         } catch (Exception e) {
@@ -398,7 +410,7 @@ public class SupabaseClient {
 
     private String updateData(String table, int id, Map<String, Object> requestBody) {
         try {
-            return webClient.patch()
+            return webClient.put()
                     .uri(uriBuilder -> uriBuilder.path("/" + table)
                             .queryParam("id", "eq." + id).build())
                     .contentType(MediaType.APPLICATION_JSON)
@@ -421,7 +433,7 @@ public class SupabaseClient {
                 .bodyToMono(String.class)
                 .block();
         } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to delete in table " + table + ": ", e);
+            throw new SupabaseConnectionException("Failed to delete id: " + id + " in table: " + table + ": ", e);
         }
     }
 

@@ -71,25 +71,25 @@ public class ModelTest {
         void testNoArgs() {
             Autorzy autor = new Autorzy();
             autor.setId(1);
-            autor.setImie("Adam");
-            autor.setNazwisko("Mickiewicz");
-            autor.setRok_Urodzenia(1798);
+            autor.setImie("John");
+            autor.setNazwisko("Tolkien");
+            autor.setRok_Urodzenia(1892);
 
             assertEquals(1, autor.getId());
-            assertEquals("Adam", autor.getImie());
-            assertEquals("Mickiewicz", autor.getNazwisko());
-            assertEquals(1798, autor.getRok_Urodzenia());
+            assertEquals("John", autor.getImie());
+            assertEquals("Tolkien", autor.getNazwisko());
+            assertEquals(1892, autor.getRok_Urodzenia());
         }
 
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Autorzy z wszystkimi argumentami")
         void testAllArgs() {
-            Autorzy autor = new Autorzy(1,"Adam", "Mickiewicz", 1798);
+            Autorzy autor = new Autorzy(1,"John", "Tolkien", 1892);
 
             assertEquals(1, autor.getId());
-            assertEquals("Adam", autor.getImie());
-            assertEquals("Mickiewicz", autor.getNazwisko());
-            assertEquals(1798, autor.getRok_Urodzenia());
+            assertEquals("John", autor.getImie());
+            assertEquals("Tolkien", autor.getNazwisko());
+            assertEquals(1892, autor.getRok_Urodzenia());
         }
 
         @Test
@@ -97,11 +97,11 @@ public class ModelTest {
         void testToString() {
             Autorzy autor = new Autorzy();
             autor.setId(1);
-            autor.setImie("Adam");
-            autor.setNazwisko("Mickiewicz");
-            autor.setRok_Urodzenia(1798);
+            autor.setImie("John");
+            autor.setNazwisko("Tolkien");
+            autor.setRok_Urodzenia(1892);
 
-            String expected = "Autorzy{id=1, Imie='Adam', Nazwisko='Mickiewicz', Rok_Urodzenia=1798}";
+            String expected = "Autorzy{id=1, Imie='John', Nazwisko='Tolkien', Rok_Urodzenia=1892}";
             assertEquals(expected, autor.toString());
         }
     }
@@ -167,17 +167,17 @@ public class ModelTest {
         void testNoArgs() {
             Ksiazka ksiazka = new Ksiazka();
             ksiazka.setId(1);
-            ksiazka.setTytul("Pan Tadeusz");
-            ksiazka.setGatunek("Epika");
-            ksiazka.setData_Wydania("1834-06-28");
+            ksiazka.setTytul("Silmarillion");
+            ksiazka.setGatunek("Fantasy");
+            ksiazka.setData_Wydania("1977-09-15");
             ksiazka.setDodano("2025-04-10");
             ksiazka.setId_autora(1);
             ksiazka.setId_placowki(2);
 
             assertEquals(1, ksiazka.getId());
-            assertEquals("Pan Tadeusz", ksiazka.getTytul());
-            assertEquals("Epika", ksiazka.getGatunek());
-            assertEquals("1834-06-28", ksiazka.getData_Wydania());
+            assertEquals("Silmarillion", ksiazka.getTytul());
+            assertEquals("Fantasy", ksiazka.getGatunek());
+            assertEquals("1977-09-15", ksiazka.getData_Wydania());
             assertEquals("2025-04-10", ksiazka.getDodano());
             assertEquals(1, ksiazka.getId_autora());
             assertEquals(2, ksiazka.getId_placowki());
@@ -186,12 +186,12 @@ public class ModelTest {
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Ksiazka z wszystkimi argumentami")
         void testAllArgs() {
-            Ksiazka ksiazka = new Ksiazka(1,"Pan Tadeusz","Epika","1834-06-28","2025-04-10",1,2);
+            Ksiazka ksiazka = new Ksiazka(1,"Silmarillion","Fantasy","1977-09-15","2025-04-10",1,2);
 
             assertEquals(1, ksiazka.getId());
-            assertEquals("Pan Tadeusz", ksiazka.getTytul());
-            assertEquals("Epika", ksiazka.getGatunek());
-            assertEquals("1834-06-28", ksiazka.getData_Wydania());
+            assertEquals("Silmarillion", ksiazka.getTytul());
+            assertEquals("Fantasy", ksiazka.getGatunek());
+            assertEquals("1977-09-15", ksiazka.getData_Wydania());
             assertEquals("2025-04-10", ksiazka.getDodano());
             assertEquals(1, ksiazka.getId_autora());
             assertEquals(2, ksiazka.getId_placowki());
@@ -202,14 +202,14 @@ public class ModelTest {
         void testToString() {
             Ksiazka ksiazka = new Ksiazka();
             ksiazka.setId(1);
-            ksiazka.setTytul("Pan Tadeusz");
-            ksiazka.setGatunek("Epika");
-            ksiazka.setData_Wydania("1834-06-28");
+            ksiazka.setTytul("Silmarillion");
+            ksiazka.setGatunek("Fantasy");
+            ksiazka.setData_Wydania("1977-09-15");
             ksiazka.setDodano("2025-04-10");
             ksiazka.setId_autora(1);
             ksiazka.setId_placowki(2);
 
-            String expected = "Ksiazka{id=1, Tytul='Pan Tadeusz', Gatunek='Epika', Data_Wydania=1834-06-28, Dodano=2025-04-10, id_autora=1, id_placowki=2}";
+            String expected = "Ksiazka{id=1, Tytul='Silmarillion', Gatunek='Fantasy', Data_Wydania=1977-09-15, Dodano=2025-04-10, id_autora=1, id_placowki=2}";
             assertEquals(expected, ksiazka.toString());
         }
     }
@@ -242,9 +242,9 @@ public class ModelTest {
         void testToString() {
             Placowka placowka = new Placowka();
             placowka.setId(1);
-            placowka.setAdres("ul. Biblioteczna 1, Kraków");
+            placowka.setAdres("Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce");
 
-            String expected = "Placowka{id=1, Adres='ul. Biblioteczna 1, Kraków'}";
+            String expected = "Placowka{id=1, Adres='Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce'}";
             assertEquals(expected, placowka.toString());
         }
     }
@@ -262,7 +262,7 @@ public class ModelTest {
             user.setNazwisko("Kowalski");
             user.setData_Urodzenia("2000-01-01");
             user.setHaslo("pass");
-            user.setNazwa_Uzytkownika("jkowalskiadmin");
+            user.setNazwa_Uzytkownika("jkowalski");
             user.setEmail("s092677@student.tu.kiece.pl");
 
             assertEquals(1, user.getId());
@@ -270,20 +270,20 @@ public class ModelTest {
             assertEquals("Kowalski", user.getNazwisko());
             assertEquals("2000-01-01", user.getData_Urodzenia());
             assertEquals("pass", user.getHaslo());
-            assertEquals("jkowalskiadmin", user.getNazwa_Uzytkownika());
+            assertEquals("jkowalski", user.getNazwa_Uzytkownika());
             assertEquals("s092677@student.tu.kiece.pl", user.getEmail());
         }
 
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Uzytkownik z wszystkimi argumentami")
         void testAllArgs() {
-            Uzytkownik user = new Uzytkownik(1,"Jan","Kowalski","2000-01-01","jkowalskiadmin","pass","s092677@student.tu.kiece.pl");
+            Uzytkownik user = new Uzytkownik(1,"Jan","Kowalski","2000-01-01","jkowalski","pass","s092677@student.tu.kiece.pl", Boolean.FALSE);
 
             assertEquals(1, user.getId());
             assertEquals("Jan", user.getImie());
             assertEquals("Kowalski", user.getNazwisko());
             assertEquals("2000-01-01", user.getData_Urodzenia());
-            assertEquals("jkowalskiadmin", user.getNazwa_Uzytkownika());
+            assertEquals("jkowalski", user.getNazwa_Uzytkownika());
             assertEquals("pass", user.getHaslo());
             assertEquals("s092677@student.tu.kiece.pl", user.getEmail());
         }
@@ -293,14 +293,15 @@ public class ModelTest {
         void testToString() {
             Uzytkownik user = new Uzytkownik();
             user.setId(1);
-            user.setImie("Anna");
-            user.setNazwisko("Nowak");
+            user.setImie("Jan");
+            user.setNazwisko("Kowalski");
             user.setData_Urodzenia("2000-01-01");
             user.setHaslo("pass");
-            user.setNazwa_Uzytkownika("anowak");
-            user.setEmail("anna.nowak@example.com");
+            user.setNazwa_Uzytkownika("jkowalski");
+            user.setEmail("s092677@student.tu.kiece.pl");
+            user.setZablokowany(Boolean.FALSE);
 
-            String expected = "Uzytkownik{id=1, Imie='Anna', Nazwisko='Nowak', Data_Urodzenia='2000-01-01', Nazwa_Uzytkownika='anowak', Haslo='pass', Email=anna.nowak@example.com}";
+            String expected = "Uzytkownik{id=1, Imie='Jan', Nazwisko='Kowalski', Data_Urodzenia='2000-01-01', Nazwa_Uzytkownika='jkowalski', Haslo='pass', Email=s092677@student.tu.kiece.pl, Zablokowany=false}";
             assertEquals(expected, user.toString());
         }
     }
