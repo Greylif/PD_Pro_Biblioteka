@@ -1,8 +1,7 @@
 package com.example.pd_pro_biblioteka.service;
 
 
-import com.example.pd_pro_biblioteka.exceptions.AccountValidationException;
-import com.example.pd_pro_biblioteka.exceptions.InvalidTransactionException;
+
 import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -296,35 +294,36 @@ public class SupabaseClient {
                 .block();
     }
 */
-    private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
-        try {
-            String data = webClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/" + KSIAZKA)
-                            .queryParam("and", k_statement)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
+    try {
+        String data = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/" + KSIAZKA)
+                        .queryParam("and", k_statement)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
-
-            String autor = webClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/" + AUTORZY)
-                            .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11, (data.indexOf(ID_PLACOWKI) - 2)))
-                            .queryParam("and", a_statement)
-                            .build())
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+        String autor = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/" + AUTORZY)
+                        .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11, (data.indexOf(ID_PLACOWKI) - 2)))
+                        .queryParam("and", a_statement)
+                        .build())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
 
         List<Integer> autorIds = extractAutorIds(autor);
         return filterKsiazkiByAutor(data, autorIds);
-        } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to fetch filtered data: ", e);
-        }
-
+    } catch (JsonFileException e) {
+        throw e;
+    } catch (Exception e) {
+        throw new SupabaseConnectionException("Failed to fetch filtered data: ", e);
     }
+}
+
 
     private List<Integer> extractAutorIds(String autorzyData) {
         List<Integer> autorIds = new ArrayList<>();
@@ -383,11 +382,13 @@ public class SupabaseClient {
                     .bodyToMono(String.class)
                     .block();
 
-        if(login == null)
-        {
-            throw new InstanceNotFoundException(table, ": brak uzytkownika ");
-        }
+            if(login == null)
+            {
+                throw new InstanceNotFoundException(table, ": brak uzytkownika ");
+            }
         return login;
+        } catch (InstanceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new SupabaseConnectionException("Failed to fetch user: ", e);
         }

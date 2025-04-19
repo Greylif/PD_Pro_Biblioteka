@@ -62,36 +62,44 @@ public class EmailService {
             JSONObject obj = Arrayout.getJSONObject(i);
             LocalDate termin = LocalDate.parse(obj.getString("Termin_Oddania"));
             Object data_oddania = obj.opt("Data_Oddania");
-            if((termin.minusDays(3)).isBefore(LocalDate.now()) && (data_oddania == null || JSONObject.NULL.equals(data_oddania))) {
-                //sendEmail(obj.getString("Email"), "Przypomnienie o oddaniu ksiazki", "Termin oddania ksiazki o: " + obj.getString("Tytul") + " obj.getString("Termin_Oddania")");
+            if((termin.minusDays(3)).isBefore(LocalDate.now()) && (data_oddania == null)) {
+                sendEmail(obj.getString("Email"), "Przypomnienie o oddaniu ksiazki", "Termin oddania ksiazki o tytule: " + obj.getString("Tytul") + " mija: "+ obj.getString("Termin_Oddania"));
                 System.out.println("\nSent: \n" + i);
             }
         }
     }
 
     private JSONArray fetchWypozyczeniaZEmail() {
+        String wypozyczeniaData;
+
         try {
-            String wypozyczeniaData = webClient.get()
-                    .uri(uriBuilder -> uriBuilder
-                            .path("/" + "Wypozyczenia")
-                            .build())
-                    .retrieve()
-                    .bodyToMono(String.class)
-                    .block();
+            try {
+                wypozyczeniaData = webClient.get()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/Wypozyczenia")
+                                .build())
+                        .retrieve()
+                        .bodyToMono(String.class)
+                        .block();
+            } catch (Exception e) {
+                throw new SupabaseConnectionException("Failed to fetch wypozyczenia data: ", e);
+            }
 
             Map<Integer, String> uzytkownicyZEmail = fetchUzytkownicyEmail(wypozyczeniaData);
             Map<Integer, String> ksiazkiZTytulami = fetchKsiazkiTytuly(wypozyczeniaData);
 
             return polaczWypozyczeniaZEmail(wypozyczeniaData, uzytkownicyZEmail, ksiazkiZTytulami);
 
-        } catch (Exception e) {
-            throw new SupabaseConnectionException("Failed to fetch wypozyczenia data: ", e);
+        } catch (SupabaseConnectionException e) {
+            throw e;
         }
     }
+
 
     private Map<Integer, String> fetchUzytkownicyEmail(String wypozyczeniaData) {
         Set<Integer> uzytkownikIds = new HashSet<>();
         Map<Integer, String> mapIdEmail = new HashMap<>();
+
         try {
             JSONArray jsonArray = new JSONArray(wypozyczeniaData);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -104,11 +112,10 @@ public class EmailService {
                     .collect(Collectors.joining(",")) + ")";
 
             String uzytkownicyData;
-
             try {
                 uzytkownicyData = webClient.get()
                         .uri(uriBuilder -> uriBuilder
-                                .path("/" + "Uzytkownik")
+                                .path("/Uzytkownik")
                                 .query(idsFilter)
                                 .build())
                         .retrieve()
@@ -118,7 +125,6 @@ public class EmailService {
                 throw new SupabaseConnectionException("Failed to fetch uzytkownicy data: ", e);
             }
 
-
             JSONArray uzytkownicyJson = new JSONArray(uzytkownicyData);
             for (int i = 0; i < uzytkownicyJson.length(); i++) {
                 JSONObject user = uzytkownicyJson.getJSONObject(i);
@@ -126,14 +132,18 @@ public class EmailService {
             }
             return mapIdEmail;
 
+        } catch (SupabaseConnectionException e) {
+            throw e;
         } catch (Exception e) {
             throw new JsonFileException("Failed to process użytkownicy JSON", e);
         }
     }
 
+
     private Map<Integer, String> fetchKsiazkiTytuly(String wypozyczeniaData) {
         Set<Integer> ksiazkaIds = new HashSet<>();
         Map<Integer, String> mapIdTytul = new HashMap<>();
+
         try {
             JSONArray jsonArray = new JSONArray(wypozyczeniaData);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -149,7 +159,7 @@ public class EmailService {
             try {
                 ksiazkiData = webClient.get()
                         .uri(uriBuilder -> uriBuilder
-                                .path("/" + "Ksiazka")
+                                .path("/Ksiazka")
                                 .query(idsFilter)
                                 .build())
                         .retrieve()
@@ -166,15 +176,17 @@ public class EmailService {
             }
             return mapIdTytul;
 
+        } catch (SupabaseConnectionException e) {
+            throw e;
         } catch (Exception e) {
             throw new JsonFileException("Failed to process ksiazki JSON", e);
         }
     }
 
 
+
     private JSONArray polaczWypozyczeniaZEmail(String wypozyczeniaData, Map<Integer, String> uzytkownicyEmails, Map<Integer, String> ksiazkiTytuly) {
         JSONArray resultArray = new JSONArray();
-        try {
             JSONArray jsonArray = new JSONArray(wypozyczeniaData);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject wypozyczenie = jsonArray.getJSONObject(i);
@@ -192,9 +204,6 @@ public class EmailService {
                 merged.put("Data_Oddania", wypozyczenie.opt("Data_Oddania"));
                 resultArray.put(merged);
             }
-        } catch (Exception e) {
-            throw new JsonFileException("Failed to combine wypozyczenia with email", e);
-        }
         return resultArray;
     }
 

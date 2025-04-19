@@ -28,20 +28,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(InvalidTransactionException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse>
-    handleInvalidTransactionException(InvalidTransactionException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Invalid Transaction",
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(errorResponse,
-                HttpStatus.BAD_REQUEST);
-    }
-
-
     @ExceptionHandler(AccountValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorResponse>
@@ -100,27 +86,6 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse>
-    handleValidationExceptions(MethodArgumentNotValidException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation Error",
-                "Validation failed for one or more fields"
-        );
-        Map<String, String> details = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(error -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            details.put(fieldName, errorMessage);
-        });
-        errorResponse.setDetails(details);
-        return new ResponseEntity<>(errorResponse,
-                HttpStatus.BAD_REQUEST);
-    }
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception

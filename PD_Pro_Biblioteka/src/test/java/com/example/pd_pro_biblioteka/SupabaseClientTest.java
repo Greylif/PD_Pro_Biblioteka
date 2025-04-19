@@ -1,17 +1,29 @@
 package com.example.pd_pro_biblioteka;
 
+import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
+import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.service.SupabaseClient;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.*;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.*;
+import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -150,12 +162,12 @@ class SupabaseClientTest {
                 when(webClient.get()).thenReturn(requestHeadersUriSpec);
                 when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1,\"Adres\":\"Ulica Test\"}]"));
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1,\"Adres\":\"Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce\"}]"));
 
                 String result = supabaseClient.getPlacowki();
                 assertAll(
                         () -> assertTrue(result.contains("1")),
-                        () -> assertTrue(result.contains("Ulica Test"))
+                        () -> assertTrue(result.contains("Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce"))
                 );
             }
 
@@ -183,9 +195,13 @@ class SupabaseClientTest {
 
             @Test
             @DisplayName("Test Get Wypozyczenia")
-            void testGetThrowAdmini() {
+            void testGetWypozyczenia() {
                 when(webClient.get()).thenReturn(requestHeadersUriSpec);
-                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                    uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", \"Termin_Oddania\":\"2025-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]"));
 
@@ -200,6 +216,7 @@ class SupabaseClientTest {
                         () -> assertTrue(result.contains("201"))
                 );
             }
+
 
 
         }
@@ -434,7 +451,11 @@ class SupabaseClientTest {
             @DisplayName("Test Delete Wypozyczenia")
             void testDeleteWypozyczenia() {
                 when(webClient.delete()).thenReturn(requestHeadersUriSpec);
-                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                    uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"deleted\":true}"));
 
@@ -442,6 +463,7 @@ class SupabaseClientTest {
 
                 assertTrue(result.contains("deleted"));
             }
+
 
 
         }
@@ -627,6 +649,25 @@ class SupabaseClientTest {
         @Test
         @DisplayName("Test Post Kary")
         void testPostKary() {
+            ArgumentCaptor<Map<String, Object>> captor = ArgumentCaptor.forClass(Map.class);
+            when(webClient.post()).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
+            when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
+            when(requestBodySpec.bodyValue(captor.capture())).thenReturn(requestHeadersSpec);
+            when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+            when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
+
+            String result = supabaseClient.addKara(20.5,"2025-04-17","2025-04-18",1);
+
+
+            Map<String, Object> sentData = captor.getValue();
+            assertEquals("2025-04-17", sentData.get("Data_Wydania_Kary"));
+            assertTrue(result.contains("success"));
+        }
+
+        @Test
+        @DisplayName("Test Post Kary z null")
+        void testPostKarywithnull() {
             when(webClient.post()).thenReturn(requestBodyUriSpec);
             when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
             when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
@@ -687,8 +728,37 @@ class SupabaseClientTest {
         @Test
         @DisplayName("Test Post Wypozyczenia")
         void testPostWypozyczenia() {
+            ArgumentCaptor<Map<String, Object>> captor = ArgumentCaptor.forClass(Map.class);
+
             when(webClient.post()).thenReturn(requestBodyUriSpec);
-            when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
+            when(requestBodyUriSpec.uri(anyString())).thenAnswer(invocation -> {
+                String uri = invocation.getArgument(0);
+                URI.create(uri);
+                return requestBodySpec;
+            });
+            when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
+            when(requestBodySpec.bodyValue(captor.capture())).thenReturn(requestHeadersSpec);
+            when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+            when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
+
+            String result = supabaseClient.addWypozyczenie("2025-04-16", "2025-04-17", "2025-04-18", 1, 101);
+
+            Map<String, Object> actualData = captor.getValue();
+            assertEquals("2025-04-16", actualData.get("Data_Wypozyczenia"));
+            assertEquals("2025-04-17", actualData.get("Data_Oddania"));
+            assertTrue(result.contains("success"));
+        }
+
+        @Test
+        @DisplayName("Test Post Wypozyczenia z null")
+        void testPostWypozyczeniawithnull() {
+
+            when(webClient.post()).thenReturn(requestBodyUriSpec);
+            when(requestBodyUriSpec.uri(anyString())).thenAnswer(invocation -> {
+                String uri = invocation.getArgument(0);
+                URI.create(uri);
+                return requestBodySpec;
+            });
             when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
             when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
             when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
@@ -698,6 +768,7 @@ class SupabaseClientTest {
 
             assertTrue(result.contains("success"));
         }
+
 
 
     }
@@ -1063,7 +1134,11 @@ class SupabaseClientTest {
             @DisplayName("Test Put Wypozyczenia with nulls")
             void testPutWypozyczenianull() {
                 when(webClient.put()).thenReturn(requestBodyUriSpec);
-                when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
+                when(requestBodyUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                    uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestBodySpec;
+                });
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
@@ -1073,6 +1148,7 @@ class SupabaseClientTest {
 
                 assertTrue(result.contains("success"));
             }
+
 
         }
 
@@ -1227,5 +1303,193 @@ class SupabaseClientTest {
 
             }
         }
+    }
+
+
+
+        @Nested
+        @DisplayName("Testy pozostalych, wyspecjalizowanych getow")
+        class specGettest {
+
+            static Stream<Arguments> getKsiazkaFiltrdata() {
+                return Stream.of(
+                        Arguments.of(1, "Silmarillion", "Fantasy", "1977-09-15", "John", "Tolkien", 101),
+                        Arguments.of(null, null, null, null, null, null, null)
+                );
+            }
+
+            @ParameterizedTest
+            @DisplayName("getKsiazkaFiltr Testy polaczenia + filtrowania")
+            @MethodSource("getKsiazkaFiltrdata")
+            void testgetKsiazkaFiltrdata(Integer id, String tytul, String gatunek, String dataWydania, String autorImie, String autorNazwisko, Integer idPlacowki) throws JSONException {
+
+                String ksiazkiResponse = "[{\"id\":1,\"Tytul\":\"Silmarillion\",\"Gatunek\":\"Fantasy\",\"Data_Wydania\":\"1977-09-15\",\"id_autora\":101,\"id_placowki\":201}]";
+                String autorzyResponse = "[{\"id\":101,\"Imie\":\"John\",\"Nazwisko\":\"Tolkien\"}]";
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                    uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
+
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+
+                when(responseSpec.bodyToMono(String.class))
+                        .thenReturn(Mono.just(ksiazkiResponse))
+                        .thenReturn(Mono.just(autorzyResponse));
+
+                String result = supabaseClient.getKsiazkaFiltr(id, tytul, gatunek, dataWydania, autorImie, autorNazwisko, idPlacowki);
+
+                assertNotNull(result);
+                JSONArray resultArray = new JSONArray(result);
+                assertEquals(1, resultArray.length());
+                assertEquals("Silmarillion", resultArray.getJSONObject(0).getString("Tytul"));
+            }
+
+            @ParameterizedTest
+            @DisplayName("getKsiazkaFiltr Testy polaczenia + filtrowania")
+            @MethodSource("getKsiazkaFiltrdata")
+            void testgetKsiazkaFiltrdata2(Integer id, String tytul, String gatunek, String dataWydania, String autorImie, String autorNazwisko, Integer idPlacowki) throws JSONException {
+
+                String ksiazkiResponse = "[{\"id\":1,\"Tytul\":\"Silmarillion\",\"Gatunek\":\"Fantasy\",\"Data_Wydania\":\"1977-09-15\",\"id_autora\":101,\"id_placowki\":201}]";
+                String autorzyResponse = "[{\"id\":102,\"Imie\":\"Andrzej\",\"Nazwisko\":\"Sapkowski\"}]";
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                    uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
+
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class))
+                        .thenReturn(Mono.just(ksiazkiResponse))
+                        .thenReturn(Mono.just(autorzyResponse));
+
+                String result = supabaseClient.getKsiazkaFiltr(id, tytul, gatunek, dataWydania, autorImie, autorNazwisko, idPlacowki);
+
+                assertNotNull(result);
+                JSONArray resultArray = new JSONArray(result);
+                assertEquals(0, resultArray.length());
+            }
+
+
+            @Test
+            @DisplayName("getKsiazkaFiltr Testy SupabaseConnectionException")
+            void testgetKsiazkaFiltrdataThrowsSupabaseConnectionException() {
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenThrow(new RuntimeException("Connection error"));
+
+                assertThrows(SupabaseConnectionException.class, () -> {
+                    supabaseClient.getKsiazkaFiltr(1, null, null, null, null, null, null);
+                });
+            }
+
+            @Test
+            @DisplayName("getKsiazkaFiltr Testy JsonFileException dla extractAutorIds")
+            void testgetKsiazkaFiltrdataextractAutorIdsThrowsJsonFileException() {
+                String invalidJson = "invalid_json";
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class))
+                        .thenReturn(Mono.just("[{\"id\":1,\"Tytul\":\"Silmarillion\",\"id_autora\":101}]"))
+                        .thenReturn(Mono.just(invalidJson));
+
+                assertThrows(JsonFileException.class, () -> {
+                    supabaseClient.getKsiazkaFiltr(1, null, null, null, "Jan", "Kowalski", null);
+                });
+            }
+
+
+            @Test
+            @DisplayName("getKsiazkaFiltr Testy JsonFileException dla filterKsiazkiByAutor")
+            void testgetKsiazkaFiltrdatafilterKsiazkiByAutorThrowsJsonFileException() {
+                String invalidJson = "invalid_json";
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class))
+                        .thenReturn(Mono.just(invalidJson))
+                        .thenReturn(Mono.just("[{\"id\":1,\"Imie\":\"Jan\",\"Nazwisko\":\"Kowalski\"}]"));
+
+                assertThrows(JsonFileException.class, () -> {
+                    supabaseClient.getKsiazkaFiltr(null, null, null, null, "Jan", "Kowalski", null);
+                });
+            }
+
+            @Test
+            @DisplayName("getUzytkownicyLogin Test poprawnego dzialania")
+            void testgetUzytkownicyLogin() {
+                String mockResponse = "[{\"id\":1,\"Nazwa_Uzytkownika\":\"testuser\"}]";
+                String login = "testuser";
+                String password = "password123";
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFunction = invocation.getArgument(0);
+                    uriFunction.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(mockResponse));
+
+                String result = supabaseClient.getUzytkownicyLogin(login, password);
+
+                assertEquals(mockResponse, result);
+            }
+
+            @Test
+            @DisplayName("getUzytkownicyLogin Test InstanceNotFoundException")
+            void testgetUzytkownicyLoginThrowsInstanceNotFoundException() {
+                String login = "wronglogin";
+                String password = "wrongpass";
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFunction = invocation.getArgument(0);
+                    uriFunction.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
+
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.empty());
+
+                assertThrows(InstanceNotFoundException.class, () ->
+                        supabaseClient.getUzytkownicyLogin(login, password));
+                }
+
+            @Test
+            @DisplayName("getUzytkownicyLogin Test SupabaseConnectionException")
+            void testgetUzytkownicyLoginThrowsSupabaseConnectionException() {
+                String login = "username";
+                String password = "password";
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenThrow(new RuntimeException("Connection error"));
+
+                SupabaseConnectionException ex = assertThrows(SupabaseConnectionException.class, () ->
+                        supabaseClient.getUzytkownicyLogin(login, password));
+
+                assertTrue(ex.getMessage().contains("Failed to fetch user"));
+            }
+        }
+
+        @Test
+        @DisplayName("Nieudane polaczenie do bazy danych")
+        void SupabaseClientThrowsSupabaseConnectionException(){
+
+            Mockito.when(webClientBuilder.baseUrl(Mockito.anyString()))
+                    .thenThrow(new RuntimeException("Failed to build WebClient"));
+
+            assertThrows(SupabaseConnectionException.class, () -> {
+                new SupabaseClient(webClientBuilder);
+            });
     }
 }
