@@ -411,7 +411,7 @@ private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
 
     private String updateData(String table, int id, Map<String, Object> requestBody) {
         try {
-            return webClient.put()
+            return webClient.patch()
                     .uri(uriBuilder -> uriBuilder.path("/" + table)
                             .queryParam("id", "eq." + id).build())
                     .contentType(MediaType.APPLICATION_JSON)

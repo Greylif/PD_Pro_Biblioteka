@@ -14,7 +14,7 @@ public class Validator {
     private static final int MIN_WIEK = 18;
     private static final int MAX_WIEK = 100;
     private static final Pattern POLSKI_ADRES_PATTERN = Pattern.compile(
-            "^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?: [A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż]+){0,256} \\d+[A-Za-z]?,? (\\d{2}-\\d{3}) [A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?: [A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż]+){0,256}$"
+            "^[A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?: [A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż0-9.]+){0,256} \\d+[A-Za-z]?,? (\\d{2}-\\d{3}) [A-ZĄĆĘŁŃÓŚŹŻ][a-ząćęłńóśźż]+(?: [A-ZĄĆĘŁŃÓŚŹŻa-ząćęłńóśźż]+){0,256}$"
     );
 
     private Validator() {}

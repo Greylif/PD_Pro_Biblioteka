@@ -938,7 +938,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Admini")
             void testPutAdmini() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -953,7 +953,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Admini with nulls")
             void testPutAdmininull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -968,7 +968,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Autorzy")
             void testPutAutorzy() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -983,7 +983,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Autorzy with nulls")
             void testPutAutorzynull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -998,7 +998,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Kary")
             void testPutKary() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1013,7 +1013,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Kary with nulls")
             void testPutKarynull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1028,7 +1028,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Ksiazki")
             void testPutKsiazki() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1043,7 +1043,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Ksiazki with nulls")
             void testPutKsiazkinull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1058,7 +1058,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Placowki")
             void testPutPlacowki() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1073,7 +1073,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Placowki with nulls")
             void testPutPlacowkinull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1088,7 +1088,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Uzytkownicy")
             void testPutUzytkownicy() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1103,7 +1103,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Uzytkownicy with nulls")
             void testPutUzytkownicynull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1118,7 +1118,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Wypozyczenia")
             void testPutWypozyczenia() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
                 when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec);
@@ -1133,7 +1133,7 @@ class SupabaseClientTest {
             @Test
             @DisplayName("Test Put Wypozyczenia with nulls")
             void testPutWypozyczenianull() {
-                when(webClient.put()).thenReturn(requestBodyUriSpec);
+                when(webClient.patch()).thenReturn(requestBodyUriSpec);
                 when(requestBodyUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
                     Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
                     uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
