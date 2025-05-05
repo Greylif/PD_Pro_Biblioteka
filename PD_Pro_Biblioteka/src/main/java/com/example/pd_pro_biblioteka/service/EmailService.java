@@ -25,7 +25,10 @@ import java.util.stream.Collectors;
 public class EmailService {
     private final JavaMailSender mailSender;
     private final WebClient webClient;
-
+    private static final String TERMIN_ODDANIA = "Termin_Oddania";
+    private static final String EMAIL = "Email";
+    private static final String TYTUL = "Tytul";
+    private static final String DATA_ODDANIA = "Data_Oddania";
     public EmailService(JavaMailSender mailSender, WebClient.Builder webClientBuilder) {
         this.mailSender = mailSender;
         try {
@@ -60,10 +63,10 @@ public class EmailService {
         System.out.println(Arrayout + "\n");
         for(int i = 0; i < Arrayout.length(); i++) {
             JSONObject obj = Arrayout.getJSONObject(i);
-            LocalDate termin = LocalDate.parse(obj.getString("Termin_Oddania"));
-            Object data_oddania = obj.opt("Data_Oddania");
+            LocalDate termin = LocalDate.parse(obj.getString(TERMIN_ODDANIA));
+            Object data_oddania = obj.opt(DATA_ODDANIA);
             if((termin.minusDays(3)).isBefore(LocalDate.now()) && (data_oddania == null)) {
-                sendEmail(obj.getString("Email"), "Przypomnienie o oddaniu ksiazki", "Termin oddania ksiazki o tytule: " + obj.getString("Tytul") + " mija: "+ obj.getString("Termin_Oddania"));
+                sendEmail(obj.getString(EMAIL), "Przypomnienie o oddaniu ksiazki", "Termin oddania ksiazki o tytule: " + obj.getString(TYTUL) + " mija: "+ obj.getString(TERMIN_ODDANIA));
                 System.out.println("\nSent: \n" + i);
             }
         }
@@ -91,7 +94,7 @@ public class EmailService {
             return polaczWypozyczeniaZEmail(wypozyczeniaData, uzytkownicyZEmail, ksiazkiZTytulami);
 
         } catch (SupabaseConnectionException e) {
-            throw e;
+            throw new SupabaseConnectionException("Failed to connect to Supabase: ", e);
         }
     }
 
@@ -128,7 +131,7 @@ public class EmailService {
             JSONArray uzytkownicyJson = new JSONArray(uzytkownicyData);
             for (int i = 0; i < uzytkownicyJson.length(); i++) {
                 JSONObject user = uzytkownicyJson.getJSONObject(i);
-                mapIdEmail.put(user.getInt("id"), user.getString("Email"));
+                mapIdEmail.put(user.getInt("id"), user.getString(EMAIL));
             }
             return mapIdEmail;
 
@@ -172,7 +175,7 @@ public class EmailService {
             JSONArray ksiazkiJson = new JSONArray(ksiazkiData);
             for (int i = 0; i < ksiazkiJson.length(); i++) {
                 JSONObject ksiazka = ksiazkiJson.getJSONObject(i);
-                mapIdTytul.put(ksiazka.getInt("id"), ksiazka.getString("Tytul"));
+                mapIdTytul.put(ksiazka.getInt("id"), ksiazka.getString(TYTUL));
             }
             return mapIdTytul;
 
@@ -198,10 +201,10 @@ public class EmailService {
                 String tytul = ksiazkiTytuly.get(ksiazkaId);
 
                 JSONObject merged = new JSONObject();
-                merged.put("Email", email);
-                merged.put("Tytul", tytul);
-                merged.put("Termin_Oddania", wypozyczenie.getString("Termin_Oddania"));
-                merged.put("Data_Oddania", wypozyczenie.opt("Data_Oddania"));
+                merged.put(EMAIL, email);
+                merged.put(TYTUL, tytul);
+                merged.put(TERMIN_ODDANIA, wypozyczenie.getString(TERMIN_ODDANIA));
+                merged.put(DATA_ODDANIA, wypozyczenie.opt(DATA_ODDANIA));
                 resultArray.put(merged);
             }
         return resultArray;

@@ -7,7 +7,6 @@ import com.example.pd_pro_biblioteka.model.Placowka;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 public class Validator {
