@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/library")
 public class Control {
+
     private final SupabaseClient supabaseService;
 
     public Control(SupabaseClient supabaseService) {
@@ -166,8 +167,10 @@ public class Control {
                                    @RequestParam(required = false) String Nazwa_Uzytkownika,
                                    @RequestParam(required = false) String Haslo,
                                    @RequestParam(required = false) String Email,
-                                   @RequestParam(required = false) Boolean Zablokowany) {
-        return supabaseService.updateUzytkownik(id, imie, nazwisko, Data_Urodzenia, Nazwa_Uzytkownika, Haslo, Email, Zablokowany);
+                                   @RequestParam(required = false) Boolean Zablokowany,
+                                   @RequestParam(required = false) Boolean mfaEnabled,
+                                   @RequestParam(required = false) String mfaSecret) {
+        return supabaseService.updateUzytkownik(id, imie, nazwisko, Data_Urodzenia, Nazwa_Uzytkownika, Haslo, Email, Zablokowany, mfaEnabled, mfaSecret);
     }
 
     @GetMapping("/uzytkownicy/{login_1}/{password}")
@@ -198,8 +201,10 @@ public class Control {
                               @RequestParam(required = false) String nazwisko,
                               @RequestParam(required = false) String nazwaUzytkownika,
                               @RequestParam(required = false) String haslo,
-                              @RequestParam(required = false) Integer idPlacowki) {
-        return supabaseService.updateAdmin(id, imie, nazwisko, nazwaUzytkownika, haslo, idPlacowki);
+                              @RequestParam(required = false) Integer idPlacowki,
+                              @RequestParam(required = false) Boolean mfaEnabled,
+                              @RequestParam(required = false) String mfaSecret) {
+        return supabaseService.updateAdmin(id, imie, nazwisko, nazwaUzytkownika, haslo, idPlacowki, mfaEnabled, mfaSecret);
     }
 
     @GetMapping("/autorzy")

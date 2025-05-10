@@ -3,12 +3,8 @@ package com.example.pd_pro_biblioteka;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.service.EmailService;
-import com.example.pd_pro_biblioteka.service.SupabaseClient;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,13 +18,10 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.shadow.com.univocity.parsers.common.NoopProcessorErrorHandler.instance;
 import static org.mockito.Mockito.*;
 
 class EmailServiceTest {

@@ -295,12 +295,14 @@ public class ControlTest {
         @DisplayName("Aktualizacja admina")
         void updateAdmin() {
             Mockito.when(supabaseClient.updateAdmin(
-                            Mockito.eq(1),
-                            Mockito.eq("Jan"),
-                            Mockito.eq("Kowalski"),
-                            Mockito.eq("usernameadmin"),
-                            Mockito.eq("adminpass"),
-                            Mockito.eq(101)))
+                            1,
+                            "Jan",
+                            "Kowalski",
+                            "usernameadmin",
+                            "adminpass",
+                            101,
+                            false,
+                            "testkey"))
                     .thenReturn("Admin zaktualizowany");
 
             try {
@@ -316,10 +318,10 @@ public class ControlTest {
         @DisplayName("Aktualizacja Autora")
         void updateAutor() {
             Mockito.when(supabaseClient.updateAutor(
-                            Mockito.eq(1),
-                            Mockito.eq("John"),
-                            Mockito.eq("Tolkien"),
-                            Mockito.eq(1893)))
+                            1,
+                            "John",
+                            "Tolkien",
+                            1893))
                     .thenReturn("Autor zaktualizowany");
 
             try {
@@ -335,12 +337,12 @@ public class ControlTest {
         @DisplayName("Aktualizacja kary")
         void updateKary() {
             Mockito.when(supabaseClient.updateKara(
-                            Mockito.eq(1),
-                            Mockito.eq(20.5),
-                            Mockito.eq("2025-04-16"),
-                            Mockito.eq("2025-04-18"),
-                            Mockito.eq(Boolean.FALSE),
-                            Mockito.eq(101)))
+                            1,
+                            20.5,
+                            "2025-04-16",
+                            "2025-04-18",
+                            Boolean.FALSE,
+                            101))
                     .thenReturn("Kara zaktualizowana");
 
             try {
@@ -357,13 +359,13 @@ public class ControlTest {
         @DisplayName("Aktualizacja ksiazek")
         void updateKsiazka() {
             Mockito.when(supabaseClient.updateKsiazka(
-                            Mockito.eq(1),
-                            Mockito.eq("Silmaril"),
-                            Mockito.eq("Fantasy"),
-                            Mockito.eq("1977"),
-                            Mockito.eq("2025-04-16"),
-                            Mockito.eq(101),
-                            Mockito.eq(201)))
+                            1,
+                            "Silmaril",
+                            "Fantasy",
+                            "1977",
+                            "2025-04-16",
+                            101,
+                            201))
                     .thenReturn("Ksiazka zaktualizowana");
 
             try {
@@ -378,7 +380,7 @@ public class ControlTest {
         @Test
         @DisplayName("Aktualizacja placowki")
         void updatePlacowka() {
-            Mockito.when(supabaseClient.updatePlacowka(Mockito.eq(1), Mockito.eq("Nowy Adres")))
+            Mockito.when(supabaseClient.updatePlacowka(1, "Nowy Adres"))
                     .thenReturn("Placowka zaktualizowana");
 
             try {
@@ -394,14 +396,16 @@ public class ControlTest {
         @DisplayName("Aktualizacja uzytkownika")
         void updateUzytkownik() {
             Mockito.when(supabaseClient.updateUzytkownik(
-                            Mockito.eq(1),
-                            Mockito.eq("Jan"),
-                            Mockito.eq("Kowalski"),
-                            Mockito.eq("2000-01-01"),
-                            Mockito.eq("user"),
-                            Mockito.eq("pass"),
-                            Mockito.eq("s092677@student.tu.kielce.pl"),
-                            Mockito.eq(Boolean.FALSE)))
+                            1,
+                            "Jan",
+                            "Kowalski",
+                            "2000-01-01",
+                            "user",
+                            "pass",
+                            "s092677@student.tu.kielce.pl",
+                            Boolean.FALSE,
+                            Boolean.FALSE,
+                            "testowyklucz"))
                     .thenReturn("Uzytkownik zaktualizowany");
 
             try {
@@ -417,13 +421,14 @@ public class ControlTest {
         @DisplayName("Aktualizacja wypozyczenia")
         void updateWypozyczenia() {
             Mockito.when(supabaseClient.updateWypozyczenie(
-                            Mockito.eq(1),
-                            Mockito.eq("2025-04-16"),
-                            Mockito.eq("2025-04-17"),
-                            Mockito.eq("2025-04-18"),
-                            Mockito.eq(101),
-                            Mockito.eq(201)))
+                            1,
+                            "2025-04-16",
+                            "2025-04-17",
+                            "2025-04-18",
+                            101,
+                            201))
                     .thenReturn("Wpozyczenie zaktualizowane");
+
 
             try {
                 mockMvc.perform(put("/library/wypozyczenia/1")

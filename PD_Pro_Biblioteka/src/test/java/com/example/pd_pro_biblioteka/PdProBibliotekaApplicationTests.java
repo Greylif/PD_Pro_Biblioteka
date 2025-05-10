@@ -4,6 +4,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 @SpringBootTest
 class PdProBibliotekaApplicationTests {
 
@@ -15,7 +17,7 @@ class PdProBibliotekaApplicationTests {
 	@Test
 	@DisplayName("maintest")
 	void testMain() {
-		PdProBibliotekaApplication.main(new String[]{});
+		assertDoesNotThrow(() -> PdProBibliotekaApplication.main(new String[]{}));
 	}
 
 

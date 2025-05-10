@@ -207,7 +207,7 @@ public class SupabaseClient {
         return updateData(KSIAZKA, id, data);
     }
 
-    public String updateUzytkownik(int id, String imie, String nazwisko, String Data_Urodzenia, String nazwaUzytkownika, String haslo, String email, Boolean Zablokowany) {
+    public String updateUzytkownik(int id, String imie, String nazwisko, String Data_Urodzenia, String nazwaUzytkownika, String haslo, String email, Boolean Zablokowany, Boolean mfaEnabled, String mfaSecret) {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
         if (nazwisko != null) data.put(NAZWISKO, nazwisko);
@@ -216,16 +216,20 @@ public class SupabaseClient {
         if (haslo != null) data.put(HASLO, haslo);
         if (email != null) data.put("Email", email);
         if (Zablokowany != null) data.put("Zablokowany", Zablokowany);
+        if (mfaEnabled != null) data.put("Mfa_Enabled", mfaEnabled);
+        if (mfaSecret != null) data.put("Mfa_Secret", mfaSecret);
         return updateData(UZYTKOWNIK, id, data);
     }
 
-    public String updateAdmin(int id, String imie, String nazwisko, String nazwaUzytkownika, String haslo, Integer idPlacowki) {
+    public String updateAdmin(int id, String imie, String nazwisko, String nazwaUzytkownika, String haslo, Integer idPlacowki, Boolean mfaEnabled, String mfaSecret) {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
         if (nazwisko != null) data.put(NAZWISKO, nazwisko);
         if (nazwaUzytkownika != null) data.put(NAZWA_UZYTKOWNIKA, nazwaUzytkownika);
         if (haslo != null) data.put(HASLO, haslo);
         if (idPlacowki != null) data.put(ID_PLACOWKI, idPlacowki);
+        if (mfaEnabled != null) data.put("Mfa_Enabled", mfaEnabled);
+        if (mfaSecret != null) data.put("Mfa_Secret", mfaSecret);
         return updateData(ADMIN, id, data);
     }
 

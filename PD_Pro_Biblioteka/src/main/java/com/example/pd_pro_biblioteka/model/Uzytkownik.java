@@ -31,6 +31,12 @@ public class Uzytkownik {
     @Setter
     @Getter
     private Boolean Zablokowany;
+    @Setter
+    @Getter
+    private Boolean mfaEnabled;
+    @Setter
+    @Getter
+    private String mfaSecret;
 
     public Uzytkownik() {}
 

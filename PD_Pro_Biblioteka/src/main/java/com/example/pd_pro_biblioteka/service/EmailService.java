@@ -76,17 +76,7 @@ public class EmailService {
         String wypozyczeniaData;
 
         try {
-            try {
-                wypozyczeniaData = webClient.get()
-                        .uri(uriBuilder -> uriBuilder
-                                .path("/Wypozyczenia")
-                                .build())
-                        .retrieve()
-                        .bodyToMono(String.class)
-                        .block();
-            } catch (Exception e) {
-                throw new SupabaseConnectionException("Failed to fetch wypozyczenia data: ", e);
-            }
+            wypozyczeniaData = fetchWypozyczeniaData();
 
             Map<Integer, String> uzytkownicyZEmail = fetchUzytkownicyEmail(wypozyczeniaData);
             Map<Integer, String> ksiazkiZTytulami = fetchKsiazkiTytuly(wypozyczeniaData);
@@ -97,6 +87,21 @@ public class EmailService {
             throw new SupabaseConnectionException("Failed to connect to Supabase: ", e);
         }
     }
+
+    private String fetchWypozyczeniaData() {
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/Wypozyczenia")
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to fetch wypozyczenia data: ", e);
+        }
+    }
+
 
 
     private Map<Integer, String> fetchUzytkownicyEmail(String wypozyczeniaData) {
@@ -110,23 +115,7 @@ public class EmailService {
                 uzytkownikIds.add(wypozyczenie.getInt("id_uzytkownika"));
             }
 
-            String idsFilter = "id=in.(" + uzytkownikIds.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(",")) + ")";
-
-            String uzytkownicyData;
-            try {
-                uzytkownicyData = webClient.get()
-                        .uri(uriBuilder -> uriBuilder
-                                .path("/Uzytkownik")
-                                .query(idsFilter)
-                                .build())
-                        .retrieve()
-                        .bodyToMono(String.class)
-                        .block();
-            } catch (Exception e) {
-                throw new SupabaseConnectionException("Failed to fetch uzytkownicy data: ", e);
-            }
+            String uzytkownicyData = fetchUzytkownicyData(uzytkownikIds);
 
             JSONArray uzytkownicyJson = new JSONArray(uzytkownicyData);
             for (int i = 0; i < uzytkownicyJson.length(); i++) {
@@ -142,6 +131,25 @@ public class EmailService {
         }
     }
 
+    private String fetchUzytkownicyData(Set<Integer> uzytkownikIds) {
+        String idsFilter = "id=in.(" + uzytkownikIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",")) + ")";
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/Uzytkownik")
+                            .query(idsFilter)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to fetch uzytkownicy data: ", e);
+        }
+    }
+
+
 
     private Map<Integer, String> fetchKsiazkiTytuly(String wypozyczeniaData) {
         Set<Integer> ksiazkaIds = new HashSet<>();
@@ -154,23 +162,7 @@ public class EmailService {
                 ksiazkaIds.add(wypozyczenie.getInt("id_ksiazki"));
             }
 
-            String idsFilter = "id=in.(" + ksiazkaIds.stream()
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(",")) + ")";
-
-            String ksiazkiData;
-            try {
-                ksiazkiData = webClient.get()
-                        .uri(uriBuilder -> uriBuilder
-                                .path("/Ksiazka")
-                                .query(idsFilter)
-                                .build())
-                        .retrieve()
-                        .bodyToMono(String.class)
-                        .block();
-            } catch (Exception e) {
-                throw new SupabaseConnectionException("Failed to fetch ksiazki data: ", e);
-            }
+            String ksiazkiData = fetchKsiazkiData(ksiazkaIds);
 
             JSONArray ksiazkiJson = new JSONArray(ksiazkiData);
             for (int i = 0; i < ksiazkiJson.length(); i++) {
@@ -185,6 +177,25 @@ public class EmailService {
             throw new JsonFileException("Failed to process ksiazki JSON", e);
         }
     }
+
+    private String fetchKsiazkiData(Set<Integer> ksiazkaIds) {
+        String idsFilter = "id=in.(" + ksiazkaIds.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(",")) + ")";
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/Ksiazka")
+                            .query(idsFilter)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to fetch ksiazki data: ", e);
+        }
+    }
+
 
 
 

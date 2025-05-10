@@ -24,6 +24,12 @@ public class Admin {
     @Setter
     @Getter
     private int id_placowki;
+    @Setter
+    @Getter
+    private Boolean mfaEnabled;
+    @Setter
+    @Getter
+    private String mfaSecret;
 
     public Admin() {}
 
