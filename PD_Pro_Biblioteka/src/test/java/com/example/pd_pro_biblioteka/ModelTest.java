@@ -186,7 +186,7 @@ public class ModelTest {
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Ksiazka z wszystkimi argumentami")
         void testAllArgs() {
-            Ksiazka ksiazka = new Ksiazka(1,"Silmarillion","Fantasy","1977-09-15","2025-04-10",1,2);
+            Ksiazka ksiazka = new Ksiazka(1,"Silmarillion","Fantasy","1977-09-15","2025-04-10",1,2,false, false);
 
             assertEquals(1, ksiazka.getId());
             assertEquals("Silmarillion", ksiazka.getTytul());
@@ -195,6 +195,8 @@ public class ModelTest {
             assertEquals("2025-04-10", ksiazka.getDodano());
             assertEquals(1, ksiazka.getId_autora());
             assertEquals(2, ksiazka.getId_placowki());
+            assertEquals(false,ksiazka.getRezerwacja());
+            assertEquals(false,ksiazka.getCzy_wyporzyczono());
         }
 
         @Test

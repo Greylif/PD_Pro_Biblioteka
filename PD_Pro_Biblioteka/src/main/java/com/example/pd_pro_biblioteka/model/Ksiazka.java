@@ -27,10 +27,16 @@ public class Ksiazka {
     @Setter
     @Getter
     private int id_placowki;
+    @Setter
+    @Getter
+    private Boolean Rezerwacja;
+    @Setter
+    @Getter
+    private Boolean czy_wyporzyczono;
 
     public Ksiazka() {}
 
-    public Ksiazka(int id, String Tytul, String Gatunek, String Data_Wydania, String Dodano, int id_autora, int id_placowki) {
+    public Ksiazka(int id, String Tytul, String Gatunek, String Data_Wydania, String Dodano, int id_autora, int id_placowki, Boolean Rezerwacja, Boolean czy_wyporzyczono) {
         this.id = id;
         this.Tytul = Tytul;
         this.Gatunek = Gatunek;
@@ -38,6 +44,8 @@ public class Ksiazka {
         this.Dodano = Dodano;
         this.id_autora = id_autora;
         this.id_placowki = id_placowki;
+        this.Rezerwacja = Rezerwacja;
+        this.czy_wyporzyczono = czy_wyporzyczono;
     }
 
 
