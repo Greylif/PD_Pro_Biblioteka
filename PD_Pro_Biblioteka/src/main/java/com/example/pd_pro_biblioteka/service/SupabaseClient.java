@@ -79,6 +79,16 @@ public class SupabaseClient {
         return fetchData("Kary", "*");
     }
 
+    public String getKary_UID(int id)
+    {
+        return fetchData_UID("Kary", "id_uzytkownika", id);
+    }
+
+    public String getWypozyczenia_UID(int id)
+    {
+        return fetchData_UID("Wypozyczenia", "id_uzytkownika", id);
+    }
+
     public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty, int idUzytkownika) {
 
         Map<String, Object> data = new HashMap<>();
@@ -285,6 +295,25 @@ public class SupabaseClient {
         throw new SupabaseConnectionException("Failed to fetch " + table + ": ", e);
     }
     }
+
+    private String fetchData_UID(String table, String filtr,int id) {
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/" + table)
+                            .queryParam("select", "*")
+                            .queryParam(filtr, "eq." + id)
+                            .build())
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        }
+        catch (Exception e)
+        {
+            throw new SupabaseConnectionException("Failed to fetch " + table + ": ", e);
+        }
+    }
+
 /*
     private String fetchData(String table, String columns) {
         return webClient.get()

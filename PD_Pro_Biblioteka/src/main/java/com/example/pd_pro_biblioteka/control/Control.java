@@ -45,6 +45,11 @@ public class Control {
         return supabaseService.getWypozyczenia();
     }
 
+    @GetMapping("/wypozyczenia/{id}")
+    public String getWypozyczenia_UID(@PathVariable int id) {
+        return supabaseService.getWypozyczenia_UID(id);
+    }
+
     @PostMapping("/wypozyczenia")
     public String addWypozyczenie(@RequestParam(required = false) String dataWypozyczenia,
                                   @RequestParam(required = false) String dataOddania,
@@ -72,6 +77,11 @@ public class Control {
     @GetMapping("/kary")
     public String getKary() {
         return supabaseService.getKary();
+    }
+
+    @GetMapping("/kary/{id}")
+    public String getKary_UID(@PathVariable int id) {
+        return supabaseService.getKary_UID(id);
     }
 
     @PostMapping("/kary")
