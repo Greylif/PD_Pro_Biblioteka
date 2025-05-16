@@ -89,6 +89,11 @@ public class SupabaseClient {
         return fetchData_UID("Wypozyczenia", "id_uzytkownika", id);
     }
 
+    public String getAdmin_AID(int id)
+    {
+        return fetchData_UID(ADMIN, "id", id);
+    }
+
     public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty, int idUzytkownika) {
 
         Map<String, Object> data = new HashMap<>();

@@ -191,6 +191,11 @@ public class Control {
         return supabaseService.getAdmini();
     }
 
+    @GetMapping("/admini/{id}")
+    public String getAdmini_AID(@PathVariable int id) {
+        return supabaseService.getAdmin_AID(id);
+    }
+
     @PostMapping("/admini")
     public String addAdmin(@RequestParam String imie,
                            @RequestParam String nazwisko,
