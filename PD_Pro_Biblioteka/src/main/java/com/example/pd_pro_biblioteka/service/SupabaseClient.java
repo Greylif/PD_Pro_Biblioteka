@@ -31,6 +31,8 @@ public class SupabaseClient {
     private static final String NAZWA_UZYTKOWNIKA = "Nazwa_Uzytkownika";
     private static final String ID_AUTORA = "id_autora";
     private static final String ID_PLACOWKI = "id_placowki";
+    private static final String ID_UZYTKOWNIKA = "id_uzytkownika";
+    private static final String SELECT = "select";
 
     public SupabaseClient(WebClient.Builder webClientBuilder) {
         try {
@@ -70,7 +72,7 @@ public class SupabaseClient {
         }
         data.put("Termin_Oddania", terminOddania);
         data.put("id_ksiazki", idKsiazki);
-        data.put("id_uzytkownika", idUzytkownika);
+        data.put(ID_UZYTKOWNIKA, idUzytkownika);
 
         return postData(WYPOZYCZENIA, data);
     }
@@ -81,12 +83,12 @@ public class SupabaseClient {
 
     public String getKary_UID(int id)
     {
-        return fetchData_UID("Kary", "id_uzytkownika", id);
+        return fetchData_UID("Kary", ID_UZYTKOWNIKA, id);
     }
 
     public String getWypozyczenia_UID(int id)
     {
-        return fetchData_UID("Wypozyczenia", "id_uzytkownika", id);
+        return fetchData_UID(WYPOZYCZENIA, ID_UZYTKOWNIKA, id);
     }
 
     public String getAdmin_AID(int id)
@@ -104,7 +106,7 @@ public class SupabaseClient {
 
         data.put("Kwota", kwota);
         data.put("Termin_Zaplaty", terminZaplaty);
-        data.put("id_uzytkownika", idUzytkownika);
+        data.put(ID_UZYTKOWNIKA, idUzytkownika);
 
         return postData("Kary", data);
     }
@@ -196,8 +198,8 @@ public class SupabaseClient {
         if (dataWypozyczenia != null) data.put("Data_Wypozyczenia", dataWypozyczenia);
         if (dataOddania != null) data.put("Data_Oddania", dataOddania);
         if (terminOddania != null) data.put("Termin_Oddania", terminOddania);
-        if (idKsiazki != null) data.put("ID_Ksiazki", idKsiazki);
-        if (idUzytkownika != null) data.put("ID_Uzytkownika", idUzytkownika);
+        if (idKsiazki != null) data.put("id_ksiazki", idKsiazki);
+        if (idUzytkownika != null) data.put(ID_UZYTKOWNIKA, idUzytkownika);
         return updateData(WYPOZYCZENIA, id, data);
     }
 
@@ -207,7 +209,7 @@ public class SupabaseClient {
         if (dataWydaniaKary != null) data.put("Data_Wydania_Kary", dataWydaniaKary);
         if (terminZaplaty != null) data.put("Termin_Zaplaty", terminZaplaty);
         if (czyZaplacono != null) data.put("Czy_Zaplacono", czyZaplacono);
-        if (idUzytkownika != null) data.put("ID_Uzytkownika", idUzytkownika);
+        if (idUzytkownika != null) data.put(ID_UZYTKOWNIKA, idUzytkownika);
         return updateData("Kary", id, data);
     }
 
@@ -289,7 +291,7 @@ public class SupabaseClient {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/" + table)
-                            .queryParam("select", columns)
+                            .queryParam(SELECT, columns)
                             .build())
                     .retrieve()
                     .bodyToMono(String.class)
@@ -306,7 +308,7 @@ public class SupabaseClient {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/" + table)
-                            .queryParam("select", "*")
+                            .queryParam(SELECT, "*")
                             .queryParam(filtr, "eq." + id)
                             .build())
                     .retrieve()
@@ -315,7 +317,7 @@ public class SupabaseClient {
         }
         catch (Exception e)
         {
-            throw new SupabaseConnectionException("Failed to fetch " + table + ": ", e);
+            throw new SupabaseConnectionException("Failed to fetch " + table + " by id: ", e);
         }
     }
 
@@ -324,7 +326,7 @@ public class SupabaseClient {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/" + table)
-                        .queryParam("select", columns)
+                        .queryParam(SELECT, columns)
                         .queryParam(NAZWA_UZYTKOWNIKA, "like.*user*")
                         .build())
                 .retrieve()
@@ -412,7 +414,7 @@ private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
             String login = webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/" + table)
-                            .queryParam("select", columns)
+                            .queryParam(SELECT, columns)
                             .queryParam("or", "(Nazwa_Uzytkownika.eq." + login_data + ",Email.eq." + login_data + ")")
                             .queryParam(HASLO, "eq." + password_data)
                             .build())

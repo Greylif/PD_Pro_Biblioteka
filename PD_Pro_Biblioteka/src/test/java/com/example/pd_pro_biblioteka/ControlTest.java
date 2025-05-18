@@ -182,6 +182,19 @@ public class ControlTest {
         }
 
         @Test
+        @DisplayName("Pobieranie listy adminow o konkretnym id")
+        void getAdminAID() {
+            Mockito.when(supabaseClient.getAdmin_AID(1)).thenReturn("Admin");
+
+            try {
+                mockMvc.perform(get("/library/admini/1"))
+                        .andExpect(status().isOk());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Test
         @DisplayName("Pobieranie listy autorow")
         void getAutorzy() {
             Mockito.when(supabaseClient.getAutorzy()).thenReturn("Autor");
@@ -201,6 +214,19 @@ public class ControlTest {
 
             try {
                 mockMvc.perform(get("/library/kary"))
+                        .andExpect(status().isOk());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Test
+        @DisplayName("Pobieranie kary o konkretnym id uzytkownika")
+        void getKaryUID() {
+            Mockito.when(supabaseClient.getKary_UID(1)).thenReturn("Kara");
+
+            try {
+                mockMvc.perform(get("/library/kary/1"))
                         .andExpect(status().isOk());
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -249,7 +275,7 @@ public class ControlTest {
         @Test
         @DisplayName("Pobieranie listy uzytkownikow")
         void getUzytkownicy() {
-            Mockito.when(supabaseClient.getPlacowki()).thenReturn("Uzytkownik");
+            Mockito.when(supabaseClient.getUzytkownicy()).thenReturn("Uzytkownik");
 
             try {
                 mockMvc.perform(get("/library/uzytkownicy"))
@@ -275,10 +301,23 @@ public class ControlTest {
         @Test
         @DisplayName("Pobieranie listy wyporzyczen")
         void getWypozyczenia() {
-            Mockito.when(supabaseClient.getPlacowki()).thenReturn("Wyporzyczenie");
+            Mockito.when(supabaseClient.getWypozyczenia()).thenReturn("Wyporzyczenie");
 
             try {
                 mockMvc.perform(get("/library/wypozyczenia"))
+                        .andExpect(status().isOk());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        @Test
+        @DisplayName("Pobieranie listy wyporzyczen o konkretnym id uzytkownika")
+        void getWypozyczeniaUID() {
+            Mockito.when(supabaseClient.getWypozyczenia_UID(1)).thenReturn("Wyporzyczenie");
+
+            try {
+                mockMvc.perform(get("/library/wypozyczenia/1"))
                         .andExpect(status().isOk());
             } catch (Exception e) {
                 throw new RuntimeException(e);

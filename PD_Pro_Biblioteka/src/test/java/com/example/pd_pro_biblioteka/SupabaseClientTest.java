@@ -96,6 +96,26 @@ class SupabaseClientTest {
             }
 
             @Test
+            @DisplayName("Test Get Admini AID")
+            void testGetAdminiAID() {
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1,\"id_placowki\":\"2\",\"Imie\":\"Jan\",\"Nazwisko\":\"Kowalski\",\"Haslo\":\"pass\",\"Nazwa_Uzytkownika\":\"username\" }]"));
+
+                String result = supabaseClient.getAdmin_AID(1);
+
+                assertAll(
+                        () -> assertTrue(result.contains("1")),
+                        () -> assertTrue(result.contains("2")),
+                        () -> assertTrue(result.contains("Jan")),
+                        () -> assertTrue(result.contains("Kowalski")),
+                        () -> assertTrue(result.contains("pass")),
+                        () -> assertTrue(result.contains("username"))
+                );
+            }
+
+            @Test
             @DisplayName("Test Get Autorzy")
             void testGetAutorzy() {
                 when(webClient.get()).thenReturn(requestHeadersUriSpec);
@@ -122,6 +142,27 @@ class SupabaseClientTest {
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Kwota\":25.5, \"Termin_Zaplaty\":2025-04-16, \"Czy_Zaplacono\":false, \"Data_Wydania_Kary\":2025-03-20, \"id_uzytkownika\":101}]"));
 
                 String result = supabaseClient.getKary();
+
+                assertAll(
+                        () -> assertTrue(result.contains("1")),
+                        () -> assertTrue(result.contains("25.5")),
+                        () -> assertTrue(result.contains("2025-04-16")),
+                        () -> assertTrue(result.contains("false")),
+                        () -> assertTrue(result.contains("2025-03-20")),
+                        () -> assertTrue(result.contains("101"))
+
+                );
+            }
+
+            @Test
+            @DisplayName("Test Get Kary UID")
+            void testGetKaryUID() {
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Kwota\":25.5, \"Termin_Zaplaty\":2025-04-16, \"Czy_Zaplacono\":false, \"Data_Wydania_Kary\":2025-03-20, \"id_uzytkownika\":101}]"));
+
+                String result = supabaseClient.getKary_UID(1);
 
                 assertAll(
                         () -> assertTrue(result.contains("1")),
@@ -206,6 +247,30 @@ class SupabaseClientTest {
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", \"Termin_Oddania\":\"2025-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]"));
 
                 String result = supabaseClient.getWypozyczenia();
+
+                assertAll(
+                        () -> assertTrue(result.contains("1")),
+                        () -> assertTrue(result.contains("2025-04-16")),
+                        () -> assertTrue(result.contains("2025-04-17")),
+                        () -> assertTrue(result.contains("2025-04-18")),
+                        () -> assertTrue(result.contains("101")),
+                        () -> assertTrue(result.contains("201"))
+                );
+            }
+
+            @Test
+            @DisplayName("Test Get Wypozyczenia UID")
+            void testGetWypozyczeniaUID() {
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                    uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", \"Termin_Oddania\":\"2025-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]"));
+
+                String result = supabaseClient.getWypozyczenia_UID(1);
 
                 assertAll(
                         () -> assertTrue(result.contains("1")),
@@ -354,6 +419,25 @@ class SupabaseClientTest {
                 );
 
                 assertTrue(exception.getMessage().contains("Failed to fetch Wypozyczenia"));
+                assertInstanceOf(RuntimeException.class, exception.getCause());
+
+            }
+
+            @Test
+            @DisplayName("Przyklad bledu polaczenia podczas pobierania danych przez ID klucza obcego")
+            void testGetThrowUIDex() {
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.error(new RuntimeException("Connection error")));
+
+                SupabaseConnectionException exception = assertThrows(
+                        SupabaseConnectionException.class,
+                        () -> supabaseClient.getKary_UID(1)
+                );
+                System.out.println(exception.getMessage());
+                assertTrue(exception.getMessage().contains("Failed to fetch Kary by id:"));
                 assertInstanceOf(RuntimeException.class, exception.getCause());
 
             }
