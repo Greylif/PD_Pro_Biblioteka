@@ -23,6 +23,7 @@ public class Autorzy {
     @NotNull(message = "Rok urodzenia nie moze byc pusty")
     private IntegerProperty Rok_Urodzenia = new SimpleIntegerProperty();
 
+
     public Autorzy(int id, String imie, String nazwisko, int rok_Urodzenia) {
         this.id.set(id);
         this.Imie.set(imie);
@@ -39,4 +40,5 @@ public class Autorzy {
     public String toString() {
         return "Autorzy{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Rok_Urodzenia=" + Rok_Urodzenia + "}";
     }
+
 }

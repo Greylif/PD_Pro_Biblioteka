@@ -10,7 +10,7 @@ import javafx.beans.property.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Admin {
+public class AdminModel {
     @NotNull(message = "Musi posiadac ID")
     private IntegerProperty id = new SimpleIntegerProperty();
 
@@ -29,14 +29,19 @@ public class Admin {
     @NotNull(message = "Musi miec przypisana placowke")
     private IntegerProperty id_placowki = new SimpleIntegerProperty();
 
+    private BooleanProperty Mfa_Enabled = new SimpleBooleanProperty();
+    private StringProperty Mfa_Secret = new SimpleStringProperty();
 
-    public Admin(int ID, String imie, String nazwisko, String nazwaUzytkownika, String haslo, int idPlacowki) {
+
+    public AdminModel(int ID, String imie, String nazwisko, String nazwaUzytkownika, String haslo, int idPlacowki, Boolean mfa_Enabled, String Mfa_Secret) {
         this.id.set(ID);
         this.Imie.set(imie);
         this.Nazwisko.set(nazwisko);
         this.Nazwa_Uzytkownika.set(nazwaUzytkownika);
         this.Haslo.set(haslo);
         this.id_placowki.set(idPlacowki);
+        this.Mfa_Enabled.set(mfa_Enabled);
+        this.Mfa_Secret.set(Mfa_Secret);
     }
 
     public IntegerProperty idProperty() { return id; }
@@ -45,6 +50,8 @@ public class Admin {
     public StringProperty nazwaProperty() { return Nazwa_Uzytkownika; }
     public StringProperty hasloProperty() { return Haslo; }
     public IntegerProperty id_placowkiProperty() { return id_placowki; }
+    public BooleanProperty mfa_EnabledProperty() { return Mfa_Enabled; }
+    public StringProperty mfa_SecretProperty() { return Mfa_Secret; }
 
     @Override
     public String toString() {

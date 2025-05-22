@@ -2,6 +2,7 @@ package com.example.pd_pro_biblioteka_client.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import javafx.beans.property.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,24 +14,54 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ksiazka {
-    @NotNull(message = "Musi posiadac ID")
-    private int id;
-    @NotBlank(message = "Tytul nie moze byc pusty")
-    private String Tytul;
-    @NotBlank(message = "Gatunek nie moze byc pusty")
-    private String Gatunek;
-    @NotNull(message = "Data wydania nie moze byc pusta")
-    private LocalDate Data_Wydania;
-    @NotNull(message = "Data dodania nie moze byc pusta")
-    private LocalDateTime Dodano;
-    @NotNull(message = "Ksiazka musi miec przypisanego autora")
-    private int id_autora;
-    @NotNull(message = "Ksiazka musi byc przypisana do placowki")
-    private int id_placowki;
+    @NotNull(message = "Musi posiadać ID")
+    private IntegerProperty id = new SimpleIntegerProperty();
+
+    @NotBlank(message = "Tytuł nie może być pusty")
+    private StringProperty tytul = new SimpleStringProperty();
+
+    @NotBlank(message = "Gatunek nie może być pusty")
+    private StringProperty gatunek = new SimpleStringProperty();
+
+    @NotNull(message = "Data wydania nie może być pusta")
+    private IntegerProperty dataWydania = new SimpleIntegerProperty();
+
+    @NotNull(message = "Data dodania nie może być pusta")
+    private StringProperty dodano = new SimpleStringProperty();
+
+    @NotNull(message = "Książka musi mieć przypisanego autora")
+    private IntegerProperty idAutora = new SimpleIntegerProperty();
+
+    @NotNull(message = "Książka musi być przypisana do placówki")
+    private IntegerProperty idPlacowki = new SimpleIntegerProperty();
+
+    private BooleanProperty Rezerwacja = new SimpleBooleanProperty();
+
+    private BooleanProperty Wypozyczenie = new SimpleBooleanProperty();
 
 
-    @Override
-    public String toString() {
-        return "Ksiazka{id=" + id + ", Tytul='" + Tytul + "', Gatunek='" + Gatunek + "', Data_Wydania=" + Data_Wydania + ", Dodano=" + Dodano + ", id_autora=" + id_autora + ", id_placowki=" + id_placowki + '}';
+
+    public Ksiazka(int id, String tytul, String gatunek, int dataWydania, String dodano, int idAutora, int idPlacowki, Boolean rezerwacja, Boolean wypozyczenia) {
+        this.id.set(id);
+        this.tytul.set(tytul);
+        this.gatunek.set(gatunek);
+        this.dataWydania.set(dataWydania);
+        this.dodano.set(dodano);
+        this.idAutora.set(idAutora);
+        this.idPlacowki.set(idPlacowki);
+        this.Rezerwacja.set(rezerwacja);
+        this.Wypozyczenie.set(wypozyczenia);
     }
+
+
+    public IntegerProperty idProperty() { return id; }
+    public StringProperty tytulProperty() { return tytul; }
+    public StringProperty gatunekProperty() { return gatunek; }
+    public IntegerProperty dataWydaniaProperty() { return dataWydania; }
+    public StringProperty dodanoProperty() { return dodano; }
+    public IntegerProperty idAutoraProperty() { return idAutora; }
+    public IntegerProperty idPlacowkiProperty() { return idPlacowki; }
+    public BooleanProperty RezerwacjaProperty() { return Rezerwacja; }
+    public BooleanProperty WypozyczenieProperty() { return Wypozyczenie; }
+
 }

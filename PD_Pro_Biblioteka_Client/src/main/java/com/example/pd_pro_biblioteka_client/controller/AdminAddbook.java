@@ -12,7 +12,7 @@ public class AdminAddbook {
 
     public TextField a_title;
     public TextField a_genre;
-    public DatePicker a_relaseDate;
+    public TextField a_relaseDate;
     public TextField au_name;
     public TextField au_surname;
     public Button add_button;

@@ -24,7 +24,7 @@ public class Uzytkownik {
     private StringProperty Nazwisko = new SimpleStringProperty();
 
     @NotNull(message = "Wiek nie moze byc pusty")
-    private ObjectProperty<LocalDateTime> Data_urodzenia = new SimpleObjectProperty<>();
+    private StringProperty Data_urodzenia = new SimpleStringProperty();
 
     @NotBlank(message = "Haslo nie moze byc puste")
     private StringProperty Haslo = new SimpleStringProperty();
@@ -36,7 +36,11 @@ public class Uzytkownik {
     @NotBlank(message = "Email nie moze byc pusty")
     private StringProperty Email = new SimpleStringProperty();
 
-    public Uzytkownik(int ID, String imie, String nazwisko, LocalDateTime dataUrodzenia, String haslo, String nazwa_uzytkownika, String email ) {
+    private BooleanProperty Zablokowany = new SimpleBooleanProperty();
+    private BooleanProperty Mfa_Enabled = new SimpleBooleanProperty();
+    private StringProperty Mfa_Secret = new SimpleStringProperty();
+
+    public Uzytkownik(int ID, String imie, String nazwisko, String dataUrodzenia, String haslo, String nazwa_uzytkownika, String email, boolean zablokowany, boolean Mfa_Enabled, String Mfa_Secret ) {
         this.id.set(ID);
         this.Imie.set(imie);
         this.Nazwisko.set(nazwisko);
@@ -44,12 +48,15 @@ public class Uzytkownik {
         this.Haslo.set(haslo);
         this.Nazwa_Uzytkownika.set(nazwa_uzytkownika);
         this.Email.set(email);
+        this.Zablokowany.set(zablokowany);
+        this.Mfa_Enabled.set(Mfa_Enabled);
+        this.Mfa_Secret.set(Mfa_Secret);
     }
 
     public IntegerProperty idProperty() {return id;}
     public StringProperty imieProperty() {return Imie;}
     public StringProperty nazwiskoProperty() {return Nazwisko;}
-    public ObjectProperty<LocalDateTime> wiekProperty() {return Data_urodzenia;}
+    public StringProperty wiekProperty() {return Data_urodzenia;}
     public StringProperty hasloProperty() {return Haslo;}
     public StringProperty nazwaProperty() {return Nazwa_Uzytkownika;}
     public StringProperty emailProperty() {return Email;}

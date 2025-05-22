@@ -30,8 +30,8 @@
     <Region prefHeight="20"/>
 
     <VBox alignment="CENTER_LEFT" spacing="5">
-        <Label text="Data wydania"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <DatePicker fx:id="a_relaseDate" prefWidth="600" style="-fx-font-size: 16px;"/>
+        <Label text="Rok Wydania"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
+        <TextField fx:id="a_relaseDate" prefWidth="600" style="-fx-font-size: 16px;"/>
     </VBox>
 
     <Region prefHeight="20"/>

@@ -1,9 +1,7 @@
 package com.example.pd_pro_biblioteka_client.model;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import javafx.beans.property.*;
 
 import java.time.LocalDateTime;
@@ -19,30 +17,47 @@ public class Kary {
     private DoubleProperty Kwota = new SimpleDoubleProperty();
 
     @NotNull(message = "Data wydania kary nie moze byc pusta")
-    private ObjectProperty<LocalDateTime> Data_Wydania_Kary = new SimpleObjectProperty<>();
-    private ObjectProperty<LocalDateTime> Termin_Zaplaty = new SimpleObjectProperty<>();
+    private StringProperty Data_Wydania_Kary = new SimpleStringProperty();
+    private StringProperty Termin_Zaplaty = new SimpleStringProperty();
     private BooleanProperty Czy_Zaplacono = new SimpleBooleanProperty();
 
     @NotNull(message = "Musi byc przypisany uzytkownik")
     private IntegerProperty id_uzytkownika = new SimpleIntegerProperty();
 
-    public Kary(int ID, double kwota, LocalDateTime dataWydaniaKary, LocalDateTime terminZaplaty, Boolean czyZaplacono) {
+
+    private StringProperty autorName = new SimpleStringProperty();
+    private StringProperty bookTitle = new SimpleStringProperty();
+
+
+    public Kary(int ID, double kwota, String dataWydaniaKary, String terminZaplaty, Boolean czyZaplacono, int id_uzytkownika) {
         this.id.set(ID);
         this.Kwota.set(kwota);
         this.Data_Wydania_Kary.set(dataWydaniaKary);
         this.Termin_Zaplaty.set(terminZaplaty);
         this.Czy_Zaplacono.set(czyZaplacono);
+        this.id_uzytkownika.set(id_uzytkownika);
     }
 
     public IntegerProperty idProperty() {return id;}
     public DoubleProperty KwotaProperty() {return Kwota;}
-    public ObjectProperty<LocalDateTime> Data_Wydania_Kary_Property() {return Data_Wydania_Kary;}
-    public ObjectProperty<LocalDateTime> Termin_Zaplaty_Property() {return Termin_Zaplaty;}
+    public StringProperty Data_Wydania_Kary_Property() {return Data_Wydania_Kary;}
+    public StringProperty Termin_Zaplaty_Property() {return Termin_Zaplaty;}
     public BooleanProperty CzyZaplaconoProperty() {return Czy_Zaplacono;}
+    public IntegerProperty id_uzytkownikaProperty() {return id_uzytkownika;}
 
 
     @Override
     public String toString() {
         return "Kary{id=" + id + ", Kwota=" + Kwota + ", Data_Wydania_Kary=" + Data_Wydania_Kary + ", Termin_Zaplaty=" + Termin_Zaplaty + ", Czy_Zaplacono=" + Czy_Zaplacono + ", id_uzytkownika=" + id_uzytkownika + "}";
     }
+
+    public StringProperty autorNameProperty() {return autorName;}
+    public String getAutorName() {return autorName.get();}
+    public void setAutorName(String autorName) {this.autorName.set(autorName);}
+
+    public StringProperty bookTitleProperty() { return bookTitle; }
+    public String getBookTitle() { return bookTitle.get(); }
+    public void setBookTitle(String bookTitle) { this.bookTitle.set(bookTitle); }
+
+
 }

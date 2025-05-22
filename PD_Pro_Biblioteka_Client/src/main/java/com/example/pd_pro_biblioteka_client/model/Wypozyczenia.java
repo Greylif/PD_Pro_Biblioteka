@@ -16,11 +16,11 @@ public class Wypozyczenia {
     private IntegerProperty id = new SimpleIntegerProperty();
 
     @NotNull(message = "Data wypozyczenia nie moze byc pusta")
-    private ObjectProperty<LocalDateTime> Data_Wypozyczenia = new SimpleObjectProperty<>();
-    private ObjectProperty<LocalDateTime> Data_Oddania = new SimpleObjectProperty<>();
+    private StringProperty Data_Wypozyczenia = new SimpleStringProperty();
+    private StringProperty Data_Oddania = new SimpleStringProperty();
 
     @NotNull(message = "Termin oddania nie moze byc pusty")
-    private ObjectProperty<LocalDateTime> Termin_Oddania = new SimpleObjectProperty<>();
+    private StringProperty Termin_Oddania = new SimpleStringProperty();
 
     @NotNull(message = "Musi byc przypisana ksiazka")
     private IntegerProperty id_ksiazki = new SimpleIntegerProperty();
@@ -28,7 +28,14 @@ public class Wypozyczenia {
     @NotNull(message = "Musi byc przypisany uzytkownik")
     private IntegerProperty id_uzytkownika = new SimpleIntegerProperty();
 
-    public Wypozyczenia(int ID, LocalDateTime Data, LocalDateTime Termin, LocalDateTime oddania, int id_ksiazki, int id_uzytkownika) {
+    private final StringProperty imie = new SimpleStringProperty();
+    private final StringProperty nazwisko = new SimpleStringProperty();
+    private final StringProperty tytul = new SimpleStringProperty();
+    private final StringProperty autor = new SimpleStringProperty();
+    private final StringProperty dataWypozyczenia = new SimpleStringProperty();
+    private final StringProperty terminOddania = new SimpleStringProperty();
+
+    public Wypozyczenia(int ID, String Data, String Termin, String oddania, int id_ksiazki, int id_uzytkownika) {
         this.id.set(ID);
         this.Data_Wypozyczenia.set(Data);
         this.Data_Oddania.set(oddania);
@@ -38,11 +45,37 @@ public class Wypozyczenia {
     }
 
     public IntegerProperty idProperty() {return id;}
-    public ObjectProperty<LocalDateTime> data_WypozyczeniaProperty() {return Data_Wypozyczenia;}
-    public ObjectProperty<LocalDateTime> data_OddaniaProperty() {return Data_Oddania;}
-    public ObjectProperty<LocalDateTime> termin_OddaniaProperty() {return Termin_Oddania;}
+    public StringProperty data_WypozyczeniaProperty() {return Data_Wypozyczenia;}
+    public StringProperty termin_OddaniaProperty() {return Termin_Oddania;}
+    public StringProperty data_OddaniaProperty() {return Data_Oddania;}
     public IntegerProperty id_ksiazkiProperty() {return id_ksiazki;}
     public IntegerProperty id_uzytkownikaProperty() {return id_uzytkownika;}
+
+    public StringProperty imieProperty() { return imie; }
+    public StringProperty nazwiskoProperty() { return nazwisko; }
+    public StringProperty tytulProperty() { return tytul; }
+    public StringProperty autorProperty() { return autor; }
+    public StringProperty dataWypozyczeniaProperty() { return dataWypozyczenia; }
+    public StringProperty terminOddaniaProperty() { return terminOddania; }
+
+
+    public String getImie() { return imie.get(); }
+    public void setImie(String imie) { this.imie.set(imie); }
+
+    public String getNazwisko() { return nazwisko.get(); }
+    public void setNazwisko(String nazwisko) { this.nazwisko.set(nazwisko); }
+
+    public String getTytul() { return tytul.get(); }
+    public void setTytul(String tytul) { this.tytul.set(tytul); }
+
+    public String getAutor() { return autor.get(); }
+    public void setAutor(String autor) { this.autor.set(autor); }
+
+    public String getDataWypozyczenia() { return dataWypozyczenia.get(); }
+    public void setDataWypozyczenia(String data) { this.dataWypozyczenia.set(data); }
+
+    public String getTerminOddania() { return terminOddania.get(); }
+    public void setTerminOddania(String termin) { this.terminOddania.set(termin); }
 
 
     @Override

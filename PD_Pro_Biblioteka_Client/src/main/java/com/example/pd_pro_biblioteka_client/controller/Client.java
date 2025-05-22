@@ -1,7 +1,10 @@
 package com.example.pd_pro_biblioteka_client.controller;
 
 
-import com.example.pd_pro_biblioteka_client.model.Ksiazka_2;
+import com.example.pd_pro_biblioteka_client.model.*;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,70 +14,100 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.time.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+import java.util.stream.Collectors;
 
 @Component
 public class Client {
 
-    public TableView borrowTable;
-    public TabPane tabPane;
-    public TableColumn b_title;
-    public TableColumn b_autor;
-    public TableColumn borrow_date;
-    public TableColumn return_date;
-    public TableColumn place_name;
-    public TableView penaltyTable;
-
-    public TableColumn p_title;
-    public TableColumn p_autor;
-    public TableColumn p_value;
-    public TableColumn p_return_date;
-    public TableColumn p_place_name;
-    public TableColumn p_status;
-    public TableView settingsTable;
-    public TableColumn p_id;
+    @FXML
+    private TableView<Wypozyczenia> borrowTable;
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private TableColumn<Ksiazka, String> b_title;
+    @FXML
+    private TableColumn<Ksiazka, String> b_autor;
+    @FXML
+    private TableColumn<Wypozyczenia, LocalDateTime> borrow_date;
+    @FXML
+    private TableColumn<Wypozyczenia, LocalDateTime> return_date;
+    @FXML
+    private TableColumn<Ksiazka, String> place_name;
 
     @FXML
-    private TableColumn<Ksiazka_2, String> s_title;
+    private TableView<Kary> penaltyTable;
     @FXML
-    private TableColumn<Ksiazka_2, String> s_autor;
+    private TableColumn<Kary, Integer> p_id;
     @FXML
-    private TableColumn<Ksiazka_2, String> s_borrow;
+    private TableColumn<Ksiazka, String> p_title;
+    @FXML
+    private TableColumn<Ksiazka, String> p_autor;
+    @FXML
+    private TableColumn<Kary, Integer> p_value;
+    @FXML
+    private TableColumn<Kary, LocalDateTime> p_return_date;
+    @FXML
+    private TableColumn<Wypozyczenia, String> p_place_name;
+    @FXML
+    private TableColumn<Kary, Boolean> p_status;
+
+
+    @FXML
+    private TextField user_name;
+    @FXML
+    private TextField user_surname;
+    @FXML
+    private DatePicker user_date;
+    @FXML
+    private TextField user_email;
+    @FXML
+    private TextField user_login;
+    @FXML
+    private PasswordField user_password;
+
+    @FXML
+    private TableColumn<Ksiazka, String> s_title;
+    @FXML
+    private TableColumn<Ksiazka, String> s_autor;
+    @FXML
+    private TableColumn<Ksiazka, Boolean> s_borrow;
+    @FXML
+    private TableView<Ksiazka> serachTable;
 
     public TableColumn f_checkbox;
     public TableColumn f_name;
 
     public Button borrow_button;
     public TableView fitrTable;
-    @FXML
-    private TableView<Ksiazka_2> serachTable;
+
 
     @FXML
     public void initialize() {
 
-        s_title.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
-        s_title.setCellFactory(TextFieldTableCell.forTableColumn());
-        //s_autor.setCellValueFactory(cellData -> cellData.getValue().gatunekProperty());
 
-        s_title.setOnEditCommit(event -> {
-            event.getRowValue().setTytul(event.getNewValue());
-        });
 
-        ObservableList<Ksiazka_2> ksiazki = FXCollections.observableArrayList(
-                new Ksiazka_2(1, "Metro 2033", "Postapo", LocalDate.of(2010, 3, 15), LocalDateTime.now(), 2, 1),
-                new Ksiazka_2(2, "Dune", "Sci-Fi", LocalDate.of(1965, 8, 1), LocalDateTime.now(), 4, 1)
-        );
 
-        serachTable.setItems(ksiazki);
-        serachTable.setEditable(true);
+        s_title.setEditable(true);
     }
+
+
+
 
     public void logout(ActionEvent actionEvent) {
         try {
@@ -130,4 +163,5 @@ public class Client {
             System.out.println("Użytkownik anulował.");
         }
     }
+
 }
