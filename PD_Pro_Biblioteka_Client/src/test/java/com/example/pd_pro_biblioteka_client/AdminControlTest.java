@@ -9,12 +9,10 @@ import javafx.scene.layout.StackPane;
 import javafx.embed.swing.JFXPanel;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
-import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,8 +23,7 @@ public class AdminControlTest extends ApplicationTest {
 
     @BeforeAll
     public static void initJfx() {
-        // This initializes the JavaFX platform, necessary in headless test environments
-        new JFXPanel(); // Initializes JavaFX
+        new JFXPanel();
     }
 
     @Override
@@ -40,18 +37,9 @@ public class AdminControlTest extends ApplicationTest {
         stage.show();
     }
 
-    @BeforeEach
-    public void setUp() {
-        // Called before each test
-        // Platform.runLater if necessary
-    }
-
     @Test
     public void testInitialize() {
         assertDoesNotThrow(() -> adminController.initialize());
-        // If you want to check data loaded:
-        // Wait some time for Platform.runLater to finish
-        // assertNotNull(adminController.penaltyTable.getItems());
     }
 
     @Test
@@ -61,7 +49,6 @@ public class AdminControlTest extends ApplicationTest {
 
     @Test
     public void testLogout() throws Exception {
-        // Use a latch to wait for Platform.runLater to finish
         final Object lock = new Object();
 
         Platform.runLater(() -> {
@@ -76,13 +63,13 @@ public class AdminControlTest extends ApplicationTest {
                 assertDoesNotThrow(() -> adminController.logout(mockEvent));
             } finally {
                 synchronized (lock) {
-                    lock.notify(); // notify main test thread to continue
+                    lock.notify();
                 }
             }
         });
 
         synchronized (lock) {
-            lock.wait(); // wait for JavaFX thread to complete
+            lock.wait();
         }
     }
 
@@ -101,8 +88,6 @@ public class AdminControlTest extends ApplicationTest {
 
     @Test
     public void testDeleteAccountCancel() {
-        // Since `delete_acc` has user confirmation dialog,
-        // we can't test it easily without mocking dialog responses.
         assertDoesNotThrow(() -> {
             Platform.runLater(() -> {
                 try {
