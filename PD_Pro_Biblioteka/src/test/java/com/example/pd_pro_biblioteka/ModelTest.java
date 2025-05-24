@@ -21,29 +21,31 @@ public class ModelTest {
             admin.setId(1);
             admin.setImie("Jan");
             admin.setNazwisko("Kowalski");
-            admin.setNazwa_Uzytkownika("jkowalski");
+            admin.setNazwaUzytkownika("jkowalski");
             admin.setHaslo("pass");
-            admin.setId_placowki(10);
+            admin.setIdplacowki(10);
 
             assertEquals(1, admin.getId());
             assertEquals("Jan", admin.getImie());
             assertEquals("Kowalski", admin.getNazwisko());
-            assertEquals("jkowalski", admin.getNazwa_Uzytkownika());
+            assertEquals("jkowalski", admin.getNazwaUzytkownika());
             assertEquals("pass", admin.getHaslo());
-            assertEquals(10, admin.getId_placowki());
+            assertEquals(10, admin.getIdplacowki());
         }
 
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Admin z wszystkimi argumentami")
         void testAllArgs() {
-            Admin admin = new Admin(1, "Jan", "Kowalski", "jkowalski", "pass", 10);
+            Admin admin = new Admin(1, "Jan", "Kowalski", "jkowalski", "pass", 10, false, "secret");
 
             assertEquals(1, admin.getId());
             assertEquals("Jan", admin.getImie());
             assertEquals("Kowalski", admin.getNazwisko());
-            assertEquals("jkowalski", admin.getNazwa_Uzytkownika());
+            assertEquals("jkowalski", admin.getNazwaUzytkownika());
             assertEquals("pass", admin.getHaslo());
-            assertEquals(10, admin.getId_placowki());
+            assertEquals(10, admin.getIdplacowki());
+            assertEquals(false, admin.getMfaEnabled());
+            assertEquals("secret", admin.getMfaSecret());
         }
 
         @Test
@@ -53,11 +55,13 @@ public class ModelTest {
             admin.setId(1);
             admin.setImie("Jan");
             admin.setNazwisko("Kowalski");
-            admin.setNazwa_Uzytkownika("jkowalski");
+            admin.setNazwaUzytkownika("jkowalski");
             admin.setHaslo("pass");
-            admin.setId_placowki(10);
+            admin.setIdplacowki(10);
+            admin.setMfaEnabled(false);
+            admin.setMfaSecret("secret");
 
-            String expected = "Admin{id=1, Imie='Jan', Nazwisko='Kowalski', Nazwa_Uzytkownika='jkowalski', Haslo='pass', id_placowki=10}";
+            String expected = "Admin{id=1, Imie='Jan', Nazwisko='Kowalski', Nazwa_Uzytkownika='jkowalski', Haslo='pass', id_placowki=10', mfa_enabled=false, mfa_secret=secret}";
             assertEquals(expected, admin.toString());
         }
     }
@@ -73,12 +77,12 @@ public class ModelTest {
             autor.setId(1);
             autor.setImie("John");
             autor.setNazwisko("Tolkien");
-            autor.setRok_Urodzenia(1892);
+            autor.setRokUrodzenia(1892);
 
             assertEquals(1, autor.getId());
             assertEquals("John", autor.getImie());
             assertEquals("Tolkien", autor.getNazwisko());
-            assertEquals(1892, autor.getRok_Urodzenia());
+            assertEquals(1892, autor.getRokUrodzenia());
         }
 
         @Test
@@ -89,7 +93,7 @@ public class ModelTest {
             assertEquals(1, autor.getId());
             assertEquals("John", autor.getImie());
             assertEquals("Tolkien", autor.getNazwisko());
-            assertEquals(1892, autor.getRok_Urodzenia());
+            assertEquals(1892, autor.getRokUrodzenia());
         }
 
         @Test
@@ -99,7 +103,7 @@ public class ModelTest {
             autor.setId(1);
             autor.setImie("John");
             autor.setNazwisko("Tolkien");
-            autor.setRok_Urodzenia(1892);
+            autor.setRokUrodzenia(1892);
 
             String expected = "Autorzy{id=1, Imie='John', Nazwisko='Tolkien', Rok_Urodzenia=1892}";
             assertEquals(expected, autor.toString());
@@ -116,17 +120,17 @@ public class ModelTest {
             Kary kara = new Kary();
             kara.setId(1);
             kara.setKwota(50.5);
-            kara.setData_Wydania_Kary("2025-04-01");
-            kara.setTermin_Zaplaty("2025-04-10");
-            kara.setCzy_Zaplacono(true);
-            kara.setId_uzytkownika(100);
+            kara.setDataWydaniaKary("2025-04-01");
+            kara.setTerminZaplaty("2025-04-10");
+            kara.setCzyZaplacono(true);
+            kara.setIduzytkownika(100);
 
             assertEquals(1, kara.getId());
             assertEquals(50.5, kara.getKwota());
-            assertEquals("2025-04-01", kara.getData_Wydania_Kary());
-            assertEquals("2025-04-10", kara.getTermin_Zaplaty());
-            assertTrue(kara.isCzy_Zaplacono());
-            assertEquals(100, kara.getId_uzytkownika());
+            assertEquals("2025-04-01", kara.getDataWydaniaKary());
+            assertEquals("2025-04-10", kara.getTerminZaplaty());
+            assertTrue(kara.getCzyZaplacono());
+            assertEquals(100, kara.getIduzytkownika());
         }
 
         @Test
@@ -136,10 +140,10 @@ public class ModelTest {
 
             assertEquals(1, kara.getId());
             assertEquals(50.5, kara.getKwota());
-            assertEquals("2025-04-01", kara.getData_Wydania_Kary());
-            assertEquals("2025-04-10", kara.getTermin_Zaplaty());
-            assertTrue(kara.isCzy_Zaplacono());
-            assertEquals(100, kara.getId_uzytkownika());
+            assertEquals("2025-04-01", kara.getDataWydaniaKary());
+            assertEquals("2025-04-10", kara.getTerminZaplaty());
+            assertTrue(kara.getCzyZaplacono());
+            assertEquals(100, kara.getIduzytkownika());
         }
 
         @Test
@@ -148,10 +152,10 @@ public class ModelTest {
             Kary kara = new Kary();
             kara.setId(1);
             kara.setKwota(50.5);
-            kara.setData_Wydania_Kary("2025-04-01");
-            kara.setTermin_Zaplaty("2025-04-10");
-            kara.setCzy_Zaplacono(true);
-            kara.setId_uzytkownika(100);
+            kara.setDataWydaniaKary("2025-04-01");
+            kara.setTerminZaplaty("2025-04-10");
+            kara.setCzyZaplacono(true);
+            kara.setIduzytkownika(100);
 
             String expected = "Kary{id=1, Kwota=50.5, Data_Wydania_Kary=2025-04-01, Termin_Zaplaty=2025-04-10, Czy_Zaplacono=true, id_uzytkownika=100}";
             assertEquals(expected, kara.toString());
@@ -169,18 +173,22 @@ public class ModelTest {
             ksiazka.setId(1);
             ksiazka.setTytul("Silmarillion");
             ksiazka.setGatunek("Fantasy");
-            ksiazka.setData_Wydania("1977-09-15");
+            ksiazka.setDataWydania("1977-09-15");
             ksiazka.setDodano("2025-04-10");
-            ksiazka.setId_autora(1);
-            ksiazka.setId_placowki(2);
+            ksiazka.setIdautora(1);
+            ksiazka.setIdplacowki(2);
+            ksiazka.setRezerwacja(false);
+            ksiazka.setCzywyporzyczono(false);
 
             assertEquals(1, ksiazka.getId());
             assertEquals("Silmarillion", ksiazka.getTytul());
             assertEquals("Fantasy", ksiazka.getGatunek());
-            assertEquals("1977-09-15", ksiazka.getData_Wydania());
+            assertEquals("1977-09-15", ksiazka.getDataWydania());
             assertEquals("2025-04-10", ksiazka.getDodano());
-            assertEquals(1, ksiazka.getId_autora());
-            assertEquals(2, ksiazka.getId_placowki());
+            assertEquals(1, ksiazka.getIdautora());
+            assertEquals(2, ksiazka.getIdplacowki());
+            assertEquals(false,ksiazka.getRezerwacja());
+            assertEquals(false,ksiazka.getCzywyporzyczono());
         }
 
         @Test
@@ -191,12 +199,12 @@ public class ModelTest {
             assertEquals(1, ksiazka.getId());
             assertEquals("Silmarillion", ksiazka.getTytul());
             assertEquals("Fantasy", ksiazka.getGatunek());
-            assertEquals("1977-09-15", ksiazka.getData_Wydania());
+            assertEquals("1977-09-15", ksiazka.getDataWydania());
             assertEquals("2025-04-10", ksiazka.getDodano());
-            assertEquals(1, ksiazka.getId_autora());
-            assertEquals(2, ksiazka.getId_placowki());
+            assertEquals(1, ksiazka.getIdautora());
+            assertEquals(2, ksiazka.getIdplacowki());
             assertEquals(false,ksiazka.getRezerwacja());
-            assertEquals(false,ksiazka.getCzy_wyporzyczono());
+            assertEquals(false,ksiazka.getCzywyporzyczono());
         }
 
         @Test
@@ -206,12 +214,12 @@ public class ModelTest {
             ksiazka.setId(1);
             ksiazka.setTytul("Silmarillion");
             ksiazka.setGatunek("Fantasy");
-            ksiazka.setData_Wydania("1977-09-15");
+            ksiazka.setDataWydania("1977-09-15");
             ksiazka.setDodano("2025-04-10");
-            ksiazka.setId_autora(1);
-            ksiazka.setId_placowki(2);
+            ksiazka.setIdautora(1);
+            ksiazka.setIdplacowki(2);
 
-            String expected = "Ksiazka{id=1, Tytul='Silmarillion', Gatunek='Fantasy', Data_Wydania=1977-09-15, Dodano=2025-04-10, id_autora=1, id_placowki=2}";
+            String expected = "Ksiazka{id=1, Tytul='Silmarillion', Gatunek='Fantasy', Data_Wydania=1977-09-15, Dodano=2025-04-10, id_autora=1, rezerwacja=null, id_placowki=2, czywyporzyczono=null}";
             assertEquals(expected, ksiazka.toString());
         }
     }
@@ -262,30 +270,30 @@ public class ModelTest {
             user.setId(1);
             user.setImie("Jan");
             user.setNazwisko("Kowalski");
-            user.setData_Urodzenia("2000-01-01");
+            user.setDataUrodzenia("2000-01-01");
             user.setHaslo("pass");
-            user.setNazwa_Uzytkownika("jkowalski");
+            user.setNazwaUzytkownika("jkowalski");
             user.setEmail("s092677@student.tu.kiece.pl");
 
             assertEquals(1, user.getId());
             assertEquals("Jan", user.getImie());
             assertEquals("Kowalski", user.getNazwisko());
-            assertEquals("2000-01-01", user.getData_Urodzenia());
+            assertEquals("2000-01-01", user.getDataUrodzenia());
             assertEquals("pass", user.getHaslo());
-            assertEquals("jkowalski", user.getNazwa_Uzytkownika());
+            assertEquals("jkowalski", user.getNazwaUzytkownika());
             assertEquals("s092677@student.tu.kiece.pl", user.getEmail());
         }
 
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Uzytkownik z wszystkimi argumentami")
         void testAllArgs() {
-            Uzytkownik user = new Uzytkownik(1,"Jan","Kowalski","2000-01-01","jkowalski","pass","s092677@student.tu.kiece.pl", Boolean.FALSE);
+            Uzytkownik user = new Uzytkownik(1,"Jan","Kowalski","2000-01-01","jkowalski","pass","s092677@student.tu.kiece.pl", Boolean.FALSE, Boolean.FALSE, "secret");
 
             assertEquals(1, user.getId());
             assertEquals("Jan", user.getImie());
             assertEquals("Kowalski", user.getNazwisko());
-            assertEquals("2000-01-01", user.getData_Urodzenia());
-            assertEquals("jkowalski", user.getNazwa_Uzytkownika());
+            assertEquals("2000-01-01", user.getDataUrodzenia());
+            assertEquals("jkowalski", user.getNazwaUzytkownika());
             assertEquals("pass", user.getHaslo());
             assertEquals("s092677@student.tu.kiece.pl", user.getEmail());
         }
@@ -297,9 +305,9 @@ public class ModelTest {
             user.setId(1);
             user.setImie("Jan");
             user.setNazwisko("Kowalski");
-            user.setData_Urodzenia("2000-01-01");
+            user.setDataUrodzenia("2000-01-01");
             user.setHaslo("pass");
-            user.setNazwa_Uzytkownika("jkowalski");
+            user.setNazwaUzytkownika("jkowalski");
             user.setEmail("s092677@student.tu.kiece.pl");
             user.setZablokowany(Boolean.FALSE);
 
@@ -318,18 +326,18 @@ public class ModelTest {
         void testNoArgs() {
             Wypozyczenia w = new Wypozyczenia();
             w.setId(1);
-            w.setData_Wypozyczenia("2025-04-14");
-            w.setData_Oddania("2025-04-21");
-            w.setTermin_Oddania("2025-04-20");
-            w.setId_ksiazki(100);
-            w.setId_uzytkownika(200);
+            w.setDataWypozyczenia("2025-04-14");
+            w.setDataOddania("2025-04-21");
+            w.setTerminOddania("2025-04-20");
+            w.setIdksiazki(100);
+            w.setIduzytkownika(200);
 
             assertEquals(1, w.getId());
-            assertEquals("2025-04-14", w.getData_Wypozyczenia());
-            assertEquals("2025-04-21", w.getData_Oddania());
-            assertEquals("2025-04-20", w.getTermin_Oddania());
-            assertEquals(100, w.getId_ksiazki());
-            assertEquals(200, w.getId_uzytkownika());
+            assertEquals("2025-04-14", w.getDataWypozyczenia());
+            assertEquals("2025-04-21", w.getDataOddania());
+            assertEquals("2025-04-20", w.getTerminOddania());
+            assertEquals(100, w.getIdksiazki());
+            assertEquals(200, w.getIduzytkownika());
         }
 
         @Test
@@ -340,11 +348,11 @@ public class ModelTest {
             );
 
             assertEquals(2, w.getId());
-            assertEquals("2025-04-01", w.getData_Wypozyczenia());
-            assertEquals("2025-04-10", w.getData_Oddania());
-            assertEquals("2025-04-08", w.getTermin_Oddania());
-            assertEquals(101, w.getId_ksiazki());
-            assertEquals(201, w.getId_uzytkownika());
+            assertEquals("2025-04-01", w.getDataWypozyczenia());
+            assertEquals("2025-04-10", w.getDataOddania());
+            assertEquals("2025-04-08", w.getTerminOddania());
+            assertEquals(101, w.getIdksiazki());
+            assertEquals(201, w.getIduzytkownika());
         }
 
         @Test

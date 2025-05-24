@@ -1,5 +1,8 @@
 package com.example.pd_pro_biblioteka.control;
 
+import com.example.pd_pro_biblioteka.model.Admin;
+import com.example.pd_pro_biblioteka.model.Ksiazka;
+import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import com.example.pd_pro_biblioteka.service.SupabaseClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,8 +49,8 @@ public class Control {
     }
 
     @GetMapping("/wypozyczenia/{id}")
-    public String getWypozyczenia_UID(@PathVariable int id) {
-        return supabaseService.getWypozyczenia_UID(id);
+    public String getWypozyczeniaUID(@PathVariable int id) {
+        return supabaseService.getWypozyczeniaUID(id);
     }
 
     @PostMapping("/wypozyczenia")
@@ -80,8 +83,8 @@ public class Control {
     }
 
     @GetMapping("/kary/{id}")
-    public String getKary_UID(@PathVariable int id) {
-        return supabaseService.getKary_UID(id);
+    public String getKaryUID(@PathVariable int id) {
+        return supabaseService.getKaryUID(id);
     }
 
     @PostMapping("/kary")
@@ -132,8 +135,10 @@ public class Control {
                                 @RequestParam(required = false) String dataWydania,
                                 @RequestParam(required = false) String dodano,
                                 @RequestParam(required = false) Integer idAutora,
-                                @RequestParam(required = false) Integer idPlacowki) {
-        return supabaseService.updateKsiazka(id, tytul, gatunek, dataWydania, dodano, idAutora, idPlacowki);
+                                @RequestParam(required = false) Integer idPlacowki,
+                                @RequestParam(required = false) Boolean rezerwacja,
+                                @RequestParam(required = false) Boolean czywyporzyczono) {
+        return supabaseService.updateKsiazka(new Ksiazka(id, tytul, gatunek, dataWydania, dodano, idAutora, idPlacowki, rezerwacja, czywyporzyczono));
     }
 
     @GetMapping("/ksiazki/filtr")
@@ -142,11 +147,11 @@ public class Control {
                                 @RequestParam(required = false) String tytul,
                                 @RequestParam(required = false) String gatunek,
                                 @RequestParam(required = false) String dataWydania,
-                                @RequestParam(required = false) String Autor_Imie,
-                                @RequestParam(required = false) String Autor_Nazwisko,
+                                @RequestParam(required = false) String autorImie,
+                                @RequestParam(required = false) String autorNazwisko,
                                 @RequestParam(required = false) Integer idPlacowki)
     {
-        return supabaseService.getKsiazkaFiltr(id, tytul, gatunek, dataWydania, Autor_Imie, Autor_Nazwisko, idPlacowki);
+        return supabaseService.getKsiazkaFiltr(id, tytul, gatunek, dataWydania, autorImie, autorNazwisko, idPlacowki);
     }
 
     @GetMapping("/uzytkownicy")
@@ -157,11 +162,11 @@ public class Control {
     @PostMapping("/uzytkownicy")
     public String addUzytkownik(@RequestParam String imie,
                                 @RequestParam String nazwisko,
-                                @RequestParam String Data_Urodzenia,
-                                @RequestParam String Nazwa_Uzytkownika,
-                                @RequestParam String Haslo,
-                                @RequestParam String Email) {
-        return supabaseService.addUzytkownik(imie, nazwisko, Data_Urodzenia, Nazwa_Uzytkownika, Haslo, Email);
+                                @RequestParam String dataUrodzenia,
+                                @RequestParam String nazwaUzytkownika,
+                                @RequestParam String haslo,
+                                @RequestParam String email) {
+        return supabaseService.addUzytkownik(imie, nazwisko, dataUrodzenia, nazwaUzytkownika, haslo, email);
     }
 
     @DeleteMapping("/uzytkownicy/{id}")
@@ -173,18 +178,18 @@ public class Control {
     public String updateUzytkownik(@PathVariable int id,
                                    @RequestParam(required = false) String imie,
                                    @RequestParam(required = false) String nazwisko,
-                                   @RequestParam(required = false) String Data_Urodzenia,
-                                   @RequestParam(required = false) String Nazwa_Uzytkownika,
-                                   @RequestParam(required = false) String Haslo,
-                                   @RequestParam(required = false) String Email,
-                                   @RequestParam(required = false) Boolean Zablokowany,
+                                   @RequestParam(required = false) String dataUrodzenia,
+                                   @RequestParam(required = false) String nazwaUzytkownika,
+                                   @RequestParam(required = false) String haslo,
+                                   @RequestParam(required = false) String email,
+                                   @RequestParam(required = false) Boolean zablokowany,
                                    @RequestParam(required = false) Boolean mfaEnabled,
                                    @RequestParam(required = false) String mfaSecret) {
-        return supabaseService.updateUzytkownik(id, imie, nazwisko, Data_Urodzenia, Nazwa_Uzytkownika, Haslo, Email, Zablokowany, mfaEnabled, mfaSecret);
+        return supabaseService.updateUzytkownik(new Uzytkownik(id, imie, nazwisko, dataUrodzenia, nazwaUzytkownika, haslo, email, zablokowany, mfaEnabled, mfaSecret));
     }
 
-    @GetMapping("/uzytkownicy/{login_1}/{password}")
-    public String getUzytkownicyLogin(@PathVariable String login_1, @PathVariable String password) { return supabaseService.getUzytkownicyLogin(login_1, password); }
+    @GetMapping("/uzytkownicy/{login1}/{password}")
+    public String getUzytkownicyLogin(@PathVariable String login1, @PathVariable String password) { return supabaseService.getUzytkownicyLogin(login1, password); }
 
     @GetMapping("/admini")
     public String getAdmini() {
@@ -192,8 +197,8 @@ public class Control {
     }
 
     @GetMapping("/admini/{id}")
-    public String getAdmini_AID(@PathVariable int id) {
-        return supabaseService.getAdmin_AID(id);
+    public String getAdminiAID(@PathVariable int id) {
+        return supabaseService.getAdminAID(id);
     }
 
     @PostMapping("/admini")
@@ -219,7 +224,8 @@ public class Control {
                               @RequestParam(required = false) Integer idPlacowki,
                               @RequestParam(required = false) Boolean mfaEnabled,
                               @RequestParam(required = false) String mfaSecret) {
-        return supabaseService.updateAdmin(id, imie, nazwisko, nazwaUzytkownika, haslo, idPlacowki, mfaEnabled, mfaSecret);
+        Admin admin = new Admin(id, imie, nazwisko, nazwaUzytkownika, haslo, idPlacowki, mfaEnabled, mfaSecret);
+        return supabaseService.updateAdmin(admin);
     }
 
     @GetMapping("/autorzy")

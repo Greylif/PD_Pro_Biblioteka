@@ -3,6 +3,9 @@ package com.example.pd_pro_biblioteka;
 import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
+import com.example.pd_pro_biblioteka.model.Admin;
+import com.example.pd_pro_biblioteka.model.Ksiazka;
+import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import com.example.pd_pro_biblioteka.service.SupabaseClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -103,7 +106,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1,\"id_placowki\":\"2\",\"Imie\":\"Jan\",\"Nazwisko\":\"Kowalski\",\"Haslo\":\"pass\",\"Nazwa_Uzytkownika\":\"username\" }]"));
 
-                String result = supabaseClient.getAdmin_AID(1);
+                String result = supabaseClient.getAdminAID(1);
 
                 assertAll(
                         () -> assertTrue(result.contains("1")),
@@ -162,7 +165,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Kwota\":25.5, \"Termin_Zaplaty\":2025-04-16, \"Czy_Zaplacono\":false, \"Data_Wydania_Kary\":2025-03-20, \"id_uzytkownika\":101}]"));
 
-                String result = supabaseClient.getKary_UID(1);
+                String result = supabaseClient.getKaryUID(1);
 
                 assertAll(
                         () -> assertTrue(result.contains("1")),
@@ -270,7 +273,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", \"Termin_Oddania\":\"2025-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]"));
 
-                String result = supabaseClient.getWypozyczenia_UID(1);
+                String result = supabaseClient.getWypozyczeniaUID(1);
 
                 assertAll(
                         () -> assertTrue(result.contains("1")),
@@ -434,7 +437,7 @@ class SupabaseClientTest {
 
                 SupabaseConnectionException exception = assertThrows(
                         SupabaseConnectionException.class,
-                        () -> supabaseClient.getKary_UID(1)
+                        () -> supabaseClient.getKaryUID(1)
                 );
                 System.out.println(exception.getMessage());
                 assertTrue(exception.getMessage().contains("Failed to fetch Kary by id:"));
@@ -1029,7 +1032,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-                String result = supabaseClient.updateAdmin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey");
+                String result = supabaseClient.updateAdmin(new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey"));
 
                 assertTrue(result.contains("success"));
             }
@@ -1044,7 +1047,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-                String result = supabaseClient.updateAdmin(1, null, null, null, null, null, null, null);
+                String result = supabaseClient.updateAdmin(new Admin(1, null, null, null, null, null, null, null));
 
                 assertTrue(result.contains("success"));
             }
@@ -1119,7 +1122,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-                String result = supabaseClient.updateKsiazka(1, "Silmarillion", "Fantasy", "1977-09-15", "2025-04-17", 101, 201);
+                String result = supabaseClient.updateKsiazka(new Ksiazka(1, "Silmarillion", "Fantasy", "1977-09-15", "2025-04-17", 101, 201, false, false));
 
                 assertTrue(result.contains("success"));
             }
@@ -1134,7 +1137,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-                String result = supabaseClient.updateKsiazka(1, null, null, null, null, null, null);
+                String result = supabaseClient.updateKsiazka(new Ksiazka(1, null, null, null, null, null, null, null, null));
 
                 assertTrue(result.contains("success"));
             }
@@ -1179,7 +1182,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-                String result = supabaseClient.updateUzytkownik(1, "Jan", "Kowalski", "2025-04-17", "username", "pass", "s092677@student.tu.kielce.pl", false, false, "t");
+                String result = supabaseClient.updateUzytkownik(new Uzytkownik(1, "Jan", "Kowalski", "2025-04-17", "username", "pass", "s092677@student.tu.kielce.pl", false, false, "secret"));
 
                 assertTrue(result.contains("success"));
             }
@@ -1194,7 +1197,7 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-                String result = supabaseClient.updateUzytkownik(1, null, null, null, null, null, null, null, null, null);
+                String result = supabaseClient.updateUzytkownik(new Uzytkownik(1, null, null, null, null, null, null, null, null, null));
 
                 assertTrue(result.contains("success"));
             }
@@ -1251,9 +1254,11 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.error(new RuntimeException("Connection error")));
 
+                Admin admin = new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey");
+
                 SupabaseConnectionException exception = assertThrows(
                         SupabaseConnectionException.class,
-                        () -> supabaseClient.updateAdmin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey")
+                        () -> supabaseClient.updateAdmin(admin)
                 );
 
                 assertTrue(exception.getMessage().contains("Failed to update to table Admin: "));
@@ -1314,9 +1319,11 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.error(new RuntimeException("Connection error")));
 
+                Ksiazka ksiazka = new Ksiazka(1, "Silmarillion", "Fantasy", "1977-09-15", null, 101, 201, Boolean.FALSE, Boolean.FALSE);
+
                 SupabaseConnectionException exception = assertThrows(
                         SupabaseConnectionException.class,
-                        () -> supabaseClient.updateKsiazka(1, "Silmarillion", "Fantasy", "1977-09-15", null, 101, 201)
+                        () -> supabaseClient.updateKsiazka(ksiazka)
                 );
 
                 assertTrue(exception.getMessage().contains("Failed to update to table Ksiazka: "));
@@ -1356,9 +1363,11 @@ class SupabaseClientTest {
                 when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
                 when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.error(new RuntimeException("Connection error")));
 
+                Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", "2025-04-17", "username", "pass", "s092677@student.tu.kielce.pl", false, false, "testowyklucz");
+
                 SupabaseConnectionException exception = assertThrows(
                         SupabaseConnectionException.class,
-                        () -> supabaseClient.updateUzytkownik(1, "Jan", "Kowalski", "2025-04-17", "username", "pass", "s092677@student.tu.kielce.pl", false, false, "testowyklucz")
+                        () -> supabaseClient.updateUzytkownik(uzytkownik)
                 );
 
                 assertTrue(exception.getMessage().contains("Failed to update to table Uzytkownik: "));

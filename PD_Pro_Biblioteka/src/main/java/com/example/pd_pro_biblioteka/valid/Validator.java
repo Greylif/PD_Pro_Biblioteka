@@ -21,7 +21,7 @@ public class Validator {
     public static boolean walidujUzytkownika(Uzytkownik uzytkownik) {
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate dataUrodzenia = LocalDate.parse(uzytkownik.getData_Urodzenia(), formatter);
+            LocalDate dataUrodzenia = LocalDate.parse(uzytkownik.getDataUrodzenia(), formatter);
             int wiek = Period.between(dataUrodzenia, LocalDate.now()).getYears();
             return wiek >= MIN_WIEK && wiek <= MAX_WIEK;
         } catch (Exception e) {

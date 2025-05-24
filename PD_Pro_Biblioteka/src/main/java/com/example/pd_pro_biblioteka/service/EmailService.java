@@ -59,13 +59,13 @@ public class EmailService {
     @Scheduled(cron = "0 00 17 * * ?")
     public void scheduledEmail() throws MessagingException {
         System.out.println("\nEmail scheduled\n");
-        JSONArray Arrayout = fetchWypozyczeniaZEmail();
-        System.out.println(Arrayout + "\n");
-        for(int i = 0; i < Arrayout.length(); i++) {
-            JSONObject obj = Arrayout.getJSONObject(i);
+        JSONArray arrayout = fetchWypozyczeniaZEmail();
+        System.out.println(arrayout + "\n");
+        for(int i = 0; i < arrayout.length(); i++) {
+            JSONObject obj = arrayout.getJSONObject(i);
             LocalDate termin = LocalDate.parse(obj.getString(TERMIN_ODDANIA));
-            Object data_oddania = obj.opt(DATA_ODDANIA);
-            if((termin.minusDays(3)).isBefore(LocalDate.now()) && (data_oddania == null)) {
+            Object dataoddania = obj.opt(DATA_ODDANIA);
+            if((termin.minusDays(3)).isBefore(LocalDate.now()) && (dataoddania == null)) {
                 sendEmail(obj.getString(EMAIL), "Przypomnienie o oddaniu ksiazki", "Termin oddania ksiazki o tytule: " + obj.getString(TYTUL) + " mija: "+ obj.getString(TERMIN_ODDANIA));
                 System.out.println("\nSent: \n" + i);
             }

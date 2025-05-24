@@ -12,35 +12,35 @@ public class Kary {
     private int id;
     @Setter
     @Getter
-    private double Kwota;
+    private double kwota;
     @Setter
     @Getter
-    private String Data_Wydania_Kary;
+    private String dataWydaniaKary;
     @Setter
     @Getter
-    private String Termin_Zaplaty;
+    private String terminZaplaty;
     @Setter
     @Getter
-    private boolean Czy_Zaplacono;
+    private Boolean czyZaplacono;
     @Setter
     @Getter
-    private int id_uzytkownika;
+    private int iduzytkownika;
 
     public Kary() {}
 
-    public Kary(int id, double Kwota, String Data_Wydania_Kary, String Termin_Zaplaty, boolean Czy_Zaplacono, int id_uzytkownika) {
+    public Kary(int id, double kwota, String dataWydaniaKary, String terminZaplaty, Boolean czyZaplacono, int iduzytkownika) {
         this.id = id;
-        this.Kwota = Kwota;
-        this.Data_Wydania_Kary = Data_Wydania_Kary;
-        this.Termin_Zaplaty = Termin_Zaplaty;
-        this.Czy_Zaplacono = Czy_Zaplacono;
-        this.id_uzytkownika = id_uzytkownika;
+        this.kwota = kwota;
+        this.dataWydaniaKary = dataWydaniaKary;
+        this.terminZaplaty = terminZaplaty;
+        this.czyZaplacono = czyZaplacono;
+        this.iduzytkownika = iduzytkownika;
     }
 
 
     @Override
     public String toString() {
-        return "Kary{id=" + id + ", Kwota=" + Kwota + ", Data_Wydania_Kary=" + Data_Wydania_Kary +
-                ", Termin_Zaplaty=" + Termin_Zaplaty + ", Czy_Zaplacono=" + Czy_Zaplacono + ", id_uzytkownika=" + id_uzytkownika + "}";
+        return "Kary{id=" + id + ", Kwota=" + kwota + ", Data_Wydania_Kary=" + dataWydaniaKary +
+                ", Termin_Zaplaty=" + terminZaplaty + ", Czy_Zaplacono=" + czyZaplacono + ", id_uzytkownika=" + iduzytkownika + "}";
     }
 }

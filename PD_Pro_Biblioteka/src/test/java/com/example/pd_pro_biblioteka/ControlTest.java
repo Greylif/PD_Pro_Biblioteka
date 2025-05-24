@@ -134,10 +134,10 @@ public class ControlTest {
                     mockMvc.perform(post("/library/uzytkownicy")
                                     .param("imie", "Jan")
                                     .param("nazwisko", "Kowalski")
-                                    .param("Data_Urodzenia", "2000-01-01")
-                                    .param("Nazwa_Uzytkownika", "username")
-                                    .param("Haslo", "pass")
-                                    .param("Email", "s092677@student.tu.kielce.pl"))
+                                    .param("dataUrodzenia", "2000-01-01")
+                                    .param("nazwaUzytkownika", "username")
+                                    .param("haslo", "pass")
+                                    .param("email", "s092677@student.tu.kielce.pl"))
                             .andExpect(status().isOk());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -184,7 +184,7 @@ public class ControlTest {
         @Test
         @DisplayName("Pobieranie listy adminow o konkretnym id")
         void getAdminAID() {
-            Mockito.when(supabaseClient.getAdmin_AID(1)).thenReturn("Admin");
+            Mockito.when(supabaseClient.getAdminAID(1)).thenReturn("Admin");
 
             try {
                 mockMvc.perform(get("/library/admini/1"))
@@ -223,7 +223,7 @@ public class ControlTest {
         @Test
         @DisplayName("Pobieranie kary o konkretnym id uzytkownika")
         void getKaryUID() {
-            Mockito.when(supabaseClient.getKary_UID(1)).thenReturn("Kara");
+            Mockito.when(supabaseClient.getKaryUID(1)).thenReturn("Kara");
 
             try {
                 mockMvc.perform(get("/library/kary/1"))
@@ -314,7 +314,7 @@ public class ControlTest {
         @Test
         @DisplayName("Pobieranie listy wyporzyczen o konkretnym id uzytkownika")
         void getWypozyczeniaUID() {
-            Mockito.when(supabaseClient.getWypozyczenia_UID(1)).thenReturn("Wyporzyczenie");
+            Mockito.when(supabaseClient.getWypozyczeniaUID(1)).thenReturn("Wyporzyczenie");
 
             try {
                 mockMvc.perform(get("/library/wypozyczenia/1"))
@@ -333,15 +333,7 @@ public class ControlTest {
         @Test
         @DisplayName("Aktualizacja admina")
         void updateAdmin() {
-            Mockito.when(supabaseClient.updateAdmin(
-                            1,
-                            "Jan",
-                            "Kowalski",
-                            "usernameadmin",
-                            "adminpass",
-                            101,
-                            false,
-                            "testkey"))
+            Mockito.when(supabaseClient.updateAdmin(new Admin(1, "Jan", "Kowalski", "usernameadmin", "adminpass", 101, false, "secret")))
                     .thenReturn("Admin zaktualizowany");
 
             try {
@@ -398,13 +390,7 @@ public class ControlTest {
         @DisplayName("Aktualizacja ksiazek")
         void updateKsiazka() {
             Mockito.when(supabaseClient.updateKsiazka(
-                            1,
-                            "Silmaril",
-                            "Fantasy",
-                            "1977",
-                            "2025-04-16",
-                            101,
-                            201))
+                    new Ksiazka(1, "Silmaril", "Fantasy","1977", "2025-04-16",101, 201, Boolean.FALSE, Boolean.FALSE)))
                     .thenReturn("Ksiazka zaktualizowana");
 
             try {
@@ -435,6 +421,7 @@ public class ControlTest {
         @DisplayName("Aktualizacja uzytkownika")
         void updateUzytkownik() {
             Mockito.when(supabaseClient.updateUzytkownik(
+                    new Uzytkownik(
                             1,
                             "Jan",
                             "Kowalski",
@@ -444,7 +431,7 @@ public class ControlTest {
                             "s092677@student.tu.kielce.pl",
                             Boolean.FALSE,
                             Boolean.FALSE,
-                            "testowyklucz"))
+                            "secret")))
                     .thenReturn("Uzytkownik zaktualizowany");
 
             try {

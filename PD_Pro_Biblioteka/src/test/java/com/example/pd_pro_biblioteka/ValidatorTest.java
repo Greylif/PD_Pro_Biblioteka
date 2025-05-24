@@ -30,7 +30,7 @@ class ValidatorTest {
         @DisplayName("Powinien zadzialac poprawnie dla poprawnej daty")
         void testDataTrue()
         {
-            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","2000-12-12","Username","Pass","s092677@student.tu.kielce.pl", Boolean.FALSE);
+            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","2000-12-12","Username","Pass","s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret");
             assertDoesNotThrow(() -> Validator.walidujUzytkownika(user));
         }
 
@@ -38,7 +38,7 @@ class ValidatorTest {
         @DisplayName("Powinien zakonczyc sie bledem dla niepoprawnej daty")
         void testDataFalse()
         {
-            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","NOT_A_DATE","Username","Pass","s092677@student.tu.kielce.pl", Boolean.FALSE);
+            Uzytkownik user = new Uzytkownik(5,"Jan","Kowalski","NOT_A_DATE","Username","Pass","s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret");
             assertThatThrownBy(() -> Validator.walidujUzytkownika(user))
                     .as("Niepoprawne tworzenie uzytkownika")
                     .isInstanceOf(AccountValidationException.class);
@@ -71,20 +71,20 @@ class ValidatorTest {
         @ParameterizedTest
         @DisplayName("Powinien zwrócić TRUE dla poprawnego wieku")
         @MethodSource("poprawnedaty")
-        void testValidWiek(String data_urodzenia) {
-            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", data_urodzenia, "username", "password", "s092677@student.tu.kielce.pl", Boolean.FALSE);
+        void testValidWiek(String dataurodzenia) {
+            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", dataurodzenia, "username", "password", "s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret");
             assertThat(Validator.walidujUzytkownika(uzytkownik))
-                    .as("Wiek %d powinien być poprawny", data_urodzenia)
+                    .as("Wiek %d powinien być poprawny", dataurodzenia)
                     .isTrue();
         }
 
         @ParameterizedTest
         @DisplayName("Powinien zwrócić FALSE dla niepoprawnego wieku")
         @MethodSource("niepoprawnedaty")
-        void testInvalidWiek(String data_urodzenia) {
-            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", data_urodzenia, "username", "password", "s092677@student.tu.kielce.pl", Boolean.FALSE);
+        void testInvalidWiek(String dataurodzenia) {
+            Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", dataurodzenia, "username", "password", "s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret");
             assertThat(Validator.walidujUzytkownika(uzytkownik))
-                    .as("Wiek %d powinien być niepoprawny", data_urodzenia)
+                    .as("Wiek %d powinien być niepoprawny", dataurodzenia)
                     .isFalse();
         }
     }

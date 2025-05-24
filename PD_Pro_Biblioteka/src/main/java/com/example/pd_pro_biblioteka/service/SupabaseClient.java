@@ -5,6 +5,9 @@ package com.example.pd_pro_biblioteka.service;
 import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
+import com.example.pd_pro_biblioteka.model.Admin;
+import com.example.pd_pro_biblioteka.model.Ksiazka;
+import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -81,19 +84,19 @@ public class SupabaseClient {
         return fetchData("Kary", "*");
     }
 
-    public String getKary_UID(int id)
+    public String getKaryUID(int id)
     {
-        return fetchData_UID("Kary", ID_UZYTKOWNIKA, id);
+        return fetchDataUID("Kary", ID_UZYTKOWNIKA, id);
     }
 
-    public String getWypozyczenia_UID(int id)
+    public String getWypozyczeniaUID(int id)
     {
-        return fetchData_UID(WYPOZYCZENIA, ID_UZYTKOWNIKA, id);
+        return fetchDataUID(WYPOZYCZENIA, ID_UZYTKOWNIKA, id);
     }
 
-    public String getAdmin_AID(int id)
+    public String getAdminAID(int id)
     {
-        return fetchData_UID(ADMIN, "id", id);
+        return fetchDataUID(ADMIN, "id", id);
     }
 
     public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty, int idUzytkownika) {
@@ -127,37 +130,37 @@ public class SupabaseClient {
         return fetchData(UZYTKOWNIK, "*");
     }
 
-    public String getUzytkownicyLogin(String login_1, String password) {return fetchDatalogin(UZYTKOWNIK, "*", login_1, password);}
+    public String getUzytkownicyLogin(String login1, String password) {return fetchDatalogin(UZYTKOWNIK, "*", login1, password);}
 
-    public String getKsiazkaFiltr(Integer id, String tytul, String gatunek, String dataWydania, String Autor_Imie, String Autor_Nazwisko, Integer idPlacowki)
+    public String getKsiazkaFiltr(Integer id, String tytul, String gatunek, String dataWydania, String autorImie, String autorNazwisko, Integer idPlacowki)
     {
-        String k_statement = "(";
-        if(id != null) k_statement += "id.like.*" + id + "*,";
-        if(tytul != null)  k_statement += "Tytul.like.*" + tytul + "*,";
-        if(gatunek != null) k_statement += "Gatunek.like.*" + gatunek + "*,";
-        if(dataWydania != null) k_statement += "Data_Wydania.like.*" + dataWydania + "*,";
-        if(idPlacowki != null) k_statement += "id_placowki.like.*" + idPlacowki + "*,";
-        k_statement = k_statement.substring(0, k_statement.length() - 1) + ")";
+        String kstatement = "(";
+        if(id != null) kstatement += "id.like.*" + id + "*,";
+        if(tytul != null)  kstatement += "Tytul.like.*" + tytul + "*,";
+        if(gatunek != null) kstatement += "Gatunek.like.*" + gatunek + "*,";
+        if(dataWydania != null) kstatement += "Data_Wydania.like.*" + dataWydania + "*,";
+        if(idPlacowki != null) kstatement += "id_placowki.like.*" + idPlacowki + "*,";
+        kstatement = kstatement.substring(0, kstatement.length() - 1) + ")";
 
-        String a_statement = "(";
-        if(Autor_Imie != null) a_statement += "Imie.like.*" + Autor_Imie + "*,";
-        if(Autor_Nazwisko != null) a_statement += "Nazwisko.like.*" + Autor_Nazwisko + "*,";
-        a_statement = a_statement.substring(0, a_statement.length() - 1) + ")";
+        String astatement = "(";
+        if(autorImie != null) astatement += "Imie.like.*" + autorImie + "*,";
+        if(autorNazwisko != null) astatement += "Nazwisko.like.*" + autorNazwisko + "*,";
+        astatement = astatement.substring(0, astatement.length() - 1) + ")";
 
-        if(k_statement.equals(")")) k_statement = "(id.gt.0)";
-        if(a_statement.equals(")")) a_statement = "(id.gt.0)";
+        if(kstatement.equals(")")) kstatement = "(id.gt.0)";
+        if(astatement.equals(")")) astatement = "(id.gt.0)";
 
-        return fetchKsiazkaFiltr(k_statement, a_statement);
+        return fetchKsiazkaFiltr(kstatement, astatement);
     }
 
-    public String addUzytkownik(String imie, String nazwisko, String Data_Urodzenia, String Nazwa_Uzytkownika, String Haslo, String Email) {
+    public String addUzytkownik(String imie, String nazwisko, String dataUrodzenia, String nazwaUzytkownika, String haslo, String email) {
         return postData(UZYTKOWNIK, Map.of(
                 "Imie", imie,
                 NAZWISKO, nazwisko,
-                "Data_Urodzenia", Data_Urodzenia,
-                NAZWA_UZYTKOWNIKA, Nazwa_Uzytkownika,
-                HASLO, Haslo,
-                "Email", Email
+                "Data_Urodzenia", dataUrodzenia,
+                NAZWA_UZYTKOWNIKA, nazwaUzytkownika,
+                HASLO, haslo,
+                "Email", email
         ));
     }
 
@@ -165,11 +168,11 @@ public class SupabaseClient {
         return fetchData(ADMIN, "*");
     }
 
-    public String addAdmin(String imie, String nazwisko, String NazwaUzytkownika, String haslo, int idPlacowki) {
+    public String addAdmin(String imie, String nazwisko, String nazwaUzytkownika, String haslo, int idPlacowki) {
         return postData(ADMIN, Map.of(
                 "Imie", imie,
                 NAZWISKO, nazwisko,
-                NAZWA_UZYTKOWNIKA, NazwaUzytkownika,
+                NAZWA_UZYTKOWNIKA, nazwaUzytkownika,
                 HASLO, haslo,
                 ID_PLACOWKI, idPlacowki
         ));
@@ -213,41 +216,41 @@ public class SupabaseClient {
         return updateData("Kary", id, data);
     }
 
-    public String updateKsiazka(int id, String tytul, String gatunek, String dataWydania, String dodano, Integer idAutora, Integer idPlacowki) {
+    public String updateKsiazka(Ksiazka ksiazka) {
         Map<String, Object> data = new HashMap<>();
-        if (tytul != null) data.put("Tytul", tytul);
-        if (gatunek != null) data.put("Gatunek", gatunek);
-        if (dataWydania != null) data.put("Data_Wydania", dataWydania);
-        if (dodano != null) data.put("Dodano", dodano);
-        if (idAutora != null) data.put(ID_AUTORA, idAutora);
-        if (idPlacowki != null) data.put(ID_PLACOWKI, idPlacowki);
-        return updateData(KSIAZKA, id, data);
+        if (ksiazka.getTytul() != null) data.put("Tytul", ksiazka.getTytul());
+        if (ksiazka.getGatunek() != null) data.put("Gatunek", ksiazka.getGatunek());
+        if (ksiazka.getDataWydania() != null) data.put("Data_Wydania", ksiazka.getDataWydania());
+        if (ksiazka.getDodano() != null) data.put("Dodano", ksiazka.getDodano());
+        if (ksiazka.getIdautora() != null) data.put(ID_AUTORA, ksiazka.getIdautora());
+        if (ksiazka.getIdplacowki() != null) data.put(ID_PLACOWKI, ksiazka.getIdplacowki());
+        return updateData(KSIAZKA, ksiazka.getId(), data);
     }
 
-    public String updateUzytkownik(int id, String imie, String nazwisko, String Data_Urodzenia, String nazwaUzytkownika, String haslo, String email, Boolean Zablokowany, Boolean mfaEnabled, String mfaSecret) {
+    public String updateUzytkownik(Uzytkownik uzytkownik) {
         Map<String, Object> data = new HashMap<>();
-        if (imie != null) data.put("Imie", imie);
-        if (nazwisko != null) data.put(NAZWISKO, nazwisko);
-        if (Data_Urodzenia != null) data.put("Data_Urodzenia", Data_Urodzenia);
-        if (nazwaUzytkownika != null) data.put(NAZWA_UZYTKOWNIKA, nazwaUzytkownika);
-        if (haslo != null) data.put(HASLO, haslo);
-        if (email != null) data.put("Email", email);
-        if (Zablokowany != null) data.put("Zablokowany", Zablokowany);
-        if (mfaEnabled != null) data.put("Mfa_Enabled", mfaEnabled);
-        if (mfaSecret != null) data.put("Mfa_Secret", mfaSecret);
-        return updateData(UZYTKOWNIK, id, data);
+        if (uzytkownik.getImie() != null) data.put("Imie", uzytkownik.getImie());
+        if (uzytkownik.getNazwisko() != null) data.put(NAZWISKO, uzytkownik.getNazwisko());
+        if (uzytkownik.getDataUrodzenia() != null) data.put("Data_Urodzenia", uzytkownik.getDataUrodzenia());
+        if (uzytkownik.getNazwaUzytkownika() != null) data.put(NAZWA_UZYTKOWNIKA, uzytkownik.getNazwaUzytkownika());
+        if (uzytkownik.getHaslo() != null) data.put(HASLO, uzytkownik.getHaslo());
+        if (uzytkownik.getEmail() != null) data.put("Email", uzytkownik.getEmail());
+        if (uzytkownik.getZablokowany() != null) data.put("Zablokowany", uzytkownik.getZablokowany());
+        if (uzytkownik.getMfaEnabled() != null) data.put("Mfa_Enabled", uzytkownik.getMfaEnabled());
+        if (uzytkownik.getMfaSecret() != null) data.put("Mfa_Secret", uzytkownik.getMfaSecret());
+        return updateData(UZYTKOWNIK, uzytkownik.getId(), data);
     }
 
-    public String updateAdmin(int id, String imie, String nazwisko, String nazwaUzytkownika, String haslo, Integer idPlacowki, Boolean mfaEnabled, String mfaSecret) {
+    public String updateAdmin(Admin admin) {
         Map<String, Object> data = new HashMap<>();
-        if (imie != null) data.put("Imie", imie);
-        if (nazwisko != null) data.put(NAZWISKO, nazwisko);
-        if (nazwaUzytkownika != null) data.put(NAZWA_UZYTKOWNIKA, nazwaUzytkownika);
-        if (haslo != null) data.put(HASLO, haslo);
-        if (idPlacowki != null) data.put(ID_PLACOWKI, idPlacowki);
-        if (mfaEnabled != null) data.put("Mfa_Enabled", mfaEnabled);
-        if (mfaSecret != null) data.put("Mfa_Secret", mfaSecret);
-        return updateData(ADMIN, id, data);
+        if (admin.getImie() != null) data.put("Imie", admin.getImie());
+        if (admin.getNazwisko() != null) data.put(NAZWISKO, admin.getNazwisko());
+        if (admin.getNazwaUzytkownika() != null) data.put(NAZWA_UZYTKOWNIKA, admin.getNazwaUzytkownika());
+        if (admin.getHaslo() != null) data.put(HASLO, admin.getHaslo());
+        if (admin.getIdplacowki() != null) data.put(ID_PLACOWKI, admin.getIdplacowki());
+        if (admin.getMfaEnabled() != null) data.put("Mfa_Enabled", admin.getMfaEnabled());
+        if (admin.getMfaSecret() != null) data.put("Mfa_Secret", admin.getMfaSecret());
+        return updateData(ADMIN, admin.getId(), data);
     }
 
     public String updateAutor(int id, String imie, String nazwisko, Integer rokUrodzenia) {
@@ -303,7 +306,7 @@ public class SupabaseClient {
     }
     }
 
-    private String fetchData_UID(String table, String filtr,int id) {
+    private String fetchDataUID(String table, String filtr,int id) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -321,25 +324,12 @@ public class SupabaseClient {
         }
     }
 
-/*
-    private String fetchData(String table, String columns) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/" + table)
-                        .queryParam(SELECT, columns)
-                        .queryParam(NAZWA_UZYTKOWNIKA, "like.*user*")
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
-*/
-private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
+private String fetchKsiazkaFiltr(String kstatement, String astatement) {
     try {
         String data = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/" + KSIAZKA)
-                        .queryParam("and", k_statement)
+                        .queryParam("and", kstatement)
                         .build())
                 .retrieve()
                 .bodyToMono(String.class)
@@ -349,7 +339,7 @@ private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
                 .uri(uriBuilder -> uriBuilder
                         .path("/" + AUTORZY)
                         .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11, (data.indexOf(ID_PLACOWKI) - 2)))
-                        .queryParam("and", a_statement)
+                        .queryParam("and", astatement)
                         .build())
                 .retrieve()
                 .bodyToMono(String.class)
@@ -395,28 +385,16 @@ private String fetchKsiazkaFiltr(String k_statement, String a_statement) {
         }
         return filteredArray.toString();
     }
-/*
-    private String fetchAnyFiltr(String collumn, String statement) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/" + collumn)
-                        .queryParam("and", statement)
-                        .build())
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
 
-    }
-*/
 
-    private String fetchDatalogin(String table, String columns, String login_data, String password_data) {
+    private String fetchDatalogin(String table, String columns, String logindata, String passworddata) {
         try {
             String login = webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/" + table)
                             .queryParam(SELECT, columns)
-                            .queryParam("or", "(Nazwa_Uzytkownika.eq." + login_data + ",Email.eq." + login_data + ")")
-                            .queryParam(HASLO, "eq." + password_data)
+                            .queryParam("or", "(Nazwa_Uzytkownika.eq." + logindata + ",Email.eq." + logindata + ")")
+                            .queryParam(HASLO, "eq." + passworddata)
                             .build())
                     .retrieve()
                     .bodyToMono(String.class)

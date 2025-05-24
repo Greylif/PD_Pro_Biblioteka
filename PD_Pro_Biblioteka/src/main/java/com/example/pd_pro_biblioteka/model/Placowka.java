@@ -11,17 +11,17 @@ public class Placowka {
     private int id;
     @Setter
     @Getter
-    private String Adres;
+    private String adres;
 
     public Placowka() {}
 
-    public Placowka(int id, String Adres) {
+    public Placowka(int id, String adres) {
         this.id = id;
-        this.Adres = Adres;
+        this.adres = adres;
     }
 
     @Override
     public String toString() {
-        return "Placowka{id=" + id + ", Adres='" + Adres + "'}";
+        return "Placowka{id=" + id + ", Adres='" + adres + "'}";
     }
 }

@@ -12,25 +12,25 @@ public class Uzytkownik {
     private int id;
     @Setter
     @Getter
-    private String Imie;
+    private String imie;
     @Setter
     @Getter
-    private String Nazwisko;
+    private String nazwisko;
     @Setter
     @Getter
-    private String Data_Urodzenia;
+    private String dataUrodzenia;
     @Setter
     @Getter
-    private String Haslo;
+    private String haslo;
     @Setter
     @Getter
-    private String Nazwa_Uzytkownika;
+    private String nazwaUzytkownika;
     @Setter
     @Getter
-    private String Email;
+    private String email;
     @Setter
     @Getter
-    private Boolean Zablokowany;
+    private Boolean zablokowany;
     @Setter
     @Getter
     private Boolean mfaEnabled;
@@ -40,21 +40,23 @@ public class Uzytkownik {
 
     public Uzytkownik() {}
 
-    public Uzytkownik(int id, String Imie, String Nazwisko, String Data_Urodzenia, String Nazwa_Uzytkownika, String Haslo, String Email, Boolean Zablokowany) {
+    public Uzytkownik(int id, String imie, String nazwisko, String dataUrodzenia, String nazwaUzytkownika, String haslo, String email, Boolean zablokowany, Boolean mfaEnabled, String mfaSecret) {
         this.id = id;
-        this.Imie = Imie;
-        this.Nazwisko = Nazwisko;
-        this.Data_Urodzenia = Data_Urodzenia;
-        this.Nazwa_Uzytkownika = Nazwa_Uzytkownika;
-        this.Haslo = Haslo;
-        this.Email = Email;
-        this.Zablokowany = Zablokowany;
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.dataUrodzenia = dataUrodzenia;
+        this.nazwaUzytkownika = nazwaUzytkownika;
+        this.haslo = haslo;
+        this.email = email;
+        this.zablokowany = zablokowany;
+        this.mfaEnabled = mfaEnabled;
+        this.mfaSecret = mfaSecret;
     }
 
 
     @Override
     public String toString() {
-        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Data_Urodzenia='" + Data_Urodzenia + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email=" + Email + ", Zablokowany=" + Zablokowany + "}";
+        return "Uzytkownik{id=" + id + ", Imie='" + imie + "', Nazwisko='" + nazwisko + "', Data_Urodzenia='" + dataUrodzenia + "', Nazwa_Uzytkownika='" + nazwaUzytkownika + "', Haslo='" + haslo + "', Email=" + email + ", Zablokowany=" + zablokowany + "}";
     }
 
 }

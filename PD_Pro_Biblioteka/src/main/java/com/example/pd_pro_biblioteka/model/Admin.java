@@ -11,19 +11,19 @@ public class Admin {
     private int id;
     @Setter
     @Getter
-    private String Imie;
+    private String imie;
     @Setter
     @Getter
-    private String Nazwisko;
+    private String nazwisko;
     @Setter
     @Getter
-    private String Nazwa_Uzytkownika;
+    private String nazwaUzytkownika;
     @Setter
     @Getter
-    private String Haslo;
+    private String haslo;
     @Setter
     @Getter
-    private int id_placowki;
+    private Integer idplacowki;
     @Setter
     @Getter
     private Boolean mfaEnabled;
@@ -33,18 +33,20 @@ public class Admin {
 
     public Admin() {}
 
-    public Admin(int id, String Imie, String Nazwisko, String Nazwa_Uzytkownika, String Haslo, int id_placowki) {
+    public Admin(Integer id, String imie, String nazwisko, String nazwaUzytkownika, String haslo, Integer idplacowki, Boolean mfaEnabled, String mfaSecret) {
         this.id = id;
-        this.Imie = Imie;
-        this.Nazwisko = Nazwisko;
-        this.Nazwa_Uzytkownika = Nazwa_Uzytkownika;
-        this.Haslo = Haslo;
-        this.id_placowki = id_placowki;
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.nazwaUzytkownika = nazwaUzytkownika;
+        this.haslo = haslo;
+        this.idplacowki = idplacowki;
+        this.mfaEnabled = mfaEnabled;
+        this.mfaSecret = mfaSecret;
     }
 
 
     @Override
     public String toString() {
-        return "Admin{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', id_placowki=" + id_placowki + "}";
+        return "Admin{id=" + id + ", Imie='" + imie + "', Nazwisko='" + nazwisko + "', Nazwa_Uzytkownika='" + nazwaUzytkownika + "', Haslo='" + haslo + "', id_placowki=" + idplacowki + "', mfa_enabled=" + mfaEnabled + ", mfa_secret=" + mfaSecret + "}";
     }
 }

@@ -11,25 +11,25 @@ public class Autorzy {
     private int id;
     @Setter
     @Getter
-    private String Imie;
+    private String imie;
     @Setter
     @Getter
-    private String Nazwisko;
+    private String nazwisko;
     @Setter
     @Getter
-    private int Rok_Urodzenia;
+    private int rokUrodzenia;
 
     public Autorzy() {}
 
-    public Autorzy(int id, String Imie, String Nazwisko, int Rok_Urodzenia) {
+    public Autorzy(int id, String imie, String nazwisko, int rokUrodzenia) {
         this.id = id;
-        this.Imie = Imie;
-        this.Nazwisko = Nazwisko;
-        this.Rok_Urodzenia = Rok_Urodzenia;
+        this.imie = imie;
+        this.nazwisko = nazwisko;
+        this.rokUrodzenia = rokUrodzenia;
     }
 
     @Override
     public String toString() {
-        return "Autorzy{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Rok_Urodzenia=" + Rok_Urodzenia + "}";
+        return "Autorzy{id=" + id + ", Imie='" + imie + "', Nazwisko='" + nazwisko + "', Rok_Urodzenia=" + rokUrodzenia + "}";
     }
 }

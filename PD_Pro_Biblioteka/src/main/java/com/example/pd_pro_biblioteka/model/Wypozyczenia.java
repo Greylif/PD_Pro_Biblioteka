@@ -11,34 +11,34 @@ public class Wypozyczenia {
     private int id;
     @Setter
     @Getter
-    private String Data_Wypozyczenia;
+    private String dataWypozyczenia;
     @Setter
     @Getter
-    private String Data_Oddania;
+    private String dataOddania;
     @Setter
     @Getter
-    private String Termin_Oddania;
+    private String terminOddania;
     @Setter
     @Getter
-    private int id_ksiazki;
+    private int idksiazki;
     @Setter
     @Getter
-    private int id_uzytkownika;
+    private int iduzytkownika;
 
     public Wypozyczenia() {}
 
-    public Wypozyczenia(int id, String Data_Wypozyczenia, String Data_Oddania, String Termin_Oddania, int id_ksiazki, int id_uzytkownika) {
+    public Wypozyczenia(int id, String dataWypozyczenia, String dataOddania, String terminOddania, int idksiazki, int iduzytkownika) {
         this.id = id;
-        this.Data_Wypozyczenia = Data_Wypozyczenia;
-        this.Data_Oddania = Data_Oddania;
-        this.Termin_Oddania = Termin_Oddania;
-        this.id_ksiazki = id_ksiazki;
-        this.id_uzytkownika = id_uzytkownika;
+        this.dataWypozyczenia = dataWypozyczenia;
+        this.dataOddania = dataOddania;
+        this.terminOddania = terminOddania;
+        this.idksiazki = idksiazki;
+        this.iduzytkownika = iduzytkownika;
     }
 
 
     @Override
     public String toString() {
-        return "Wypozyczenia{id=" + id + ", Data_Wypozyczenia=" + Data_Wypozyczenia + ", Data_Oddania=" + Data_Oddania + ", Termin_Oddania=" + Termin_Oddania + ", id_ksiazki=" + id_ksiazki + ", id_uzytkownika=" + id_uzytkownika + "}";
+        return "Wypozyczenia{id=" + id + ", Data_Wypozyczenia=" + dataWypozyczenia + ", Data_Oddania=" + dataOddania + ", Termin_Oddania=" + terminOddania + ", id_ksiazki=" + idksiazki + ", id_uzytkownika=" + iduzytkownika + "}";
     }
 }

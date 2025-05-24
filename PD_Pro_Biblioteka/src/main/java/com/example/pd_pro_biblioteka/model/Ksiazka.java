@@ -11,46 +11,46 @@ public class Ksiazka {
     private int id;
     @Setter
     @Getter
-    private String Tytul;
+    private String tytul;
     @Setter
     @Getter
-    private String Gatunek;
+    private String gatunek;
     @Setter
     @Getter
-    private String Data_Wydania;
+    private String dataWydania;
     @Setter
     @Getter
-    private String Dodano;
+    private String dodano;
     @Setter
     @Getter
-    private int id_autora;
+    private Integer idautora;
     @Setter
     @Getter
-    private int id_placowki;
+    private Integer idplacowki;
     @Setter
     @Getter
-    private Boolean Rezerwacja;
+    private Boolean rezerwacja;
     @Setter
     @Getter
-    private Boolean czy_wyporzyczono;
+    private Boolean czywyporzyczono;
 
     public Ksiazka() {}
 
-    public Ksiazka(int id, String Tytul, String Gatunek, String Data_Wydania, String Dodano, int id_autora, int id_placowki, Boolean Rezerwacja, Boolean czy_wyporzyczono) {
+    public Ksiazka(int id, String tytul, String gatunek, String dataWydania, String dodano, Integer idautora, Integer idplacowki, Boolean rezerwacja, Boolean czywyporzyczono) {
         this.id = id;
-        this.Tytul = Tytul;
-        this.Gatunek = Gatunek;
-        this.Data_Wydania = Data_Wydania;
-        this.Dodano = Dodano;
-        this.id_autora = id_autora;
-        this.id_placowki = id_placowki;
-        this.Rezerwacja = Rezerwacja;
-        this.czy_wyporzyczono = czy_wyporzyczono;
+        this.tytul = tytul;
+        this.gatunek = gatunek;
+        this.dataWydania = dataWydania;
+        this.dodano = dodano;
+        this.idautora = idautora;
+        this.idplacowki = idplacowki;
+        this.rezerwacja = rezerwacja;
+        this.czywyporzyczono = czywyporzyczono;
     }
 
 
     @Override
     public String toString() {
-        return "Ksiazka{id=" + id + ", Tytul='" + Tytul + '\'' + ", Gatunek='" + Gatunek + '\'' + ", Data_Wydania=" + Data_Wydania + ", Dodano=" + Dodano + ", id_autora=" + id_autora + ", id_placowki=" + id_placowki + '}';
+        return "Ksiazka{id=" + id + ", Tytul='" + tytul + '\'' + ", Gatunek='" + gatunek + '\'' + ", Data_Wydania=" + dataWydania + ", Dodano=" + dodano + ", id_autora=" + idautora + ", rezerwacja=" + rezerwacja + ", id_placowki=" + idplacowki + ", czywyporzyczono=" + czywyporzyczono + "}";
     }
 }
