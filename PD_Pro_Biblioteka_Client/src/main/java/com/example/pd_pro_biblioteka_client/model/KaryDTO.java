@@ -15,4 +15,7 @@ public class KaryDTO {
     public String Termin_Zaplaty;
     public String Czy_Zaplacono;
     public int id_uzytkownika;
+
+    public KaryDTO(int i, double v, String date, String date1, String aFalse, int i1) {
+    }
 }

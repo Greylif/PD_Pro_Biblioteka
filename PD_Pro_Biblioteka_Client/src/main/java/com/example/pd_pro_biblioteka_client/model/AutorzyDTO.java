@@ -5,4 +5,7 @@ public class AutorzyDTO {
     public String Imie;
     public String Nazwisko;
     public int Rok_Urodzenia;
+
+    public AutorzyDTO(int i, String jan, String kowalski, int i1) {
+    }
 }
