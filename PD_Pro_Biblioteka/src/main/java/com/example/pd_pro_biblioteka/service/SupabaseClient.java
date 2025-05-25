@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,6 +37,23 @@ public class SupabaseClient {
     private static final String ID_PLACOWKI = "id_placowki";
     private static final String ID_UZYTKOWNIKA = "id_uzytkownika";
     private static final String SELECT = "select";
+    private static final String DATA_WYPOZYCZENIA = "Data_Wypozyczenia";
+    private static final String TERMIN_ODDANIA = "Termin_Oddania";
+    private static final String MFA_ENABLED = "Mfa_Enabled";
+    private static final String DATA_ODDANIA = "Data_Oddania";
+    private static final String TERMIN_ZAPLATY = "Termin_Zaplaty";
+    private static final String DATA_URODZENIA = "Data_Urodzenia";
+    private static final String ADRES = "Adres";
+    private static final String KWOTA = "Kwota";
+    private static final String MFA_SECRET = "Mfa_Secret";
+    private static final String DATA_WYDANIA_KARY = "Data_Wydania_Kary";
+    private static final String EMAIL = "Email";
+    private static final String TYTUL = "Tytul";
+    private static final String DATA_WYDANIA = "Data_Wydania";
+    private static final String ROK_URODZENIA = "Rok_Urodzenia";
+    private static final String GATUNEK = "Gatunek";
+    private static final String ID_KSIAZKI = "id_ksiazki";
+
 
     public SupabaseClient(WebClient.Builder webClientBuilder) {
         try {
@@ -57,7 +75,7 @@ public class SupabaseClient {
     }
 
     public String addPlacowka(String adres) {
-        return postData(PLACOWKA, Map.of("Adres", adres));
+        return postData(PLACOWKA, Map.of(ADRES, adres));
     }
 
     public String getWypozyczenia() {
@@ -68,13 +86,13 @@ public class SupabaseClient {
         Map<String, Object> data = new HashMap<>();
 
         if (dataWypozyczenia != null) {
-            data.put("Data_Wypozyczenia", dataWypozyczenia);
+            data.put(DATA_WYPOZYCZENIA, dataWypozyczenia);
         }
         if (dataOddania != null) {
-            data.put("Data_Oddania", dataOddania);
+            data.put(DATA_ODDANIA, dataOddania);
         }
-        data.put("Termin_Oddania", terminOddania);
-        data.put("id_ksiazki", idKsiazki);
+        data.put(TERMIN_ODDANIA, terminOddania);
+        data.put(ID_KSIAZKI, idKsiazki);
         data.put(ID_UZYTKOWNIKA, idUzytkownika);
 
         return postData(WYPOZYCZENIA, data);
@@ -104,11 +122,11 @@ public class SupabaseClient {
         Map<String, Object> data = new HashMap<>();
 
         if (dataWydaniaKary != null) {
-            data.put("Data_Wydania_Kary", dataWydaniaKary);
+            data.put(DATA_WYDANIA_KARY, dataWydaniaKary);
         }
 
-        data.put("Kwota", kwota);
-        data.put("Termin_Zaplaty", terminZaplaty);
+        data.put(KWOTA, kwota);
+        data.put(TERMIN_ZAPLATY, terminZaplaty);
         data.put(ID_UZYTKOWNIKA, idUzytkownika);
 
         return postData("Kary", data);
@@ -118,9 +136,9 @@ public class SupabaseClient {
 
     public String addKsiazka(String tytul, String gatunek, String dataWydania, int idAutora, int idPlacowki) {
         return postData(KSIAZKA, Map.of(
-                "Tytul", tytul,
-                "Gatunek", gatunek,
-                "Data_Wydania", dataWydania,
+                TYTUL, tytul,
+                GATUNEK, gatunek,
+                DATA_WYDANIA, dataWydania,
                 ID_AUTORA, idAutora,
                 ID_PLACOWKI, idPlacowki
         ));
@@ -132,35 +150,48 @@ public class SupabaseClient {
 
     public String getUzytkownicyLogin(String login1, String password) {return fetchDatalogin(UZYTKOWNIK, "*", login1, password);}
 
+
+    private String safeLike(String column, String value) {
+        if (value.matches("[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s.-]{1,100}")) {
+            return column + ".like.*" + value + "*";
+        }
+        throw new IllegalArgumentException("Invalid characters in value: " + value);
+    }
+
     public String getKsiazkaFiltr(Integer id, String tytul, String gatunek, String dataWydania, String autorImie, String autorNazwisko, Integer idPlacowki)
     {
-        String kstatement = "(";
-        if(id != null) kstatement += "id.like.*" + id + "*,";
-        if(tytul != null)  kstatement += "Tytul.like.*" + tytul + "*,";
-        if(gatunek != null) kstatement += "Gatunek.like.*" + gatunek + "*,";
-        if(dataWydania != null) kstatement += "Data_Wydania.like.*" + dataWydania + "*,";
-        if(idPlacowki != null) kstatement += "id_placowki.like.*" + idPlacowki + "*,";
-        kstatement = kstatement.substring(0, kstatement.length() - 1) + ")";
+            StringBuilder kstatement = new StringBuilder("(");
+            if (id != null) kstatement.append(safeLike("id", String.valueOf(id))).append(",");
+            if (tytul != null) kstatement.append(safeLike(TYTUL, tytul)).append(",");
+            if (gatunek != null) kstatement.append(safeLike(GATUNEK, gatunek)).append(",");
+            if (dataWydania != null) kstatement.append(safeLike(DATA_WYDANIA, dataWydania)).append(",");
+            if (idPlacowki != null) kstatement.append(safeLike(ID_PLACOWKI, String.valueOf(idPlacowki))).append(",");
 
-        String astatement = "(";
-        if(autorImie != null) astatement += "Imie.like.*" + autorImie + "*,";
-        if(autorNazwisko != null) astatement += "Nazwisko.like.*" + autorNazwisko + "*,";
-        astatement = astatement.substring(0, astatement.length() - 1) + ")";
+            if (kstatement.length() > 1) kstatement.setLength(kstatement.length() - 1);
+            kstatement.append(")");
 
-        if(kstatement.equals(")")) kstatement = "(id.gt.0)";
-        if(astatement.equals(")")) astatement = "(id.gt.0)";
+            StringBuilder astatement = new StringBuilder("(");
+            if (autorImie != null) astatement.append(safeLike("Imie", autorImie)).append(",");
+            if (autorNazwisko != null) astatement.append(safeLike(NAZWISKO, autorNazwisko)).append(",");
+            if (astatement.length() > 1) astatement.setLength(astatement.length() - 1);
+            astatement.append(")");
 
-        return fetchKsiazkaFiltr(kstatement, astatement);
+            if (kstatement.toString().equals("()")) kstatement = new StringBuilder("(id.gt.0)");
+            if (astatement.toString().equals("()")) astatement = new StringBuilder("(id.gt.0)");
+
+
+        return fetchKsiazkaFiltr(kstatement.toString(), astatement.toString());
+
     }
 
     public String addUzytkownik(String imie, String nazwisko, String dataUrodzenia, String nazwaUzytkownika, String haslo, String email) {
         return postData(UZYTKOWNIK, Map.of(
                 "Imie", imie,
                 NAZWISKO, nazwisko,
-                "Data_Urodzenia", dataUrodzenia,
+                DATA_URODZENIA, dataUrodzenia,
                 NAZWA_UZYTKOWNIKA, nazwaUzytkownika,
                 HASLO, haslo,
-                "Email", email
+                EMAIL, email
         ));
     }
 
@@ -186,31 +217,31 @@ public class SupabaseClient {
         return postData(AUTORZY, Map.of(
                 "Imie", imie,
                 NAZWISKO, nazwisko,
-                "Rok_Urodzenia", rokUrodzenia
+                ROK_URODZENIA, rokUrodzenia
         ));
     }
 
     public String updatePlacowka(int id, String adres) {
         Map<String, Object> data = new HashMap<>();
-        if (adres != null) data.put("Adres", adres);
+        if (adres != null) data.put(ADRES, adres);
         return updateData(PLACOWKA, id, data);
     }
 
     public String updateWypozyczenie(int id, String dataWypozyczenia, String dataOddania, String terminOddania, Integer idKsiazki, Integer idUzytkownika) {
         Map<String, Object> data = new HashMap<>();
-        if (dataWypozyczenia != null) data.put("Data_Wypozyczenia", dataWypozyczenia);
-        if (dataOddania != null) data.put("Data_Oddania", dataOddania);
-        if (terminOddania != null) data.put("Termin_Oddania", terminOddania);
-        if (idKsiazki != null) data.put("id_ksiazki", idKsiazki);
+        if (dataWypozyczenia != null) data.put(DATA_WYPOZYCZENIA, dataWypozyczenia);
+        if (dataOddania != null) data.put(DATA_ODDANIA, dataOddania);
+        if (terminOddania != null) data.put(TERMIN_ODDANIA, terminOddania);
+        if (idKsiazki != null) data.put(ID_KSIAZKI, idKsiazki);
         if (idUzytkownika != null) data.put(ID_UZYTKOWNIKA, idUzytkownika);
         return updateData(WYPOZYCZENIA, id, data);
     }
 
     public String updateKara(int id, Double kwota, String dataWydaniaKary, String terminZaplaty, Boolean czyZaplacono, Integer idUzytkownika) {
         Map<String, Object> data = new HashMap<>();
-        if (kwota != null) data.put("Kwota", kwota);
-        if (dataWydaniaKary != null) data.put("Data_Wydania_Kary", dataWydaniaKary);
-        if (terminZaplaty != null) data.put("Termin_Zaplaty", terminZaplaty);
+        if (kwota != null) data.put(KWOTA, kwota);
+        if (dataWydaniaKary != null) data.put(DATA_WYDANIA_KARY, dataWydaniaKary);
+        if (terminZaplaty != null) data.put(TERMIN_ZAPLATY, terminZaplaty);
         if (czyZaplacono != null) data.put("Czy_Zaplacono", czyZaplacono);
         if (idUzytkownika != null) data.put(ID_UZYTKOWNIKA, idUzytkownika);
         return updateData("Kary", id, data);
@@ -218,9 +249,9 @@ public class SupabaseClient {
 
     public String updateKsiazka(Ksiazka ksiazka) {
         Map<String, Object> data = new HashMap<>();
-        if (ksiazka.getTytul() != null) data.put("Tytul", ksiazka.getTytul());
-        if (ksiazka.getGatunek() != null) data.put("Gatunek", ksiazka.getGatunek());
-        if (ksiazka.getDataWydania() != null) data.put("Data_Wydania", ksiazka.getDataWydania());
+        if (ksiazka.getTytul() != null) data.put(TYTUL, ksiazka.getTytul());
+        if (ksiazka.getGatunek() != null) data.put(GATUNEK, ksiazka.getGatunek());
+        if (ksiazka.getDataWydania() != null) data.put(DATA_WYDANIA, ksiazka.getDataWydania());
         if (ksiazka.getDodano() != null) data.put("Dodano", ksiazka.getDodano());
         if (ksiazka.getIdautora() != null) data.put(ID_AUTORA, ksiazka.getIdautora());
         if (ksiazka.getIdplacowki() != null) data.put(ID_PLACOWKI, ksiazka.getIdplacowki());
@@ -231,13 +262,13 @@ public class SupabaseClient {
         Map<String, Object> data = new HashMap<>();
         if (uzytkownik.getImie() != null) data.put("Imie", uzytkownik.getImie());
         if (uzytkownik.getNazwisko() != null) data.put(NAZWISKO, uzytkownik.getNazwisko());
-        if (uzytkownik.getDataUrodzenia() != null) data.put("Data_Urodzenia", uzytkownik.getDataUrodzenia());
+        if (uzytkownik.getDataUrodzenia() != null) data.put(DATA_URODZENIA, uzytkownik.getDataUrodzenia());
         if (uzytkownik.getNazwaUzytkownika() != null) data.put(NAZWA_UZYTKOWNIKA, uzytkownik.getNazwaUzytkownika());
         if (uzytkownik.getHaslo() != null) data.put(HASLO, uzytkownik.getHaslo());
-        if (uzytkownik.getEmail() != null) data.put("Email", uzytkownik.getEmail());
+        if (uzytkownik.getEmail() != null) data.put(EMAIL, uzytkownik.getEmail());
         if (uzytkownik.getZablokowany() != null) data.put("Zablokowany", uzytkownik.getZablokowany());
-        if (uzytkownik.getMfaEnabled() != null) data.put("Mfa_Enabled", uzytkownik.getMfaEnabled());
-        if (uzytkownik.getMfaSecret() != null) data.put("Mfa_Secret", uzytkownik.getMfaSecret());
+        if (uzytkownik.getMfaEnabled() != null) data.put(MFA_ENABLED, uzytkownik.getMfaEnabled());
+        if (uzytkownik.getMfaSecret() != null) data.put(MFA_SECRET, uzytkownik.getMfaSecret());
         return updateData(UZYTKOWNIK, uzytkownik.getId(), data);
     }
 
@@ -248,8 +279,8 @@ public class SupabaseClient {
         if (admin.getNazwaUzytkownika() != null) data.put(NAZWA_UZYTKOWNIKA, admin.getNazwaUzytkownika());
         if (admin.getHaslo() != null) data.put(HASLO, admin.getHaslo());
         if (admin.getIdplacowki() != null) data.put(ID_PLACOWKI, admin.getIdplacowki());
-        if (admin.getMfaEnabled() != null) data.put("Mfa_Enabled", admin.getMfaEnabled());
-        if (admin.getMfaSecret() != null) data.put("Mfa_Secret", admin.getMfaSecret());
+        if (admin.getMfaEnabled() != null) data.put(MFA_ENABLED, admin.getMfaEnabled());
+        if (admin.getMfaSecret() != null) data.put(MFA_SECRET, admin.getMfaSecret());
         return updateData(ADMIN, admin.getId(), data);
     }
 
@@ -257,7 +288,7 @@ public class SupabaseClient {
         Map<String, Object> data = new HashMap<>();
         if (imie != null) data.put("Imie", imie);
         if (nazwisko != null) data.put(NAZWISKO, nazwisko);
-        if (rokUrodzenia != null) data.put("Rok_Urodzenia", rokUrodzenia);
+        if (rokUrodzenia != null) data.put(ROK_URODZENIA, rokUrodzenia);
         return updateData(AUTORZY, id, data);
     }
 
@@ -306,7 +337,9 @@ public class SupabaseClient {
     }
     }
 
-    private String fetchDataUID(String table, String filtr,int id) {
+    private static final Set<String> ALLOWED_FILTERS = Set.of("id", ID_PLACOWKI, ID_AUTORA, ID_UZYTKOWNIKA, ID_KSIAZKI);
+
+    private String fetchDataUID(String table, String filtr, Integer id) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
@@ -338,7 +371,7 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
         String autor = webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/" + AUTORZY)
-                        .queryParam("id", "eq." + data.substring(data.indexOf(ID_AUTORA) + 11, (data.indexOf(ID_PLACOWKI) - 2)))
+                        .queryParam("id", "gt.0")
                         .queryParam("and", astatement)
                         .build())
                 .retrieve()
@@ -386,9 +419,15 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
         return filteredArray.toString();
     }
 
+    private boolean isSafe(String input) {
+        return input != null && input.matches("[\\w@.]{1,50}");
+    }
 
     private String fetchDatalogin(String table, String columns, String logindata, String passworddata) {
         try {
+            if (!isSafe(logindata) || !isSafe(passworddata)) {
+                throw new IllegalArgumentException("Invalid login or password format.");
+            }
             String login = webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/" + table)
@@ -405,43 +444,71 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
                 throw new InstanceNotFoundException(table, ": brak uzytkownika ");
             }
         return login;
-        } catch (InstanceNotFoundException e) {
+        } catch (InstanceNotFoundException | IllegalArgumentException e) {
             throw e;
-        } catch (Exception e) {
+        }  catch (Exception e) {
             throw new SupabaseConnectionException("Failed to fetch user: ", e);
         }
+    }
+
+    private static final Pattern SAFE_TEXT_PATTERN = Pattern.compile("[\\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s@.+\\-:,]{1,200}");
+
+
+    private boolean isSafeValue(Object value) {
+        if (value instanceof String string) {
+            return SAFE_TEXT_PATTERN.matcher(string).matches();
+        }
+        return true;
+    }
+
+    private Map<String, Object> validateRequestBody(Map<String, Object> requestBody) {
+        Map<String, Object> safeMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : requestBody.entrySet()) {
+            Object value = entry.getValue();
+            if (isSafeValue(value)) {
+                safeMap.put(entry.getKey(), value);
+            } else {
+                throw new IllegalArgumentException("Unsafe value for field: " + entry.getKey());
+            }
+        }
+        return safeMap;
     }
 
 
     private String postData(String table, Map<String, Object> requestBody) {
         try {
+            Map<String, Object> safeBody = validateRequestBody(requestBody);
             return webClient.post()
                     .uri("/" + table)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(requestBody)
+                    .bodyValue(safeBody)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
+            throw e;
+        }
+        catch (Exception e) {
             throw new SupabaseConnectionException("Failed to post to table " + table + ": ", e);
         }
     }
 
     private String updateData(String table, int id, Map<String, Object> requestBody) {
         try {
+            Map<String, Object> safeBody = validateRequestBody(requestBody);
             return webClient.patch()
                     .uri(uriBuilder -> uriBuilder.path("/" + table)
                             .queryParam("id", "eq." + id).build())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(requestBody)
+                    .bodyValue(safeBody)
                     .retrieve()
                     .bodyToMono(String.class)
                     .block();
         } catch (Exception e) {
             throw new SupabaseConnectionException("Failed to update to table " + table + ": ", e);
         }
-
     }
+
 
     private String deleteData(String table, int id) {
         try{

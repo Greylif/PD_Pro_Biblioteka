@@ -1574,6 +1574,72 @@ class SupabaseClientTest {
             }
         }
 
+    @Nested
+    @DisplayName("Testy powiazane z sql injection")
+    class sqlinjectionTests
+    {
+        @Test
+        @DisplayName("Poprawne logowanie")
+        void fetchDataloginvalidCredentials() {
+            when(webClient.get()).thenReturn(requestHeadersUriSpec);
+            when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+            when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+            when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("user"));
+
+            String result = supabaseClient.getUzytkownicyLogin("user", "pass");
+            assertEquals("user", result);
+        }
+
+        @Test
+        @DisplayName("SQL injection w login")
+        void fetchDatalogininvalidLogin() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                supabaseClient.getUzytkownicyLogin("' OR 1=1 --", "pass");
+            });
+        }
+
+        @Test
+        @DisplayName("null login")
+        void fetchDatalogininvalidLoginnull() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                supabaseClient.getUzytkownicyLogin(null, "pass");
+            });
+        }
+
+        @Test
+        @DisplayName("null haslo")
+        void fetchDatalogininvalidpassnull() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                supabaseClient.getUzytkownicyLogin(null, "' OR 1=1 --");
+            });
+        }
+
+        @Test
+        @DisplayName("SQL injection w password")
+        void fetchDatalogininvalidpass() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                supabaseClient.getUzytkownicyLogin("user", "' OR 1=1 --");
+            });
+        }
+
+        @Test
+        @DisplayName("SQL injection w body post/update")
+        void fetchDatalogininvalidbody() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                supabaseClient.addPlacowka("' OR 1=1 --");
+            });
+        }
+
+        @Test
+        @DisplayName("SQL injection w ksiazka filtr")
+        void fetchKsiazkaFiltrsqlinjection() {
+            assertThrows(IllegalArgumentException.class, () -> {
+                supabaseClient.getKsiazkaFiltr(1, "Silmarillion", "' OR 1=1 --", "1977-09-15", "John", "Tolkien", 101);
+            });
+        }
+
+    }
+
         @Test
         @DisplayName("Nieudane polaczenie do bazy danych")
         void SupabaseClientThrowsSupabaseConnectionException(){
@@ -1585,4 +1651,6 @@ class SupabaseClientTest {
                 new SupabaseClient(webClientBuilder);
             });
     }
+
+
 }

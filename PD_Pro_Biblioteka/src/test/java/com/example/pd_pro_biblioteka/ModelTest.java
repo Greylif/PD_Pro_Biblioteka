@@ -287,14 +287,14 @@ public class ModelTest {
         @Test
         @DisplayName("Sprawdzanie tworzenia klasy Uzytkownik z wszystkimi argumentami")
         void testAllArgs() {
-            Uzytkownik user = new Uzytkownik(1,"Jan","Kowalski","2000-01-01","jkowalski","pass","s092677@student.tu.kiece.pl", Boolean.FALSE, Boolean.FALSE, "secret");
+            Uzytkownik user = new Uzytkownik(1,"Jan","Kowalski","2000-01-01","pass","jkowalski","s092677@student.tu.kiece.pl", Boolean.FALSE, Boolean.FALSE, "secret");
 
             assertEquals(1, user.getId());
             assertEquals("Jan", user.getImie());
             assertEquals("Kowalski", user.getNazwisko());
             assertEquals("2000-01-01", user.getDataUrodzenia());
-            assertEquals("jkowalski", user.getNazwaUzytkownika());
             assertEquals("pass", user.getHaslo());
+            assertEquals("jkowalski", user.getNazwaUzytkownika());
             assertEquals("s092677@student.tu.kiece.pl", user.getEmail());
         }
 
