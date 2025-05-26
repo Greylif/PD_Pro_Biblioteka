@@ -150,6 +150,7 @@ public class SupabaseClient {
 
     public String getUzytkownicyLogin(String login1, String password) {return fetchDatalogin(UZYTKOWNIK, "*", login1, password);}
 
+    public String getAdminLogin(String login1, String password) {return fetchDatalogin(ADMIN, "*", login1, password);}
 
     private String safeLike(String column, String value) {
         if (value.matches("[a-zA-Z0-9ąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s.-]{1,100}")) {
@@ -337,8 +338,6 @@ public class SupabaseClient {
     }
     }
 
-    private static final Set<String> ALLOWED_FILTERS = Set.of("id", ID_PLACOWKI, ID_AUTORA, ID_UZYTKOWNIKA, ID_KSIAZKI);
-
     private String fetchDataUID(String table, String filtr, Integer id) {
         try {
             return webClient.get()
@@ -420,7 +419,7 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
     }
 
     private boolean isSafe(String input) {
-        return input != null && input.matches("[\\w@.]{1,50}");
+        return input != null && input.matches("[\\w@.]{1,100}");
     }
 
     private String fetchDatalogin(String table, String columns, String logindata, String passworddata) {
@@ -432,7 +431,7 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
                     .uri(uriBuilder -> uriBuilder
                             .path("/" + table)
                             .queryParam(SELECT, columns)
-                            .queryParam("or", "(Nazwa_Uzytkownika.eq." + logindata + ",Email.eq." + logindata + ")")
+                            .queryParam(NAZWA_UZYTKOWNIKA, "eq." + logindata)
                             .queryParam(HASLO, "eq." + passworddata)
                             .build())
                     .retrieve()

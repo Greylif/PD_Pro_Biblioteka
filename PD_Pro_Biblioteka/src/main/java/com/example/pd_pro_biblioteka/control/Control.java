@@ -191,6 +191,10 @@ public class Control {
     @GetMapping("/uzytkownicy/{login1}/{password}")
     public String getUzytkownicyLogin(@PathVariable String login1, @PathVariable String password) { return supabaseService.getUzytkownicyLogin(login1, password); }
 
+    @GetMapping("/admini/{login1}/{password}")
+    public String getAdminLogin(@PathVariable String login1, @PathVariable String password) { return supabaseService.getAdminLogin(login1, password); }
+
+
     @GetMapping("/admini")
     public String getAdmini() {
         return supabaseService.getAdmini();
