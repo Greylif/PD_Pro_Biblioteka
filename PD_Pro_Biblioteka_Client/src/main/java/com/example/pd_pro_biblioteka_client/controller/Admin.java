@@ -309,6 +309,11 @@ public class Admin {
         );
     }
 
+    void setPenaltyTable(TableView<Kary> table) {
+        this.penaltyTable = table;
+    }
+
+
     @FXML
     public void borrow(ActionEvent actionEvent) {
     }
