@@ -1,5 +1,6 @@
 package com.example.pd_pro_biblioteka.service;
 
+import com.example.pd_pro_biblioteka.exceptions.EmailSendException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import org.json.JSONArray;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.web.reactive.function.client.WebClient;
+import java.security.SecureRandom;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -29,6 +31,10 @@ public class EmailService {
     private static final String EMAIL = "Email";
     private static final String TYTUL = "Tytul";
     private static final String DATA_ODDANIA = "Data_Oddania";
+
+    private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|:,.<>?";
+
+
     public EmailService(JavaMailSender mailSender, WebClient.Builder webClientBuilder) {
         this.mailSender = mailSender;
         try {
@@ -69,6 +75,40 @@ public class EmailService {
         }
     }
 
+    public void sendNewPassword(String email) {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+
+        for (int i = 0; i < 12; i++) {
+            password.append(CHARS.charAt(random.nextInt(CHARS.length())));
+        }
+
+        try{
+            sendEmail(email,"Library Password", "Your new Password is: " + password.toString());
+        }
+        catch (MessagingException e)
+        {
+            throw new EmailSendException("Failed to send new password", e);
+        }
+
+        Map<String, Object> body = new HashMap<>() ;
+        body.put("Haslo", password.toString());
+
+        try {
+            webClient.patch()
+                    .uri(uriBuilder -> uriBuilder.path("/" + "Uzytkownik")
+                            .queryParam(EMAIL, "eq." + email).build())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to update to table Email" + ": ", e);
+        }
+
+    }
+
     private JSONArray fetchWypozyczeniaZEmail() {
         String wypozyczeniaData;
 
@@ -98,7 +138,6 @@ public class EmailService {
             throw new SupabaseConnectionException("Failed to fetch wypozyczenia data: ", e);
         }
     }
-
 
 
     private Map<Integer, String> fetchUzytkownicyEmail(String wypozyczeniaData) {
@@ -146,8 +185,6 @@ public class EmailService {
         }
     }
 
-
-
     private Map<Integer, String> fetchKsiazkiTytuly(String wypozyczeniaData) {
         Set<Integer> ksiazkaIds = new HashSet<>();
         Map<Integer, String> mapIdTytul = new HashMap<>();
@@ -192,8 +229,6 @@ public class EmailService {
             throw new SupabaseConnectionException("Failed to fetch ksiazki data: ", e);
         }
     }
-
-
 
 
     private JSONArray polaczWypozyczeniaZEmail(String wypozyczeniaData, Map<Integer, String> uzytkownicyEmails, Map<Integer, String> ksiazkiTytuly) {

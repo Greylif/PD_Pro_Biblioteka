@@ -324,6 +324,19 @@ public class ControlTest {
             }
         }
 
+        @Test
+        @DisplayName("Logowanie admina")
+        void getAdminLogin() {
+            Mockito.when(supabaseClient.getAdminLogin("login1","password")).thenReturn("Admin Login");
+
+            try {
+                mockMvc.perform(get("/library/admini/login1/password"))
+                        .andExpect(status().isOk());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
     }
 
     @Nested
@@ -442,6 +455,32 @@ public class ControlTest {
                 throw new RuntimeException(e);
             }
         }
+
+        @Test
+        @DisplayName("Przypomnienie hasla uzytkownika")
+        void updatePassUzytkownik() {
+            Mockito.when(supabaseClient.updateUzytkownik(
+                            new Uzytkownik(
+                                    1,
+                                    "Jan",
+                                    "Kowalski",
+                                    "2000-01-01",
+                                    "user",
+                                    "pass",
+                                    "s092677@student.tu.kielce.pl",
+                                    Boolean.FALSE,
+                                    Boolean.FALSE,
+                                    "secret")))
+                    .thenReturn("Haslo zaktualizowane");
+
+            try {
+                mockMvc.perform(put("/library/uzytkownicy/passwordreset/email"))
+                        .andExpect(status().isOk());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
         @Test
         @DisplayName("Aktualizacja wypozyczenia")

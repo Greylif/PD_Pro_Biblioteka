@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -171,7 +173,41 @@ class EmailServiceTest {
 
             verify(mailSender, times(0)).send(any(MimeMessage.class));
         }
+
+        @Test
+        @DisplayName("Test wysylania nowego hasla i aktualizacji w bazie")
+        void testSendNewPasswordUpdatesPasswordInSupabase() {
+            String email = "s092677@student.tu.kielce.pl";
+
+            MimeMessage dummyMessage = mock(MimeMessage.class);
+            when(mailSender.createMimeMessage()).thenReturn(dummyMessage);
+
+            WebClient.RequestBodyUriSpec patchUriSpec = mock(WebClient.RequestBodyUriSpec.class);
+            WebClient.RequestBodySpec patchBodySpec = mock(WebClient.RequestBodySpec.class);
+            WebClient.RequestHeadersSpec patchHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
+
+            when(webClient.patch()).thenReturn(patchUriSpec);
+            when(patchUriSpec.uri(any(Function.class))).thenReturn(patchBodySpec);
+            when(patchBodySpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(patchBodySpec);
+            when(patchBodySpec.bodyValue(anyMap())).thenReturn(patchHeadersSpec);
+            when(patchHeadersSpec.retrieve()).thenReturn(responseSpec);
+            when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(""));
+
+            emailService.sendNewPassword(email);
+
+            verify(mailSender, times(1)).send(any(MimeMessage.class));
+            
+            verify(webClient, times(1)).patch();
+            verify(patchUriSpec, times(1)).uri(any(Function.class));
+            verify(patchBodySpec, times(1)).bodyValue(argThat(map -> {
+                if (!(map instanceof Map)) return false;
+                Object value = ((Map<?, ?>) map).get("Haslo");
+                return value instanceof String && ((String) value).length() == 12;
+            }));
+        }
+
     }
+
 
     @Nested
     @DisplayName("Testy throw dla wysylania emaili")

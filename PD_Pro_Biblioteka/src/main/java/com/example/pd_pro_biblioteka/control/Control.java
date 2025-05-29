@@ -159,6 +159,7 @@ public class Control {
         return supabaseService.getUzytkownicy();
     }
 
+
     @PostMapping("/uzytkownicy")
     public String addUzytkownik(@RequestParam String imie,
                                 @RequestParam String nazwisko,
@@ -186,6 +187,11 @@ public class Control {
                                    @RequestParam(required = false) Boolean mfaEnabled,
                                    @RequestParam(required = false) String mfaSecret) {
         return supabaseService.updateUzytkownik(new Uzytkownik(id, imie, nazwisko, dataUrodzenia, nazwaUzytkownika, haslo, email, zablokowany, mfaEnabled, mfaSecret));
+    }
+
+    @PutMapping("/uzytkownicy/passwordreset/{email}")
+    public String updatePassUzytkownik(@PathVariable String email) {
+        return supabaseService.resetpasswordbyemail(email);
     }
 
     @GetMapping("/uzytkownicy/{login1}/{password}")

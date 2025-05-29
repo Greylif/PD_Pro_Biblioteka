@@ -2,6 +2,7 @@ package com.example.pd_pro_biblioteka.service;
 
 
 
+import com.example.pd_pro_biblioteka.exceptions.EmailSendException;
 import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
@@ -54,8 +55,9 @@ public class SupabaseClient {
     private static final String GATUNEK = "Gatunek";
     private static final String ID_KSIAZKI = "id_ksiazki";
 
+    private final EmailService emailService;
 
-    public SupabaseClient(WebClient.Builder webClientBuilder) {
+    public SupabaseClient(WebClient.Builder webClientBuilder, EmailService emailService) {
         try {
             this.webClient = webClientBuilder
                     .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co/rest/v1")
@@ -63,6 +65,7 @@ public class SupabaseClient {
                     .defaultHeader("apikey", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4cCI6MjA1Nzk2NzczNH0.xdr4z5_udXpL4sbJpccFQrOPj_7_6w1bIs-FMGcdn1U")
                     .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                     .build();
+            this.emailService = emailService;
         }
         catch (Exception e)
         {
@@ -104,17 +107,39 @@ public class SupabaseClient {
 
     public String getKaryUID(int id)
     {
-        return fetchDataUID("Kary", ID_UZYTKOWNIKA, id);
+        return fetchDataUID("Kary", ID_UZYTKOWNIKA, Integer.toString(id));
     }
 
     public String getWypozyczeniaUID(int id)
     {
-        return fetchDataUID(WYPOZYCZENIA, ID_UZYTKOWNIKA, id);
+        return fetchDataUID(WYPOZYCZENIA, ID_UZYTKOWNIKA, Integer.toString(id));
+    }
+
+    public String resetpasswordbyemail(String email)
+    {
+        String request = fetchDataUID(UZYTKOWNIK, EMAIL, email);
+
+        if(request == null)
+        {
+            return "Error while sending new password, null request";
+        }
+
+        try {
+            if (!request.equals("[]")) {
+                emailService.sendNewPassword(email);
+            }
+        }
+        catch (EmailSendException e)
+        {
+            return "Error while sending new password";
+        }
+
+        return request;
     }
 
     public String getAdminAID(int id)
     {
-        return fetchDataUID(ADMIN, "id", id);
+        return fetchDataUID(ADMIN, "id", Integer.toString(id));
     }
 
     public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty, int idUzytkownika) {
@@ -338,7 +363,7 @@ public class SupabaseClient {
     }
     }
 
-    private String fetchDataUID(String table, String filtr, Integer id) {
+    private String fetchDataUID(String table, String filtr, String id) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder

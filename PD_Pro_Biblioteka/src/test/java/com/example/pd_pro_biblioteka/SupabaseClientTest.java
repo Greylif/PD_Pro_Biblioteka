@@ -6,6 +6,7 @@ import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.model.Admin;
 import com.example.pd_pro_biblioteka.model.Ksiazka;
 import com.example.pd_pro_biblioteka.model.Uzytkownik;
+import com.example.pd_pro_biblioteka.service.EmailService;
 import com.example.pd_pro_biblioteka.service.SupabaseClient;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,14 +60,22 @@ class SupabaseClientTest {
 
     private SupabaseClient supabaseClient;
 
+    private EmailService emailService;
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        webClientBuilder = mock(WebClient.Builder.class);
+        webClient = mock(WebClient.class);
+        emailService = mock(EmailService.class);
+
         when(webClientBuilder.baseUrl(anyString())).thenReturn(webClientBuilder);
         when(webClientBuilder.defaultHeader(anyString(), anyString())).thenReturn(webClientBuilder);
         when(webClientBuilder.build()).thenReturn(webClient);
-        supabaseClient = new SupabaseClient(webClientBuilder);
+
+        supabaseClient = new SupabaseClient(webClientBuilder, emailService);
     }
 
 
@@ -1539,6 +1548,28 @@ class SupabaseClientTest {
             }
 
             @Test
+            @DisplayName("getAdminLogin Test poprawnego dzialania")
+            void testgetAdminLogin() {
+                String mockResponse = "[{\"id\":1,\"Nazwa_Uzytkownika\":\"testuser\"}]";
+                String login = "testuser";
+                String password = "password123";
+
+                when(webClient.get()).thenReturn(requestHeadersUriSpec);
+
+                when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                    Function<UriBuilder, URI> uriFunction = invocation.getArgument(0);
+                    uriFunction.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                    return requestHeadersSpec;
+                });
+                when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(mockResponse));
+
+                String result = supabaseClient.getAdminLogin(login, password);
+
+                assertEquals(mockResponse, result);
+            }
+
+            @Test
             @DisplayName("getUzytkownicyLogin Test InstanceNotFoundException")
             void testgetUzytkownicyLoginThrowsInstanceNotFoundException() {
                 String login = "wronglogin";
@@ -1648,7 +1679,7 @@ class SupabaseClientTest {
                     .thenThrow(new RuntimeException("Failed to build WebClient"));
 
             assertThrows(SupabaseConnectionException.class, () -> {
-                new SupabaseClient(webClientBuilder);
+                new SupabaseClient(webClientBuilder, emailService);
             });
     }
 
