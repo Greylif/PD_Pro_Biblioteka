@@ -191,7 +191,7 @@ public class Control {
 
     @PutMapping("/uzytkownicy/passwordreset/{email}")
     public String updatePassUzytkownik(@PathVariable String email) {
-        return supabaseService.resetpasswordbyemail(email);
+        return supabaseService.putResetpasswordbyemail(email);
     }
 
     @GetMapping("/uzytkownicy/{login1}/{password}")

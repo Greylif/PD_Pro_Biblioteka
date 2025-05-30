@@ -1,5 +1,6 @@
 package com.example.pd_pro_biblioteka;
 
+import com.example.pd_pro_biblioteka.exceptions.EmailSendException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
 import com.example.pd_pro_biblioteka.service.EmailService;
@@ -22,8 +23,7 @@ import java.time.LocalDate;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class EmailServiceTest {
@@ -44,6 +44,12 @@ class EmailServiceTest {
     @SuppressWarnings("rawtypes")
     @Mock
     private WebClient.RequestHeadersSpec requestHeadersSpec;
+
+    @SuppressWarnings("rawtypes")
+    WebClient.RequestHeadersSpec patchHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
+
+
+
 
     @Mock
     private WebClient.ResponseSpec responseSpec;
@@ -184,10 +190,13 @@ class EmailServiceTest {
 
             WebClient.RequestBodyUriSpec patchUriSpec = mock(WebClient.RequestBodyUriSpec.class);
             WebClient.RequestBodySpec patchBodySpec = mock(WebClient.RequestBodySpec.class);
-            WebClient.RequestHeadersSpec patchHeadersSpec = mock(WebClient.RequestHeadersSpec.class);
 
             when(webClient.patch()).thenReturn(patchUriSpec);
-            when(patchUriSpec.uri(any(Function.class))).thenReturn(patchBodySpec);
+            when(patchUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+                Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+                uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+                return patchBodySpec;
+            });
             when(patchBodySpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(patchBodySpec);
             when(patchBodySpec.bodyValue(anyMap())).thenReturn(patchHeadersSpec);
             when(patchHeadersSpec.retrieve()).thenReturn(responseSpec);
@@ -196,7 +205,7 @@ class EmailServiceTest {
             emailService.sendNewPassword(email);
 
             verify(mailSender, times(1)).send(any(MimeMessage.class));
-            
+
             verify(webClient, times(1)).patch();
             verify(patchUriSpec, times(1)).uri(any(Function.class));
             verify(patchBodySpec, times(1)).bodyValue(argThat(map -> {
@@ -333,6 +342,48 @@ class EmailServiceTest {
                 emailService.scheduledEmail();
             });
         }
+
+        @Test
+        @DisplayName("Throws EmailSendException when MessagingException is thrown by sendEmail")
+        void testSendNewPasswordThrowsEmailSendException() throws Exception {
+            String email = "test@example.com";
+
+            EmailService emailServiceSpy = Mockito.spy(emailService);
+
+            doThrow(new MessagingException("Simulated MessagingException"))
+                    .when(emailServiceSpy).sendEmail(eq(email), anyString(), anyString());
+
+            assertThrows(EmailSendException.class, () -> {
+                emailServiceSpy.sendNewPassword(email);
+            });
+        }
+
+        @Test
+        @DisplayName("Throws SupabaseConnectionException when WebClient fails")
+        void testSendNewPasswordThrowsSupabaseConnectionException()  {
+            String email = "test@example.com";
+
+            MimeMessage dummyMessage = mock(MimeMessage.class);
+            when(mailSender.createMimeMessage()).thenReturn(dummyMessage);
+
+            WebClient.RequestBodyUriSpec patchUriSpec = mock(WebClient.RequestBodyUriSpec.class);
+            WebClient.RequestBodySpec patchBodySpec = mock(WebClient.RequestBodySpec.class);
+
+            when(webClient.patch()).thenReturn(patchUriSpec);
+            when(patchUriSpec.uri(any(Function.class))).thenReturn(patchBodySpec);
+            when(patchBodySpec.contentType(MediaType.APPLICATION_JSON)).thenReturn(patchBodySpec);
+            when(patchBodySpec.bodyValue(anyMap())).thenReturn(patchHeadersSpec);
+            when(patchHeadersSpec.retrieve()).thenReturn(responseSpec);
+            when(responseSpec.bodyToMono(String.class)).thenThrow(new RuntimeException("Supabase error"));
+
+            SupabaseConnectionException exception = assertThrows(SupabaseConnectionException.class, () -> {
+                emailService.sendNewPassword(email);
+            });
+
+            assertTrue(exception.getMessage().contains("Failed to update to table Email"));
+        }
+
+
 
     }
 

@@ -115,7 +115,7 @@ public class SupabaseClient {
         return fetchDataUID(WYPOZYCZENIA, ID_UZYTKOWNIKA, Integer.toString(id));
     }
 
-    public String resetpasswordbyemail(String email)
+    public String putResetpasswordbyemail(String email)
     {
         String request = fetchDataUID(UZYTKOWNIK, EMAIL, email);
 

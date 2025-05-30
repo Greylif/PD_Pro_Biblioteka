@@ -1,5 +1,6 @@
 package com.example.pd_pro_biblioteka;
 
+import com.example.pd_pro_biblioteka.exceptions.EmailSendException;
 import com.example.pd_pro_biblioteka.exceptions.InstanceNotFoundException;
 import com.example.pd_pro_biblioteka.exceptions.JsonFileException;
 import com.example.pd_pro_biblioteka.exceptions.SupabaseConnectionException;
@@ -1244,6 +1245,80 @@ class SupabaseClientTest {
 
                 assertTrue(result.contains("success"));
             }
+
+            @Nested
+            @DisplayName("Testy putResetpasswordbyemail")
+            class ResetPasswordTests {
+
+                @Test
+                @DisplayName("Zwraca błąd gdy fetchDataUID zwraca null")
+                void testResetPasswordReturnsErrorOnNull() {
+                    String email = "test@example.com";
+
+                    when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                    when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                    when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                    when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.justOrEmpty((String) null));
+
+                    String result = supabaseClient.putResetpasswordbyemail(email);
+
+                    assertEquals("Error while sending new password, null request", result);
+                    verify(emailService, never()).sendNewPassword(anyString());
+                }
+
+                @Test
+                @DisplayName("Nie wysyła maila gdy użytkownik nie istnieje (pusta lista)")
+                void testResetPasswordNoUserFound() {
+                    String email = "test@example.com";
+
+                    when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                    when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                    when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                    when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[]"));
+
+                    String result = supabaseClient.putResetpasswordbyemail(email);
+
+                    assertEquals("[]", result);
+                    verify(emailService, never()).sendNewPassword(anyString());
+                }
+
+                @Test
+                @DisplayName("Wysyła maila gdy użytkownik istnieje")
+                void testResetPasswordSendsEmail() {
+                    String email = "test@example.com";
+                    String mockJson = "[{\"id\":1,\"email\":\"test@example.com\"}]";
+
+                    when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                    when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                    when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                    when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(mockJson));
+
+                    String result = supabaseClient.putResetpasswordbyemail(email);
+
+                    assertEquals(mockJson, result);
+                    verify(emailService, times(1)).sendNewPassword(email);
+                }
+
+                @Test
+                @DisplayName("Zwraca błąd gdy sendNewPassword rzuca wyjątek")
+                void testResetPasswordSendEmailFails() {
+                    String email = "test@example.com";
+                    String mockJson = "[{\"id\":1,\"email\":\"test@example.com\"}]";
+
+                    when(webClient.get()).thenReturn(requestHeadersUriSpec);
+                    when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+                    when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+                    when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(mockJson));
+
+                    doThrow(new EmailSendException("Error", null)).when(emailService).sendNewPassword(email);
+
+                    String result = supabaseClient.putResetpasswordbyemail(email);
+
+                    assertEquals("Error while sending new password", result);
+                    verify(emailService, times(1)).sendNewPassword(email);
+                }
+            }
+
 
 
         }
