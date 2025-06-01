@@ -11,9 +11,11 @@ import com.example.pd_pro_biblioteka.model.Ksiazka;
 import com.example.pd_pro_biblioteka.model.Uzytkownik;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -346,6 +348,30 @@ public class SupabaseClient {
         return deleteData(WYPOZYCZENIA, id);
     }
 
+
+    @Scheduled(cron = "0 00 17 * * ?")
+    public void scheduledKara(){
+        try {
+            String wypozyczeniaData = fetchData(WYPOZYCZENIA, "*");
+            JSONArray wypozyczeniaArray = new JSONArray(wypozyczeniaData);
+
+            for (int i = 0; i < wypozyczeniaArray.length(); i++) {
+                JSONObject obj = wypozyczeniaArray.getJSONObject(i);
+                LocalDate termin = LocalDate.parse(obj.getString(TERMIN_ODDANIA));
+                Object dataOddania = obj.opt(DATA_ODDANIA);
+                int userId = obj.getInt(ID_UZYTKOWNIKA);
+
+                if (termin.isBefore(LocalDate.now()) && "null".equals(dataOddania.toString())) {
+                    addKara(100, String.valueOf(LocalDate.now()), obj.getString(DATA_WYPOZYCZENIA), userId);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("Failed to post kara", e);
+        }
+    }
+
+
     private String fetchData(String table, String columns) {
         try {
             return webClient.get()
@@ -444,7 +470,7 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
     }
 
     private boolean isSafe(String input) {
-        return input != null && input.matches("[\\w@.]{1,100}");
+        return input != null && input.matches("[A-Za-z0-9!@#$%^&*()_+\\[\\]{}|:,.<>?]{1,100}");
     }
 
     private String fetchDatalogin(String table, String columns, String logindata, String passworddata) {

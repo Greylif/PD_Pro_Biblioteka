@@ -59,6 +59,13 @@ class SupabaseClientTest {
     @Mock
     private WebClient.ResponseSpec responseSpec;
 
+    @SuppressWarnings("rawtypes")
+    @Mock
+    private WebClient.RequestHeadersSpec requestHeadersSpec2;
+
+    @Mock
+    private WebClient.ResponseSpec responseSpec2;
+
     private SupabaseClient supabaseClient;
 
     private EmailService emailService;
@@ -1746,7 +1753,57 @@ class SupabaseClientTest {
 
     }
 
-        @Test
+    static Stream<String> wyporzyczenieBody() {
+        return Stream.of(
+                "[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", \"Termin_Oddania\":\"2025-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]",
+                "[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", \"Termin_Oddania\":\"2125-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]",
+                "[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":null, \"Termin_Oddania\":\"2025-04-18\", \"id_ksiazki\":\"101\", \"id_uzytkownika\":\"201\"}]"
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("wyporzyczenieBody")
+    @DisplayName("Automatyczna proba nadania kary - przypadki parametryzowane")
+    void scheduledKaraParameterizedTest(String responseBody) {
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
+        when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec2);
+        when(requestHeadersSpec2.retrieve()).thenReturn(responseSpec2);
+        when(responseSpec2.bodyToMono(String.class)).thenReturn(Mono.just("[{\"success\":true}]"));
+
+        assertDoesNotThrow(() -> supabaseClient.scheduledKara());
+    }
+
+    @Test
+    @DisplayName("Automatyczna proba nadania kary - throw error")
+    void scheduledKaraTestSendThrow() {
+        when(webClient.get()).thenReturn(requestHeadersUriSpec);
+        when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+        when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("error"));
+
+        when(webClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
+        when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.bodyValue(any())).thenReturn(requestHeadersSpec2);
+        when(requestHeadersSpec2.retrieve()).thenReturn(responseSpec2);
+        when(responseSpec2.bodyToMono(String.class)).thenReturn(Mono.just("\"success\":true}"));
+
+        assertThrows(SupabaseConnectionException.class, () -> {
+            supabaseClient.scheduledKara();
+        });
+
+    }
+
+
+
+    @Test
         @DisplayName("Nieudane polaczenie do bazy danych")
         void SupabaseClientThrowsSupabaseConnectionException(){
 
