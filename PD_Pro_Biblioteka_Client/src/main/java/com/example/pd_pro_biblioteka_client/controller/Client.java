@@ -97,6 +97,24 @@ public class Client {
     public TableView fitrTable;
 
 
+
+    private AlertService alertService = new AlertService();
+
+    public void setAlertService(AlertService alertService) {
+        this.alertService = alertService;
+    }
+
+    public class AlertService {
+        public Optional<ButtonType> showConfirmation(String title, String header, String content) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle(title);
+            alert.setHeaderText(header);
+            alert.setContentText(content);
+            return alert.showAndWait();
+        }
+    }
+
+
     @FXML
     public void initialize() {
 
@@ -137,31 +155,34 @@ public class Client {
     }
 
     public void delete_acc(ActionEvent actionEvent) throws IOException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Potwierdzenie");
-        alert.setHeaderText("Czy jesteś pewny?");
-        alert.setContentText("Tej operacji nie można cofnąć.");
+        Optional<ButtonType> result = alertService.showConfirmation(
+                "Potwierdzenie",
+                "Czy jesteś pewny?",
+                "Tej operacji nie można cofnąć."
+        );
 
-        Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Tu wykonaj akcję po zatwierdzeniu
             System.out.println("Użytkownik zatwierdził.");
-
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.close();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-            Parent logRoot = fxmlLoader.load();
-
-            Stage logStage = new Stage();
-            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-            logStage.setTitle("Logowanie");
-            logStage.setScene(new Scene(logRoot));
-            logStage.show();
+            performLogout(actionEvent);  // <- PRZENIESIONE TUTAJ
         } else {
-            // Anulowano
             System.out.println("Użytkownik anulował.");
         }
     }
+
+    public void performLogout(ActionEvent actionEvent) throws IOException {
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.close();
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+        Parent logRoot = fxmlLoader.load();
+
+        Stage logStage = new Stage();
+        logStage.initModality(Modality.APPLICATION_MODAL);
+        logStage.setTitle("Logowanie");
+        logStage.setScene(new Scene(logRoot));
+        logStage.show();
+    }
+
+
 
 }
