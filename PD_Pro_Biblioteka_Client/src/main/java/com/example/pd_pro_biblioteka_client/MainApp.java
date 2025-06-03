@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class MainApp extends Application {
 
-    private ConfigurableApplicationContext springContext;
+    protected ConfigurableApplicationContext springContext;
 
     @Override
     public void init() throws Exception {
