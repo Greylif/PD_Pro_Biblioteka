@@ -468,9 +468,11 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
         }
         return filteredArray.toString();
     }
+    private static final Pattern SAFE_TEXT_PATTERN = Pattern.compile("[\\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s@.+\\-:,]{1,200}");
+
 
     private boolean isSafe(String input) {
-        return input != null && input.matches("[A-Za-z0-9!@#$%^&*()_+\\[\\]{}|:,.<>?]{1,100}");
+        return input != null && SAFE_TEXT_PATTERN.matcher(input).matches();
     }
 
     private String fetchDatalogin(String table, String columns, String logindata, String passworddata) {
@@ -500,8 +502,6 @@ private String fetchKsiazkaFiltr(String kstatement, String astatement) {
             throw new SupabaseConnectionException("Failed to fetch user: ", e);
         }
     }
-
-    private static final Pattern SAFE_TEXT_PATTERN = Pattern.compile("[\\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s@.+\\-:,]{1,200}");
 
 
     private boolean isSafeValue(Object value) {

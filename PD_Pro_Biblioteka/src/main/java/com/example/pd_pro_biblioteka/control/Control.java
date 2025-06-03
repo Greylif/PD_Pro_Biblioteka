@@ -91,7 +91,6 @@ public class Control {
     public String addKara(@RequestParam double kwota,
                           @RequestParam(required = false) String dataWydaniaKary,
                           @RequestParam String terminZaplaty,
-                          @RequestParam(required = false) Boolean czyZaplacono,
                           @RequestParam int idUzytkownika) {
         return supabaseService.addKara(kwota, dataWydaniaKary, terminZaplaty, idUzytkownika);
     }

@@ -32,7 +32,7 @@ public class EmailService {
     private static final String TYTUL = "Tytul";
     private static final String DATA_ODDANIA = "Data_Oddania";
 
-    private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|:,.<>?";
+    private static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_@+:,.ąćęłńóśźżĄĆĘŁŃÓŚŹŻ";
 
 
     public EmailService(JavaMailSender mailSender, WebClient.Builder webClientBuilder) {
