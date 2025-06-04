@@ -60,18 +60,21 @@ public class SupabaseClient {
   private final WebClient webClient;
   private final EmailService emailService;
 
+
   public SupabaseClient(WebClient.Builder webClientBuilder, EmailService emailService) {
+    String supabaseUrl = System.getenv("SUPABASE_URL");
+    String supabaseKey = System.getenv("SUPABASE_KEY");
+    String supabaseKey2 = System.getenv("SUPABASE_KEY2");
+
+    supabaseUrl = supabaseUrl.trim() + "/rest/v1";
+    supabaseKey = supabaseKey.trim();
+    supabaseKey2 = supabaseKey2.trim();
+
     try {
       this.webClient = webClientBuilder
-          .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co/rest/v1")
-          .defaultHeader(HttpHeaders.AUTHORIZATION,
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ" 
-                  + "0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjM5MTcz"
-                  + "NCwiZXhwIjoyMDU3OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
-          .defaultHeader("apikey",
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ" 
-                  + "0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4cCI6"
-                  + "MjA1Nzk2NzczNH0.xdr4z5_udXpL4sbJpccFQrOPj_7_6w1bIs-FMGcdn1U")
+          .baseUrl(supabaseUrl)
+          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + supabaseKey)
+          .defaultHeader("apikey", supabaseKey2)
           .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
           .build();
       this.emailService = emailService;
@@ -155,9 +158,7 @@ public class SupabaseClient {
     data.put(KWOTA, kwota);
     data.put(TERMIN_ZAPLATY, terminZaplaty);
     data.put(ID_UZYTKOWNIKA, idUzytkownika);
-    System.out.println("bez null test");
     if (opis != null) {
-      System.out.println("null test");
       data.put("opis", opis);
     }
 
@@ -473,7 +474,8 @@ public class SupabaseClient {
         int userId = obj.getInt(ID_UZYTKOWNIKA);
 
         if (termin.isBefore(LocalDate.now()) && "null".equals(dataOddania.toString())) {
-          addKara(100, String.valueOf(LocalDate.now()), obj.getString(DATA_WYPOZYCZENIA), userId, "Automatyczna kara");
+          addKara(100, String.valueOf(LocalDate.now()), obj.getString(DATA_WYPOZYCZENIA),
+              userId, "Automatyczna kara");
         }
       }
 

@@ -37,19 +37,18 @@ public class EmailService {
 
   public EmailService(JavaMailSender mailSender, WebClient.Builder webClientBuilder) {
     this.mailSender = mailSender;
+    String supabaseUrl = System.getenv("SUPABASE_URL");
+    String supabaseKey = System.getenv("SUPABASE_KEY");
+    String supabaseKey2 = System.getenv("SUPABASE_KEY2");
+
+    supabaseUrl = supabaseUrl.trim();
+    supabaseKey = supabaseKey.trim();
+    supabaseKey2 = supabaseKey2.trim();
     try {
       this.webClient = webClientBuilder
-          .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co/rest/v1")
-          .defaultHeader(HttpHeaders.AUTHORIZATION,
-              "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ"
-                  + "zdXBhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm9"
-                  + "sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjM5MTczNCwiZXhwIjoy"
-                  + "MDU3OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
-          .defaultHeader("apikey",
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdX"
-                  + "BhYmFzZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbWZtd2lhIiwicm"
-                  + "9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4cCI6MjA1Nz"
-                  + "k2NzczNH0.xdr4z5_udXpL4sbJpccFQrOPj_7_6w1bIs-FMGcdn1U")
+          .baseUrl(supabaseUrl)
+          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + supabaseKey2)
+          .defaultHeader("apikey", supabaseKey)
           .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
           .build();
     } catch (Exception e) {
