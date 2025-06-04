@@ -85,19 +85,21 @@ public class ControlTest {
       }
     }
 
+
     @Test
     @DisplayName("Tworzenie kary")
     void createKara() {
       Mockito.when(
               supabaseClient.addKara(Mockito.anyDouble(), Mockito.anyString(), Mockito.anyString(),
-                  Mockito.anyInt()))
+                  Mockito.anyInt(), Mockito.anyString()))
           .thenReturn(String.valueOf(kara));
       try {
         mockMvc.perform(post("/library/kary")
                 .param("kwota", "20.5")
                 .param("dataWydaniaKary", "2025-04-16")
                 .param("terminZaplaty", "2025-04-18")
-                .param("idUzytkownika", "101"))
+                .param("idUzytkownika", "101")
+                .param("opis", "opis"))
             .andExpect(status().isOk());
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -108,7 +110,7 @@ public class ControlTest {
     @DisplayName("Tworzenie ksiazki")
     void createKsiazka() {
       Mockito.when(
-              supabaseClient.addKsiazka(Mockito.anyString(), Mockito.anyString(), 
+              supabaseClient.addKsiazka(Mockito.anyString(), Mockito.anyString(),
                   Mockito.anyString(),
                   Mockito.anyInt(), Mockito.anyInt()))
           .thenReturn(String.valueOf(ksiazka));
@@ -369,7 +371,8 @@ public class ControlTest {
     @DisplayName("Aktualizacja admina")
     void updateAdmin() {
       Mockito.when(supabaseClient.updateAdmin(
-              new Admin(1, "Jan", "Kowalski", "usernameadmin", "adminpass", 101, false, "secret")))
+              new Admin(1, "Jan", "Kowalski", "usernameadmin", "adminpass",
+                  101, false, "secret", "ADMIN")))
           .thenReturn("Admin zaktualizowany");
 
       try {
@@ -409,7 +412,8 @@ public class ControlTest {
               "2025-04-16",
               "2025-04-18",
               Boolean.FALSE,
-              101))
+              101,
+              "opis"))
           .thenReturn("Kara zaktualizowana");
 
       try {
@@ -468,7 +472,8 @@ public class ControlTest {
                   "s092677@student.tu.kielce.pl",
                   Boolean.FALSE,
                   Boolean.FALSE,
-                  "secret")))
+                  "secret",
+                  "USER")))
           .thenReturn("Uzytkownik zaktualizowany");
 
       try {
@@ -494,7 +499,8 @@ public class ControlTest {
                   "s092677@student.tu.kielce.pl",
                   Boolean.FALSE,
                   Boolean.FALSE,
-                  "secret")))
+                  "secret",
+                  "USER")))
           .thenReturn("Haslo zaktualizowane");
 
       try {

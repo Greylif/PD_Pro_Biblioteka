@@ -42,7 +42,7 @@ public class ModelTest {
     @Test
     @DisplayName("Sprawdzanie tworzenia klasy Admin z wszystkimi argumentami")
     void testAllArgs() {
-      Admin admin = new Admin(1, "Jan", "Kowalski", "jkowalski", "pass", 10, false, "secret");
+      Admin admin = new Admin(1, "Jan", "Kowalski", "jkowalski", "pass", 10, false, "secret", "ADMIN");
 
       assertEquals(1, admin.getId());
       assertEquals("Jan", admin.getImie());
@@ -69,7 +69,8 @@ public class ModelTest {
 
       String expected = "Admin{id=1, Imie='Jan', Nazwisko='Kowalski', "
           + "Nazwa_Uzytkownika='jkowalski', "
-          + "Haslo='pass', id_placowki=10', mfa_enabled=false, mfa_secret=secret}";
+          + "Haslo='pass', id_placowki=10', mfa_enabled=false, mfa_secret=secret"
+          + ", role='null}";
       assertEquals(expected, admin.toString());
     }
   }
@@ -144,7 +145,7 @@ public class ModelTest {
     @Test
     @DisplayName("Sprawdzanie tworzenia klasy Kara z wszystkimi argumentami")
     void testAllArgs() {
-      Kary kara = new Kary(1, 50.5, "2025-04-01", "2025-04-10", true, 100);
+      Kary kara = new Kary(1, 50.5, "2025-04-01", "2025-04-10", true, 100, "opis");
 
       assertEquals(1, kara.getId());
       assertEquals(50.5, kara.getKwota());
@@ -167,7 +168,8 @@ public class ModelTest {
 
       String expected = "Kary{id=1, Kwota=50.5, Data_Wydania_Kary=2025-04-01, "
           + "Termin_Zaplaty=2025-04-10, "
-          + "Czy_Zaplacono=true, id_uzytkownika=100}";
+          + "Czy_Zaplacono=true, id_uzytkownika=100"
+          + ", opis=null}";
       assertEquals(expected, kara.toString());
     }
   }
@@ -302,7 +304,7 @@ public class ModelTest {
     @DisplayName("Sprawdzanie tworzenia klasy Uzytkownik z wszystkimi argumentami")
     void testAllArgs() {
       Uzytkownik user = new Uzytkownik(1, "Jan", "Kowalski", "2000-01-01", "pass", "jkowalski",
-          "s092677@student.tu.kiece.pl", Boolean.FALSE, Boolean.FALSE, "secret");
+          "s092677@student.tu.kiece.pl", Boolean.FALSE, Boolean.FALSE, "secret", "USER");
 
       assertEquals(1, user.getId());
       assertEquals("Jan", user.getImie());
@@ -329,7 +331,8 @@ public class ModelTest {
       String expected = "Uzytkownik{id=1, Imie='Jan', Nazwisko='Kowalski', "
           + "Data_Urodzenia='2000-01-01', "
           + "Nazwa_Uzytkownika='jkowalski', Haslo='pass', "
-          + "Email=s092677@student.tu.kiece.pl, Zablokowany=false}";
+          + "Email=s092677@student.tu.kiece.pl, Zablokowany=false, "
+          + "Mfa_enabled=null, Mfa_secret=null, Role=null}";
       assertEquals(expected, user.toString());
     }
   }

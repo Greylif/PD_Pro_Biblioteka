@@ -144,7 +144,7 @@ public class SupabaseClient {
   }
 
   public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty,
-      int idUzytkownika) {
+      int idUzytkownika, String opis) {
 
     Map<String, Object> data = new HashMap<>();
 
@@ -155,6 +155,11 @@ public class SupabaseClient {
     data.put(KWOTA, kwota);
     data.put(TERMIN_ZAPLATY, terminZaplaty);
     data.put(ID_UZYTKOWNIKA, idUzytkownika);
+    System.out.println("bez null test");
+    if (opis != null) {
+      System.out.println("null test");
+      data.put("opis", opis);
+    }
 
     return postData("Kary", data);
   }
@@ -309,7 +314,7 @@ public class SupabaseClient {
   }
 
   public String updateKara(int id, Double kwota, String dataWydaniaKary, String terminZaplaty,
-      Boolean czyZaplacono, Integer idUzytkownika) {
+      Boolean czyZaplacono, Integer idUzytkownika, String opis) {
     Map<String, Object> data = new HashMap<>();
     if (kwota != null) {
       data.put(KWOTA, kwota);
@@ -325,6 +330,9 @@ public class SupabaseClient {
     }
     if (idUzytkownika != null) {
       data.put(ID_UZYTKOWNIKA, idUzytkownika);
+    }
+    if (opis != null) {
+      data.put("opis", opis);
     }
     return updateData("Kary", id, data);
   }
@@ -465,7 +473,7 @@ public class SupabaseClient {
         int userId = obj.getInt(ID_UZYTKOWNIKA);
 
         if (termin.isBefore(LocalDate.now()) && "null".equals(dataOddania.toString())) {
-          addKara(100, String.valueOf(LocalDate.now()), obj.getString(DATA_WYPOZYCZENIA), userId);
+          addKara(100, String.valueOf(LocalDate.now()), obj.getString(DATA_WYPOZYCZENIA), userId, "Automatyczna kara");
         }
       }
 

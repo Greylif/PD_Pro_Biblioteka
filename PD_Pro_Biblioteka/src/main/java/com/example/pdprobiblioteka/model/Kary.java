@@ -26,18 +26,22 @@ public class Kary {
   @Setter
   @Getter
   private int iduzytkownika;
+  @Setter
+  @Getter
+  private String opis;
 
   public Kary() {
   }
 
   public Kary(int id, double kwota, String dataWydaniaKary, String terminZaplaty,
-      Boolean czyZaplacono, int iduzytkownika) {
+      Boolean czyZaplacono, int iduzytkownika, String opis) {
     this.id = id;
     this.kwota = kwota;
     this.dataWydaniaKary = dataWydaniaKary;
     this.terminZaplaty = terminZaplaty;
     this.czyZaplacono = czyZaplacono;
     this.iduzytkownika = iduzytkownika;
+    this.opis = opis;
   }
 
 
@@ -45,6 +49,6 @@ public class Kary {
   public String toString() {
     return "Kary{id=" + id + ", Kwota=" + kwota + ", Data_Wydania_Kary=" + dataWydaniaKary
         + ", Termin_Zaplaty=" + terminZaplaty + ", Czy_Zaplacono=" + czyZaplacono
-        + ", id_uzytkownika=" + iduzytkownika + "}";
+        + ", id_uzytkownika=" + iduzytkownika + ", opis=" + opis + "}";
   }
 }

@@ -93,8 +93,9 @@ public class Control {
   public String addKara(@RequestParam double kwota,
       @RequestParam(required = false) String dataWydaniaKary,
       @RequestParam String terminZaplaty,
-      @RequestParam int idUzytkownika) {
-    return supabaseService.addKara(kwota, dataWydaniaKary, terminZaplaty, idUzytkownika);
+      @RequestParam int idUzytkownika,
+      @RequestParam(required = false) String opis) {
+    return supabaseService.addKara(kwota, dataWydaniaKary, terminZaplaty, idUzytkownika, opis);
   }
 
   @DeleteMapping("/kary/{id}")
@@ -108,9 +109,10 @@ public class Control {
       @RequestParam(required = false) String dataWydaniaKary,
       @RequestParam(required = false) String terminZaplaty,
       @RequestParam(required = false) Boolean czyZaplacono,
-      @RequestParam(required = false) Integer idUzytkownika) {
+      @RequestParam(required = false) Integer idUzytkownika,
+      @RequestParam(required = false) String opis) {
     return supabaseService.updateKara(id, kwota, dataWydaniaKary, terminZaplaty, czyZaplacono,
-        idUzytkownika);
+        idUzytkownika, opis);
   }
 
   @GetMapping("/ksiazki")
@@ -195,7 +197,7 @@ public class Control {
       @RequestParam(required = false) String mfaSecret) {
     return supabaseService.updateUzytkownik(
         new Uzytkownik(id, imie, nazwisko, dataUrodzenia, nazwaUzytkownika, haslo, email,
-            zablokowany, mfaEnabled, mfaSecret));
+            zablokowany, mfaEnabled, mfaSecret, "USER"));
   }
 
   @PutMapping("/uzytkownicy/passwordreset/{email}")
@@ -248,7 +250,7 @@ public class Control {
       @RequestParam(required = false) Boolean mfaEnabled,
       @RequestParam(required = false) String mfaSecret) {
     Admin admin = new Admin(id, imie, nazwisko, nazwaUzytkownika, haslo, idPlacowki, mfaEnabled,
-        mfaSecret);
+        mfaSecret, "Admin");
     return supabaseService.updateAdmin(admin);
   }
 

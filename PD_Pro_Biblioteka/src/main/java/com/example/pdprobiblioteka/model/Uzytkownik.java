@@ -26,13 +26,16 @@ public class Uzytkownik {
   private Boolean zablokowany;
   private Boolean mfaEnabled;
   private String mfaSecret;
+  private String role;
 
 
   @Override
   public String toString() {
     return "Uzytkownik{id=" + id + ", Imie='" + imie + "', Nazwisko='" + nazwisko
         + "', Data_Urodzenia='" + dataUrodzenia + "', Nazwa_Uzytkownika='" + nazwaUzytkownika
-        + "', Haslo='" + haslo + "', Email=" + email + ", Zablokowany=" + zablokowany + "}";
+        + "', Haslo='" + haslo + "', Email=" + email
+        + ", Zablokowany=" + zablokowany + ", Mfa_enabled=" + mfaEnabled
+        + ", Mfa_secret=" + mfaSecret + ", Role=" + role + "}";
   }
 
 }

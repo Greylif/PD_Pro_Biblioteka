@@ -882,7 +882,7 @@ class SupabaseClientTest {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-        String result = supabaseClient.addKara(20.5, "2025-04-17", "2025-04-18", 1);
+        String result = supabaseClient.addKara(20.5, "2025-04-17", "2025-04-18", 1, "opis");
 
         Map<String, Object> sentData = captor.getValue();
         assertEquals("2025-04-17", sentData.get("Data_Wydania_Kary"));
@@ -899,7 +899,7 @@ class SupabaseClientTest {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-        String result = supabaseClient.addKara(20.5, null, "2025-04-18", 1);
+        String result = supabaseClient.addKara(20.5, null, "2025-04-18", 1, null);
 
         assertTrue(result.contains("success"));
       }
@@ -1061,7 +1061,7 @@ class SupabaseClientTest {
 
         SupabaseConnectionException exception = assertThrows(
             SupabaseConnectionException.class,
-            () -> supabaseClient.addKara(20.5, null, "2025-04-18", 1)
+            () -> supabaseClient.addKara(20.5, null, "2025-04-18", 1, "opis")
         );
 
         assertTrue(exception.getMessage().contains("Failed to post to table Kary: "));
@@ -1180,7 +1180,7 @@ class SupabaseClientTest {
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
         String result = supabaseClient.updateAdmin(
-            new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey"));
+            new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey", "ADMIN"));
 
         assertTrue(result.contains("success"));
       }
@@ -1196,7 +1196,7 @@ class SupabaseClientTest {
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
         String result = supabaseClient.updateAdmin(
-            new Admin(1, null, null, null, null, null, null, null));
+            new Admin(1, null, null, null, null, null, null, null, null));
 
         assertTrue(result.contains("success"));
       }
@@ -1242,7 +1242,7 @@ class SupabaseClientTest {
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
         String result = supabaseClient.updateKara(1, 20.5, "2025-04-16", "2025-04-18",
-            Boolean.FALSE, 101);
+            Boolean.FALSE, 101, "opis");
 
         assertTrue(result.contains("success"));
       }
@@ -1257,7 +1257,7 @@ class SupabaseClientTest {
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
-        String result = supabaseClient.updateKara(1, null, null, null, null, null);
+        String result = supabaseClient.updateKara(1, null, null, null, null, null, null);
 
         assertTrue(result.contains("success"));
       }
@@ -1338,7 +1338,7 @@ class SupabaseClientTest {
 
         String result = supabaseClient.updateUzytkownik(
             new Uzytkownik(1, "Jan", "Kowalski", "2025-04-17", "username", "pass",
-                "s092677@student.tu.kielce.pl", false, false, "secret"));
+                "s092677@student.tu.kielce.pl", false, false, "secret", "USER"));
 
         assertTrue(result.contains("success"));
       }
@@ -1354,7 +1354,7 @@ class SupabaseClientTest {
         when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("{\"success\":true}"));
 
         String result = supabaseClient.updateUzytkownik(
-            new Uzytkownik(1, null, null, null, null, null, null, null, null, null));
+            new Uzytkownik(1, null, null, null, null, null, null, null, null, null, null));
 
         assertTrue(result.contains("success"));
       }
@@ -1486,7 +1486,7 @@ class SupabaseClientTest {
         when(responseSpec.bodyToMono(String.class)).thenReturn(
             Mono.error(new RuntimeException("Connection error")));
 
-        Admin admin = new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey");
+        Admin admin = new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey", "ADMIN");
 
         SupabaseConnectionException exception = assertThrows(
             SupabaseConnectionException.class,
@@ -1534,7 +1534,7 @@ class SupabaseClientTest {
 
         SupabaseConnectionException exception = assertThrows(
             SupabaseConnectionException.class,
-            () -> supabaseClient.updateKara(1, 20.5, null, "2025-04-18", Boolean.FALSE, 101)
+            () -> supabaseClient.updateKara(1, 20.5, null, "2025-04-18", Boolean.FALSE, 101, "opis")
         );
 
         assertTrue(exception.getMessage().contains("Failed to update to table Kary: "));
@@ -1603,7 +1603,7 @@ class SupabaseClientTest {
             Mono.error(new RuntimeException("Connection error")));
 
         Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", "2025-04-17", "username",
-            "pass", "s092677@student.tu.kielce.pl", false, false, "testowyklucz");
+            "pass", "s092677@student.tu.kielce.pl", false, false, "testowyklucz", "USER");
 
         SupabaseConnectionException exception = assertThrows(
             SupabaseConnectionException.class,

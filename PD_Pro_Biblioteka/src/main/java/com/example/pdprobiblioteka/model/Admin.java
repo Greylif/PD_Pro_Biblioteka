@@ -23,11 +23,13 @@ public class Admin {
   private Integer idplacowki;
   private Boolean mfaEnabled;
   private String mfaSecret;
+  private String role;
 
   @Override
   public String toString() {
     return "Admin{id=" + id + ", Imie='" + imie + "', Nazwisko='" + nazwisko
         + "', Nazwa_Uzytkownika='" + nazwaUzytkownika + "', Haslo='" + haslo + "', id_placowki="
-        + idplacowki + "', mfa_enabled=" + mfaEnabled + ", mfa_secret=" + mfaSecret + "}";
+        + idplacowki + "', mfa_enabled=" + mfaEnabled + ", mfa_secret=" + mfaSecret
+        + ", role='" + role + "}";
   }
 }
