@@ -73,7 +73,8 @@ class ValidatorTest {
     @MethodSource("poprawnedaty")
     void testValidWiek(String dataurodzenia) {
       Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", dataurodzenia, "username",
-          "password", "s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret", "USER");
+          "password", "s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret",
+          "USER");
       assertThat(Validator.walidujUzytkownika(uzytkownik))
           .as("Wiek %d powinien być poprawny", dataurodzenia)
           .isTrue();
@@ -84,7 +85,8 @@ class ValidatorTest {
     @MethodSource("niepoprawnedaty")
     void testInvalidWiek(String dataurodzenia) {
       Uzytkownik uzytkownik = new Uzytkownik(1, "Jan", "Kowalski", dataurodzenia, "username",
-          "password", "s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret", "USER");
+          "password", "s092677@student.tu.kielce.pl", Boolean.FALSE, Boolean.FALSE, "secret",
+          "USER");
       assertThat(Validator.walidujUzytkownika(uzytkownik))
           .as("Wiek %d powinien być niepoprawny", dataurodzenia)
           .isFalse();

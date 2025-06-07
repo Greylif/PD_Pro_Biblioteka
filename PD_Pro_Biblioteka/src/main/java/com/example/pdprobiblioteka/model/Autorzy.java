@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca autora książek.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Autorzy {
 
@@ -20,9 +23,14 @@ public class Autorzy {
   @Getter
   private int rokUrodzenia;
 
-  public Autorzy() {
-  }
-
+  /**
+   * Konstruktor klasy.
+   *
+   * @param id identyfikator autora
+   * @param imie imie autora
+   * @param nazwisko nazwisko autora
+   * @param rokUrodzenia rok urodzenia autora
+   */
   public Autorzy(int id, String imie, String nazwisko, int rokUrodzenia) {
     this.id = id;
     this.imie = imie;

@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca administratora systemu bibliotecznego.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter

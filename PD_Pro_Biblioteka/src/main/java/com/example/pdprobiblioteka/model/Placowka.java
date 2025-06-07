@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca placówkę biblioteki.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Placowka {
 
@@ -14,9 +17,12 @@ public class Placowka {
   @Getter
   private String adres;
 
-  public Placowka() {
-  }
-
+  /**
+   * Konstruktor Klasy.
+   *
+   * @param id identyfikator placówki
+   * @param adres adres placówki
+   */
   public Placowka(int id, String adres) {
     this.id = id;
     this.adres = adres;

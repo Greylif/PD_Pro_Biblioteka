@@ -22,6 +22,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+/**
+ * Serwis odpowiedzialny za wysyłanie wiadomości e-mail do użytkowników,
+ * w tym przypomnień o zbliżającym się terminie zwrotu książki oraz resetu hasła.
+ * Dane są pobierane z bazy danych Supabase.
+ */
 @Service
 public class EmailService {
 
@@ -34,9 +39,17 @@ public class EmailService {
   private final JavaMailSender mailSender;
   private final WebClient webClient;
 
-
+  /**
+   * Tworzy instancję serwisu EmailService i inicjalizuje klienta WebClient
+   * z ustawionymi domyślnymi nagłówkami do komunikacji z usługą Supabase.
+   *
+   * @param mailSender obiekt odpowiedzialny za wysyłanie e-maili (JavaMailSender)
+   * @param webClientBuilder budowniczy WebClienta używany do konfiguracji połączenia z Supabase
+   * @throws SupabaseConnectionException jeśli inicjalizacja WebClienta nie powiedzie się
+   */
   public EmailService(JavaMailSender mailSender, WebClient.Builder webClientBuilder) {
     this.mailSender = mailSender;
+    /*
     String supabaseUrl = System.getenv("SUPABASE_URL");
     String supabaseKey = System.getenv("SUPABASE_KEY");
     String supabaseKey2 = System.getenv("SUPABASE_KEY2");
@@ -44,11 +57,21 @@ public class EmailService {
     supabaseUrl = supabaseUrl.trim();
     supabaseKey = supabaseKey.trim();
     supabaseKey2 = supabaseKey2.trim();
+    */
     try {
       this.webClient = webClientBuilder
-          .baseUrl(supabaseUrl)
-          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + supabaseKey2)
-          .defaultHeader("apikey", supabaseKey)
+          .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co")
+          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer "
+              + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmF"
+              + "zZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbW"
+              + "Ztd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4c"
+              + "CI6MjA1Nzk2NzczNH0.xdr4z5_udXpL4sb"
+              + "JpccFQrOPj_7_6w1bIs-FMGcdn1U")
+          .defaultHeader("apikey",
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YX"
+                  + "V2eWp4c3NwbWZtd2lhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MT"
+                  + "c0MjM5MTczNCwiZXhwIjoyMDU"
+                  + "3OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
           .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
           .build();
     } catch (Exception e) {
@@ -56,6 +79,14 @@ public class EmailService {
     }
   }
 
+  /**
+   * Wysyła wiadomość e-mail do podanego adresata.
+   *
+   * @param to      adres e-mail odbiorcy
+   * @param subject temat wiadomości
+   * @param text    treść wiadomości (HTML dozwolony)
+   * @throws MessagingException w przypadku błędu wysyłki e-maila
+   */
   public void sendEmail(String to, String subject, String text) throws MessagingException {
     MimeMessage message = mailSender.createMimeMessage();
     MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -67,6 +98,12 @@ public class EmailService {
     mailSender.send(message);
   }
 
+  /**
+   * Zaplanowane zadanie wysyłające e-maile z przypomnieniem o zwrocie książki.
+   * Uruchamiane codziennie o 17:00.
+   *
+   * @throws MessagingException w przypadku błędu wysyłki e-maila
+   */
   @Scheduled(cron = "0 00 17 * * ?")
   public void scheduledEmail() throws MessagingException {
     JSONArray arrayout = fetchWypozyczeniazEmail();
@@ -82,6 +119,13 @@ public class EmailService {
     }
   }
 
+  /**
+   * Generuje nowe hasło, wysyła je użytkownikowi e-mailem i aktualizuje je w bazie danych.
+   *
+   * @param email adres e-mail użytkownika
+   * @throws EmailSendException             w przypadku błędu wysyłki wiadomości
+   * @throws SupabaseConnectionException    w przypadku błędu połączenia z bazą Supabase
+   */
   public void sendNewPassword(String email) {
     SecureRandom random = new SecureRandom();
     StringBuilder password = new StringBuilder();
@@ -114,6 +158,12 @@ public class EmailService {
 
   }
 
+
+  /**
+   * Pobiera dane wypożyczeń i łączy je z adresami e-mail oraz tytułami książek.
+   *
+   * @return tablica JSON zawierająca dane do wysyłki e-maili
+   */
   private JSONArray fetchWypozyczeniazEmail() {
     String wypozyczeniaData;
 
@@ -130,6 +180,12 @@ public class EmailService {
     }
   }
 
+  /**
+   * Pobiera dane wypożyczeń z Supabase.
+   *
+   * @return ciąg JSON z danymi wypożyczeń
+   * @throws SupabaseConnectionException w przypadku błędu połączenia
+   */
   private String fetchWypozyczeniaData() {
     try {
       return webClient.get()
@@ -145,6 +201,13 @@ public class EmailService {
   }
 
 
+  /**
+   * Pobiera adresy e-mail użytkowników na podstawie danych wypożyczeń.
+   *
+   * @param wypozyczeniaData dane wypożyczeń
+   * @return mapa ID użytkownika → adres e-mail
+   * @throws JsonFileException w przypadku błędu przetwarzania JSON
+   */
   private Map<Integer, String> fetchUzytkownicyEmail(String wypozyczeniaData) {
     Set<Integer> uzytkownikIds = new HashSet<>();
     Map<Integer, String> mapIdEmail = new HashMap<>();
@@ -172,6 +235,13 @@ public class EmailService {
     }
   }
 
+  /**
+   * Pobiera dane użytkowników z Supabase.
+   *
+   * @param uzytkownikIds zbiór ID użytkowników
+   * @return ciąg JSON z danymi użytkowników
+   * @throws SupabaseConnectionException w przypadku błędu połączenia
+   */
   private String fetchUzytkownicyData(Set<Integer> uzytkownikIds) {
     String idsFilter = "id=in.(" + uzytkownikIds.stream()
         .map(String::valueOf)
@@ -190,6 +260,13 @@ public class EmailService {
     }
   }
 
+  /**
+   * Pobiera tytuły książek na podstawie danych wypożyczeń.
+   *
+   * @param wypozyczeniaData dane wypożyczeń
+   * @return mapa ID książki → tytuł
+   * @throws JsonFileException w przypadku błędu przetwarzania JSON
+   */
   private Map<Integer, String> fetchKsiazkiTytuly(String wypozyczeniaData) {
     Set<Integer> ksiazkaIds = new HashSet<>();
     Map<Integer, String> mapIdTytul = new HashMap<>();
@@ -217,6 +294,14 @@ public class EmailService {
     }
   }
 
+
+  /**
+   * Pobiera dane książek z Supabase.
+   *
+   * @param ksiazkaIds zbiór ID książek
+   * @return ciąg JSON z danymi książek
+   * @throws SupabaseConnectionException w przypadku błędu połączenia
+   */
   private String fetchKsiazkiData(Set<Integer> ksiazkaIds) {
     String idsFilter = "id=in.(" + ksiazkaIds.stream()
         .map(String::valueOf)
@@ -235,7 +320,14 @@ public class EmailService {
     }
   }
 
-
+  /**
+   * Łączy dane wypożyczeń z adresami e-mail i tytułami książek.
+   *
+   * @param wypozyczeniaData  dane wypożyczeń
+   * @param uzytkownicyEmails mapa ID użytkownika → e-mail
+   * @param ksiazkiTytuly     mapa ID książki → tytuł
+   * @return tablica JSON gotowa do wysyłki przypomnień
+   */
   private JSONArray polaczWypozyczeniazEmail(String wypozyczeniaData,
       Map<Integer, String> uzytkownicyEmails, Map<Integer, String> ksiazkiTytuly) {
     JSONArray resultArray = new JSONArray();

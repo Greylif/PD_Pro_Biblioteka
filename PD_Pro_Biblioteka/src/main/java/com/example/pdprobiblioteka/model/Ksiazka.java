@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca książkę w bibliotece.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter

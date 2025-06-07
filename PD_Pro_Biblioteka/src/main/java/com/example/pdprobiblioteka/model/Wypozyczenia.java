@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca informacje o wypożyczeniu książki przez użytkownika.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Wypozyczenia {
 
@@ -26,9 +29,17 @@ public class Wypozyczenia {
   @Getter
   private int iduzytkownika;
 
-  public Wypozyczenia() {
-  }
 
+  /**
+   * Konstruktor klasy.
+   *
+   * @param id identyfikator wypożyczenia
+   * @param dataWypozyczenia data wypożyczenia
+   * @param dataOddania data oddana książki
+   * @param terminOddania termin na oddanie książki
+   * @param idksiazki id wypożyczonej książki
+   * @param iduzytkownika id użytkownika, który wypożyczył książkę
+   */
   public Wypozyczenia(int id, String dataWypozyczenia, String dataOddania, String terminOddania,
       int idksiazki, int iduzytkownika) {
     this.id = id;

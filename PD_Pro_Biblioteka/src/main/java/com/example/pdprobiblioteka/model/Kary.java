@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 
+/**
+ * Klasa reprezentująca nałożoną karę (np. za nieterminowy zwrot książki).
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Kary {
 
@@ -30,9 +33,17 @@ public class Kary {
   @Getter
   private String opis;
 
-  public Kary() {
-  }
-
+  /**
+   * Konstruktor klasy.
+   *
+   * @param id identyfikator kary
+   * @param kwota kwota pieniężna kary
+   * @param dataWydaniaKary data nałożenia kary
+   * @param terminZaplaty termin na zapłatę kary
+   * @param czyZaplacono boolean czy kara zaostała zapłacona
+   * @param iduzytkownika id użytkownika, który otrzymał karę
+   * @param opis opis kary
+   */
   public Kary(int id, double kwota, String dataWydaniaKary, String terminZaplaty,
       Boolean czyZaplacono, int iduzytkownika, String opis) {
     this.id = id;

@@ -20,12 +20,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+/**
+ * Testy Klasy Control.
+ */
 @DisplayName("Testy Control")
-@WebMvcTest(Control.class)
+@WebMvcTest(controllers = Control.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)
 public class ControlTest {
 
   private Admin admin;
@@ -42,6 +46,7 @@ public class ControlTest {
 
   @Autowired
   private MockMvc mockMvc;
+
 
 
   @Nested

@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
+/**
+ * Klasa reprezentująca użytkownika biblioteki.
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter

@@ -569,7 +569,6 @@ class SupabaseClientTest {
             SupabaseConnectionException.class,
             () -> supabaseClient.getKaryuid(1)
         );
-        System.out.println(exception.getMessage());
         assertTrue(exception.getMessage().contains("Failed to fetch Kary by id:"));
         assertInstanceOf(RuntimeException.class, exception.getCause());
 
@@ -1486,7 +1485,8 @@ class SupabaseClientTest {
         when(responseSpec.bodyToMono(String.class)).thenReturn(
             Mono.error(new RuntimeException("Connection error")));
 
-        Admin admin = new Admin(1, "Jan", "Kowalski", "Username", "pass", 101, true, "testkey", "ADMIN");
+        Admin admin = new Admin(1, "Jan", "Kowalski", "Username", "pass", 101,
+            true, "testkey", "ADMIN");
 
         SupabaseConnectionException exception = assertThrows(
             SupabaseConnectionException.class,

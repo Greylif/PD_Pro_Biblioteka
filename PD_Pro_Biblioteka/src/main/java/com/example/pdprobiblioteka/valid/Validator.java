@@ -8,6 +8,9 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
+/**
+ * Klasa pomocnicza do walidacji danych użytkowników i placówek.
+ */
 public class Validator {
 
   private static final int MIN_WIEK = 18;
@@ -21,6 +24,14 @@ public class Validator {
   private Validator() {
   }
 
+
+  /**
+   * Sprawdza czy użytkownik spełnia wymagania wiekowe.
+   *
+   * @param uzytkownik obiekt użytkownika
+   * @return true jeśli wiek użytkownika jest pomiędzy 18 a 100 lat
+   * @throws AccountValidationException jeśli wystąpi błąd parsowania daty
+   */
   public static boolean walidujUzytkownika(Uzytkownik uzytkownik) {
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -32,6 +43,12 @@ public class Validator {
     }
   }
 
+  /**
+   * Sprawdza czy adres placówki spełnia wymagany polski format.
+   *
+   * @param placowka obiekt placówki
+   * @return true jeśli adres jest zgodny ze wzorcem
+   */
   public static boolean walidujPlacowke(Placowka placowka) {
     return POLSKI_ADRES_PATTERN.matcher(placowka.getAdres()).matches();
   }

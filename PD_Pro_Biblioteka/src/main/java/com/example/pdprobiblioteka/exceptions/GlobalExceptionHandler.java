@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-
+/**
+ * Globalna obsługa wyjątków w aplikacji.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-
+  /**
+   * Obsługuje wyjątek InstanceNotFoundException (404 - nie znaleziono zasobu).
+   */
   @ExceptionHandler(InstanceNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public ResponseEntity<ErrorResponse> handleInstanceNotFoundException(
@@ -25,6 +29,9 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
   }
 
+  /**
+   * Obsługuje wyjątek AccountValidationException (400 - błąd walidacji).
+   */
   @ExceptionHandler(AccountValidationException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ResponseEntity<ErrorResponse> handleAccountValidationException(
@@ -41,7 +48,9 @@ public class GlobalExceptionHandler {
         HttpStatus.BAD_REQUEST);
   }
 
-
+  /**
+   * Obsługuje wyjątek SupabaseConnectionException (500 - błąd serwera).
+   */
   @ExceptionHandler(SupabaseConnectionException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ResponseEntity<ErrorResponse> handleSupabaseConnectionException(
@@ -55,6 +64,10 @@ public class GlobalExceptionHandler {
         HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+
+  /**
+   * Obsługuje wyjątek EmailSendException (500 - błąd serwera).
+   */
   @ExceptionHandler(EmailSendException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ResponseEntity<ErrorResponse> handleEmailSendException(EmailSendException ex) {
@@ -68,6 +81,9 @@ public class GlobalExceptionHandler {
   }
 
 
+  /**
+   * Obsługuje wyjątek JsonFileException (500 - błąd serwera).
+   */
   @ExceptionHandler(JsonFileException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ResponseEntity<ErrorResponse> handleJsonFileException(JsonFileException ex) {
@@ -80,6 +96,9 @@ public class GlobalExceptionHandler {
         HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
+  /**
+   * Obsługuje wszystkie inne nieobsłużone wyjątki (500 - błąd wewnętrzny).
+   */
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ResponseEntity<ErrorResponse> handleGeneralException(Exception

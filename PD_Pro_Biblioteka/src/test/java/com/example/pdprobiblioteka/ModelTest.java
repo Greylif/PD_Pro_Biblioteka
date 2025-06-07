@@ -14,6 +14,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+/**
+ * Testy Klasy modelów.
+ */
 public class ModelTest {
 
   @Nested
@@ -42,7 +45,8 @@ public class ModelTest {
     @Test
     @DisplayName("Sprawdzanie tworzenia klasy Admin z wszystkimi argumentami")
     void testAllArgs() {
-      Admin admin = new Admin(1, "Jan", "Kowalski", "jkowalski", "pass", 10, false, "secret", "ADMIN");
+      Admin admin = new Admin(1, "Jan", "Kowalski", "jkowalski", "pass", 10, false,
+          "secret", "ADMIN");
 
       assertEquals(1, admin.getId());
       assertEquals("Jan", admin.getImie());
@@ -80,22 +84,7 @@ public class ModelTest {
   class AutorzyTests {
 
     @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Autorzy bez argumentow")
-    void testNoArgs() {
-      Autorzy autor = new Autorzy();
-      autor.setId(1);
-      autor.setImie("John");
-      autor.setNazwisko("Tolkien");
-      autor.setRokUrodzenia(1892);
-
-      assertEquals(1, autor.getId());
-      assertEquals("John", autor.getImie());
-      assertEquals("Tolkien", autor.getNazwisko());
-      assertEquals(1892, autor.getRokUrodzenia());
-    }
-
-    @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Autorzy z wszystkimi argumentami")
+    @DisplayName("Sprawdzanie tworzenia klasy Autorzy z wszystkimi argumentami oraz toString")
     void testAllArgs() {
       Autorzy autor = new Autorzy(1, "John", "Tolkien", 1892);
 
@@ -103,47 +92,19 @@ public class ModelTest {
       assertEquals("John", autor.getImie());
       assertEquals("Tolkien", autor.getNazwisko());
       assertEquals(1892, autor.getRokUrodzenia());
-    }
-
-    @Test
-    @DisplayName("Sprawdzanie ToString klasy Autorzy")
-    void testToString() {
-      Autorzy autor = new Autorzy();
-      autor.setId(1);
-      autor.setImie("John");
-      autor.setNazwisko("Tolkien");
-      autor.setRokUrodzenia(1892);
 
       String expected = "Autorzy{id=1, Imie='John', Nazwisko='Tolkien', Rok_Urodzenia=1892}";
       assertEquals(expected, autor.toString());
     }
   }
 
+
   @Nested
   @DisplayName("Testy dla Kary")
   class KaryTests {
 
     @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Kary bez argumentow")
-    void testNoArgs() {
-      Kary kara = new Kary();
-      kara.setId(1);
-      kara.setKwota(50.5);
-      kara.setDataWydaniaKary("2025-04-01");
-      kara.setTerminZaplaty("2025-04-10");
-      kara.setCzyZaplacono(true);
-      kara.setIduzytkownika(100);
-
-      assertEquals(1, kara.getId());
-      assertEquals(50.5, kara.getKwota());
-      assertEquals("2025-04-01", kara.getDataWydaniaKary());
-      assertEquals("2025-04-10", kara.getTerminZaplaty());
-      assertTrue(kara.getCzyZaplacono());
-      assertEquals(100, kara.getIduzytkownika());
-    }
-
-    @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Kara z wszystkimi argumentami")
+    @DisplayName("Sprawdzanie tworzenia klasy Kara z wszystkimi argumentami oraz toString")
     void testAllArgs() {
       Kary kara = new Kary(1, 50.5, "2025-04-01", "2025-04-10", true, 100, "opis");
 
@@ -153,26 +114,14 @@ public class ModelTest {
       assertEquals("2025-04-10", kara.getTerminZaplaty());
       assertTrue(kara.getCzyZaplacono());
       assertEquals(100, kara.getIduzytkownika());
-    }
-
-    @Test
-    @DisplayName("Sprawdzanie ToString klasy Kary")
-    void testToString() {
-      Kary kara = new Kary();
-      kara.setId(1);
-      kara.setKwota(50.5);
-      kara.setDataWydaniaKary("2025-04-01");
-      kara.setTerminZaplaty("2025-04-10");
-      kara.setCzyZaplacono(true);
-      kara.setIduzytkownika(100);
-
       String expected = "Kary{id=1, Kwota=50.5, Data_Wydania_Kary=2025-04-01, "
           + "Termin_Zaplaty=2025-04-10, "
           + "Czy_Zaplacono=true, id_uzytkownika=100"
-          + ", opis=null}";
+          + ", opis=opis}";
       assertEquals(expected, kara.toString());
     }
   }
+
 
   @Nested
   @DisplayName("Testy dla Ksiazka")
@@ -206,7 +155,8 @@ public class ModelTest {
     @Test
     @DisplayName("Sprawdzanie tworzenia klasy Ksiazka z wszystkimi argumentami")
     void testAllArgs() {
-      Ksiazka ksiazka = new Ksiazka(1, "Silmarillion", "Fantasy", "1977-09-15", "2025-04-10", 1, 2,
+      Ksiazka ksiazka = new Ksiazka(1, "Silmarillion", "Fantasy", "1977-09-15", "2025-04-10", 1,
+          2,
           false, false);
 
       assertEquals(1, ksiazka.getId());
@@ -243,36 +193,20 @@ public class ModelTest {
   @DisplayName("Testy dla Placowka")
   class PlacowkaTests {
 
-    @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Placowka bez argumentow")
-    void testNoArgs() {
-      Placowka placowka = new Placowka();
-      placowka.setId(1);
-      placowka.setAdres("Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce");
-      assertEquals(1, placowka.getId());
-      assertEquals("Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce", placowka.getAdres());
-    }
 
     @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Placowka z wszystkimi argumentami")
+    @DisplayName("Sprawdzanie tworzenia klasy Placowka z wszystkimi argumentami i toString")
     void testAllArgs() {
-      Placowka placowka = new Placowka(1, "Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce");
+      Placowka placowka = new Placowka(1,
+          "Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce");
 
       assertEquals(1, placowka.getId());
       assertEquals("Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce", placowka.getAdres());
-    }
-
-    @Test
-    @DisplayName("Sprawdzanie ToString klasy Placowka")
-    void testToString() {
-      Placowka placowka = new Placowka();
-      placowka.setId(1);
-      placowka.setAdres("Aleja Tysiąclecia Państwa Polskiego 7, 28-340 Kielce");
-
       String expected = "Placowka{id=1, Adres='Aleja Tysiąclecia Państwa Polskiego 7, "
           + "28-340 Kielce'}";
       assertEquals(expected, placowka.toString());
     }
+
   }
 
   @Nested
@@ -342,24 +276,6 @@ public class ModelTest {
   @DisplayName("Testy dla Wypozyczenia")
   class WypozyczeniaTests {
 
-    @Test
-    @DisplayName("Sprawdzanie tworzenia klasy Wypozyczenia bez argumentow")
-    void testNoArgs() {
-      Wypozyczenia w = new Wypozyczenia();
-      w.setId(1);
-      w.setDataWypozyczenia("2025-04-14");
-      w.setDataOddania("2025-04-21");
-      w.setTerminOddania("2025-04-20");
-      w.setIdksiazki(100);
-      w.setIduzytkownika(200);
-
-      assertEquals(1, w.getId());
-      assertEquals("2025-04-14", w.getDataWypozyczenia());
-      assertEquals("2025-04-21", w.getDataOddania());
-      assertEquals("2025-04-20", w.getTerminOddania());
-      assertEquals(100, w.getIdksiazki());
-      assertEquals(200, w.getIduzytkownika());
-    }
 
     @Test
     @DisplayName("Sprawdzanie tworzenia klasy Wypozyczenia z wszystkimi argumentami")
@@ -388,5 +304,4 @@ public class ModelTest {
       assertEquals(expected, w.toString());
     }
   }
-
 }

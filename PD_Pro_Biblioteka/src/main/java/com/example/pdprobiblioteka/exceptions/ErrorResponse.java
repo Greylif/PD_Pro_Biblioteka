@@ -5,6 +5,10 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
+
+/**
+ * Klasa reprezentująca standardową odpowiedź błędu zwracaną przez API.
+ */
 @Getter
 public class ErrorResponse {
 
@@ -17,6 +21,13 @@ public class ErrorResponse {
   @Setter
   private Map<String, String> details;
 
+  /**
+   * Tworzy nową instancję ErrorResponse.
+   *
+   * @param status  kod HTTP
+   * @param error   krótki opis błędu
+   * @param message szczegółowa wiadomość o błędzie
+   */
   public ErrorResponse(int status, String error, String message) {
     this.timestamp = LocalDateTime.now();
     this.status = status;
