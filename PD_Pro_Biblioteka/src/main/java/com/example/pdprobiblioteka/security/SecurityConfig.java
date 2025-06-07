@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -102,42 +101,14 @@ public class SecurityConfig {
   }
 
   /**
-   * Kodowanie haseł - obecnie wyłączone kodowanie (tylko do testów!).
-   * W środowisku produkcyjnym należy używać `BCryptPasswordEncoder`.
+   * Kodowanie haseł.
    *
    * @return domyślny encoder haseł
    */
-  /*
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return NoOpPasswordEncoder.getInstance();
-  }
-  */
-
-
-
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
-
-
-
-  /*
-  //in client:
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-
-  public void registerUser(UserDto userDto) {
-    String encodedPassword = passwordEncoder.encode(userDto.getPassword());
-    User user = new User();
-    user.setPassword(encodedPassword);
-  }
-  */
-
-
-
-
 
   /**
    * Tworzy filtr JWT do wstrzyknięcia do łańcucha filtrów Spring Security.

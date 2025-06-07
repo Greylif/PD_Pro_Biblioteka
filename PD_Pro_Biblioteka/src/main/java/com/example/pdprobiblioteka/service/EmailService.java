@@ -47,31 +47,23 @@ public class EmailService {
    * @param webClientBuilder budowniczy WebClienta używany do konfiguracji połączenia z Supabase
    * @throws SupabaseConnectionException jeśli inicjalizacja WebClienta nie powiedzie się
    */
-  public EmailService(JavaMailSender mailSender, WebClient.Builder webClientBuilder) {
+  public EmailService(JavaMailSender mailSender,
+      WebClient.Builder webClientBuilder) {
     this.mailSender = mailSender;
-    /*
+
     String supabaseUrl = System.getenv("SUPABASE_URL");
     String supabaseKey = System.getenv("SUPABASE_KEY");
     String supabaseKey2 = System.getenv("SUPABASE_KEY2");
 
-    supabaseUrl = supabaseUrl.trim();
+    supabaseUrl = supabaseUrl.trim() + "/rest/v1";
     supabaseKey = supabaseKey.trim();
     supabaseKey2 = supabaseKey2.trim();
-    */
+
     try {
       this.webClient = webClientBuilder
-          .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co")
-          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer "
-              + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmF"
-              + "zZSIsInJlZiI6InBjcmJ0YXV2eWp4c3NwbW"
-              + "Ztd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4c"
-              + "CI6MjA1Nzk2NzczNH0.xdr4z5_udXpL4sb"
-              + "JpccFQrOPj_7_6w1bIs-FMGcdn1U")
-          .defaultHeader("apikey",
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjcmJ0YX"
-                  + "V2eWp4c3NwbWZtd2lhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MT"
-                  + "c0MjM5MTczNCwiZXhwIjoyMDU"
-                  + "3OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
+          .baseUrl(supabaseUrl)
+          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + supabaseKey)
+          .defaultHeader("apikey", supabaseKey2)
           .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
           .build();
     } catch (Exception e) {
@@ -111,10 +103,15 @@ public class EmailService {
       JSONObject obj = arrayout.getJSONObject(i);
       LocalDate termin = LocalDate.parse(obj.getString(TERMIN_ODDANIA));
       Object dataoddania = obj.opt(DATA_ODDANIA);
-      if ((termin.minusDays(3)).isBefore(LocalDate.now()) && (dataoddania == null)) {
-        sendEmail(obj.getString(EMAIL), "Przypomnienie o oddaniu ksiazki",
-            "Termin oddania ksiazki o tytule: " + obj.getString(TYTUL) + " mija: " + obj.getString(
-                TERMIN_ODDANIA));
+      if ((termin.minusDays(3)).isBefore(LocalDate.now())) {
+        assert dataoddania != null;
+        if ("null".equals(dataoddania.toString())) {
+
+          sendEmail(obj.getString(EMAIL), "Przypomnienie o oddaniu ksiazki",
+              "Termin oddania ksiazki o tytule: " + obj.getString(TYTUL) + " mija: "
+                  + obj.getString(
+                  TERMIN_ODDANIA));
+        }
       }
     }
   }

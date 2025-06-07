@@ -1,6 +1,5 @@
 package com.example.pdprobiblioteka.service;
 
-
 import com.example.pdprobiblioteka.exceptions.EmailSendException;
 import com.example.pdprobiblioteka.exceptions.InstanceNotFoundException;
 import com.example.pdprobiblioteka.exceptions.JsonFileException;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -71,7 +69,6 @@ public class SupabaseClient {
   private final WebClient webClient;
   private final EmailService emailService;
 
-  @Autowired
   private PasswordEncoder passwordEncoder;
 
   /**
@@ -80,8 +77,9 @@ public class SupabaseClient {
    * @param webClientBuilder builder do tworzenia WebClienta z odpowiednimi nagłówkami
    * @param emailService serwis odpowiedzialny za wysyłanie e-maili (np. do resetowania hasła)
    */
-  public SupabaseClient(WebClient.Builder webClientBuilder, EmailService emailService) {
-    /*
+  public SupabaseClient(WebClient.Builder webClientBuilder,
+      EmailService emailService, PasswordEncoder passwordEncoder) {
+
     String supabaseUrl = System.getenv("SUPABASE_URL");
     String supabaseKey = System.getenv("SUPABASE_KEY");
     String supabaseKey2 = System.getenv("SUPABASE_KEY2");
@@ -90,21 +88,12 @@ public class SupabaseClient {
     supabaseKey = supabaseKey.trim();
     supabaseKey2 = supabaseKey2.trim();
 
-     */
-
+    this.passwordEncoder = passwordEncoder;
     try {
       this.webClient = webClientBuilder
-          .baseUrl("https://pcrbtauvyjxsspmfmwia.supabase.co/rest/v1")
-          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer "
-              + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz"
-              + "ZSIsInJlZiI6InBjcmJ0YXV2e"
-              + "Wp4c3NwbWZtd2lhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MT"
-              + "c0MjM5MTczNCwiZXhwIjoyMDU3"
-              + "OTY3NzM0fQ.L5av7QMn8OqyF8WhaPo6IJOApwQcqJPCzqLlzJHz6zw")
-          .defaultHeader("apikey",
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBjc"
-                  + "mJ0YXV2eWp4c3NwbWZtd2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTE3MzQsImV4cCI6"
-                  + "MjA1Nzk2NzczNH0.xdr4z5_udXpL4sbJpccFQrOPj_7_6w1bIs-FMGcdn1U")
+          .baseUrl(supabaseUrl)
+          .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + supabaseKey)
+          .defaultHeader("apikey", supabaseKey2)
           .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
           .build();
       this.emailService = emailService;
@@ -996,7 +985,8 @@ public class SupabaseClient {
       if (isSafeValue(value)) {
         safeMap.put(entry.getKey(), value);
       } else {
-        throw new IllegalArgumentException("Unsafe value for field: " + entry.getKey() + value.toString());
+        throw new IllegalArgumentException("Unsafe value for field: "
+            + entry.getKey() + value.toString());
       }
     }
     return safeMap;

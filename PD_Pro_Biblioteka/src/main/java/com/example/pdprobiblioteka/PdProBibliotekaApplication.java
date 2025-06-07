@@ -1,7 +1,10 @@
 package com.example.pdprobiblioteka;
 
+import com.example.pdprobiblioteka.config.JwtConfig;
+import com.example.pdprobiblioteka.config.SupabaseConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -10,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @SpringBootApplication
 @EnableScheduling
+@EnableConfigurationProperties({SupabaseConfig.class, JwtConfig.class})
 public class PdProBibliotekaApplication {
 
   /**

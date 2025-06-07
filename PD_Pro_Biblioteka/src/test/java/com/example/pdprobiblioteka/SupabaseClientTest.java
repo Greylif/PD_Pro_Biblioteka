@@ -17,6 +17,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.example.pdprobiblioteka.config.SupabaseConfig;
 import com.example.pdprobiblioteka.exceptions.EmailSendException;
 import com.example.pdprobiblioteka.exceptions.InstanceNotFoundException;
 import com.example.pdprobiblioteka.exceptions.JsonFileException;
@@ -44,6 +45,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -85,6 +87,10 @@ class SupabaseClientTest {
 
   private EmailService emailService;
 
+  private SupabaseConfig supabaseConfig;
+
+  private PasswordEncoder passwordEncoder;
+
   static Stream<String> wyporzyczenieBody() {
     return Stream.of(
         "[{\"id\":1, \"Data_Wypozyczenia\":\"2025-04-16\", \"Data_Oddania\":\"2025-04-17\", "
@@ -106,12 +112,19 @@ class SupabaseClientTest {
     webClientBuilder = mock(WebClient.Builder.class);
     webClient = mock(WebClient.class);
     emailService = mock(EmailService.class);
+    supabaseConfig = mock(SupabaseConfig.class);
+    passwordEncoder = mock(PasswordEncoder.class);
+
+    when(supabaseConfig.getUrl()).thenReturn("http://localhost");
+    when(supabaseConfig.getKey()).thenReturn("dummyKey");
+    when(supabaseConfig.getKey2()).thenReturn("dummyKey2");
 
     when(webClientBuilder.baseUrl(anyString())).thenReturn(webClientBuilder);
     when(webClientBuilder.defaultHeader(anyString(), anyString())).thenReturn(webClientBuilder);
     when(webClientBuilder.build()).thenReturn(webClient);
+    when(passwordEncoder.encode(anyString())).thenReturn("hashedPass");
 
-    supabaseClient = new SupabaseClient(webClientBuilder, emailService);
+    supabaseClient = new SupabaseClient(webClientBuilder, emailService, passwordEncoder);
   }
 
   @ParameterizedTest
@@ -162,7 +175,7 @@ class SupabaseClientTest {
         .thenThrow(new RuntimeException("Failed to build WebClient"));
 
     assertThrows(SupabaseConnectionException.class, () -> {
-      new SupabaseClient(webClientBuilder, emailService);
+      new SupabaseClient(webClientBuilder, emailService, passwordEncoder);
     });
   }
 

@@ -10,13 +10,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 /**
- * Serwis do obsługi JWT (JSON Web Tokenów), w tym ich generowania,
- * weryfikacji i odczytywania danych z tokena.
+ * Serwis do obsługi JWT (JSON Web Tokenów), w tym ich generowania, weryfikacji i odczytywania
+ * danych z tokena.
  */
 @Service
 public class JwtService {
 
-  private static final String SECRET_KEY = "tajnyklucz";
+  private final String secretKey;
+
+  /**
+   * Konstruktor klasy nadajacy wartość klucza do kenerowania tokenów Jwt.
+   */
+  public JwtService() {
+    this.secretKey = System.getenv("JWT_KEY");
+  }
 
   /**
    * Pobiera nazwę użytkownika (subject) z podanego tokena.
@@ -47,7 +54,7 @@ public class JwtService {
    * @return obiekt Claims
    */
   public Claims extractAllClaims(String token) {
-    return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
   }
 
   /**
@@ -67,15 +74,15 @@ public class JwtService {
         .claim("role", role)
         .setIssuedAt(new Date(System.currentTimeMillis()))
         .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-        .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+        .signWith(SignatureAlgorithm.HS256, secretKey)
         .compact();
   }
 
   /**
    * Sprawdza, czy token jest poprawny i nie wygasł.
    *
-   * @param token        token JWT
-   * @param userDetails  dane użytkownika
+   * @param token       token JWT
+   * @param userDetails dane użytkownika
    * @return true jeśli token jest ważny i należy do danego użytkownika
    */
   public boolean isTokenValid(String token, UserDetails userDetails) {
