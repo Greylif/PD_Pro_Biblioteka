@@ -8,21 +8,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class TotpService {
 
-  private final GoogleAuthenticator gAuth = new GoogleAuthenticator();
-
   public String generateSecretKey() {
-    GoogleAuthenticator gAuth = new GoogleAuthenticator();
-    return gAuth.createCredentials().getKey();
+    GoogleAuthenticator gauth = new GoogleAuthenticator();
+    return gauth.createCredentials().getKey();
   }
 
-  public String getQRBarcodeURL(String username, String secret) {
+  public String getQrBarcodeUrl(String username, String secret) {
     GoogleAuthenticatorKey key = new GoogleAuthenticatorKey.Builder(secret).build();
     return GoogleAuthenticatorQRGenerator.getOtpAuthURL("BibliotekaSystem", username, key);
   }
 
   public boolean verifyCode(String secret, int code) {
-    GoogleAuthenticator gAuth = new GoogleAuthenticator();
-    return gAuth.authorize(secret, code);
+    GoogleAuthenticator gauth = new GoogleAuthenticator();
+    return gauth.authorize(secret, code);
   }
 
 }

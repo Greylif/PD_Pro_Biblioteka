@@ -60,7 +60,7 @@ public class AuthControllerTest {
       UserDetails mockUserDetails = Mockito.mock(UserDetails.class);
 
       Mockito.when(userDetailsService.loadUserByUsername(username)).thenReturn(mockUserDetails);
-      Mockito.when(jwtService.generateToken(mockUserDetails)).thenReturn(token);
+      Mockito.when(jwtService.generateToken(mockUserDetails, false)).thenReturn(token);
 
       String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 
@@ -105,7 +105,7 @@ public class AuthControllerTest {
       UserDetails mockAdminDetails = Mockito.mock(UserDetails.class);
 
       Mockito.when(adminDetailsService.loadUserByUsername(username)).thenReturn(mockAdminDetails);
-      Mockito.when(jwtService.generateToken(mockAdminDetails)).thenReturn(token);
+      Mockito.when(jwtService.generateToken(mockAdminDetails, true)).thenReturn(token);
 
       String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 

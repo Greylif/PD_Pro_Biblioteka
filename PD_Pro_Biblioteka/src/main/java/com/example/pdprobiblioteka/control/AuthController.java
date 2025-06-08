@@ -9,6 +9,8 @@ import com.example.pdprobiblioteka.service.SupabaseAdminDetailsService;
 import com.example.pdprobiblioteka.service.SupabaseClient;
 import com.example.pdprobiblioteka.service.SupabaseUserDetailsService;
 import com.example.pdprobiblioteka.service.TotpService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,11 +77,27 @@ public class AuthController {
         String totp = request.getTotp();
         if (totp == null || totp.isEmpty()
             || !totpService.verifyCode(user.getMfaSecret(), Integer.parseInt(totp))) {
-          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing TOTP code");
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+              .body("Invalid or missing TOTP code");
         }
       }
 
-      String jwt = jwtService.generateToken(userDetails);
+      String jwt = jwtService.generateToken(userDetails, false);
+      String secretKey = System.getenv("JWT_KEY");
+      Claims claims = Jwts.parser()
+          .setSigningKey(secretKey)
+          .parseClaimsJws(jwt)
+          .getBody();
+
+      String username = claims.getSubject();
+      String role = claims.get("role", String.class);
+      String userId = claims.get("userId", String.class);
+      Boolean isAdmin = claims.get("isAdmin", Boolean.class);
+      System.out.println(username);
+      System.out.println(role);
+      System.out.println(userId);
+      System.out.println(isAdmin);
+
       return ResponseEntity.ok(new AuthResponse(jwt));
     } catch (AuthenticationException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login or password");
@@ -102,7 +120,7 @@ public class AuthController {
           new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
       );
       var adminDetails = adminDetailsService.loadUserByUsername(request.getUsername());
-      String jwt = jwtService.generateToken(adminDetails);
+      String jwt = jwtService.generateToken(adminDetails, true);
       return ResponseEntity.ok(new AuthResponse(jwt));
     } catch (AuthenticationException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login or password");
@@ -117,8 +135,7 @@ public class AuthController {
 
 
   @PostMapping("/setup-totp")
-  public ResponseEntity<?> setupTotp(@RequestBody AuthRequest request) {
-    // Authenticate username/password
+  public ResponseEntity<Object> setupTotp(@RequestBody AuthRequest request) {
     try {
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -130,12 +147,10 @@ public class AuthController {
       }
 
       String secret = totpService.generateSecretKey();
-      String barcodeUrl = totpService.getQRBarcodeURL(user.getNazwaUzytkownika(), secret);
+      String barcodeUrl = totpService.getQrBarcodeUrl(user.getNazwaUzytkownika(), secret);
 
-      // Save secret temporarily, ideally in DB or session/cache
-      // For simplicity, you could add a method in SupabaseClient to update MFA secret temporarily
       user.setMfaSecret(secret);
-      supabaseClient.updateUserMfaSecret(user.getId(), secret); // implement this
+      supabaseClient.updateUserMfaSecret(user.getId(), secret);
 
       return ResponseEntity.ok(Map.of(
           "secret", secret,
@@ -147,7 +162,7 @@ public class AuthController {
   }
 
   @PostMapping("/setup-totp/admin")
-  public ResponseEntity<?> setupTotpAdmin(@RequestBody AuthRequest request) {
+  public ResponseEntity<Object> setupTotpAdmin(@RequestBody AuthRequest request) {
     try {
       authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
@@ -163,10 +178,10 @@ public class AuthController {
       }
 
       String secret = totpService.generateSecretKey();
-      String barcodeUrl = totpService.getQRBarcodeURL(admin.getNazwaUzytkownika(), secret);
+      String barcodeUrl = totpService.getQrBarcodeUrl(admin.getNazwaUzytkownika(), secret);
 
       admin.setMfaSecret(secret);
-      supabaseClient.updateAdminMfaSecret(admin.getId(), secret); // implement this
+      supabaseClient.updateAdminMfaSecret(admin.getId(), secret);
 
       return ResponseEntity.ok(Map.of(
           "secret", secret,
@@ -181,7 +196,7 @@ public class AuthController {
 
 
   @PostMapping("/confirm-totp")
-  public ResponseEntity<?> confirmTotp(@RequestBody Map<String, Object> payload) {
+  public ResponseEntity<Object> confirmTotp(@RequestBody Map<String, Object> payload) {
     String username = (String) payload.get("username");
     int code = (int) payload.get("code");
 
@@ -194,15 +209,14 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid TOTP code");
     }
 
-    // Confirm MFA enabled
     user.setMfaEnabled(true);
-    supabaseClient.updateUserMfaEnabled(user.getId(), true); // implement this method
+    supabaseClient.updateUserMfaEnabled(user.getId(), true);
 
     return ResponseEntity.ok("TOTP enabled successfully");
   }
 
   @PostMapping("/confirm-totp/admin")
-  public ResponseEntity<?> confirmTotpAdmin(@RequestBody Map<String, Object> payload) {
+  public ResponseEntity<Object> confirmTotpAdmin(@RequestBody Map<String, Object> payload) {
     String username = (String) payload.get("username");
     int code = (int) payload.get("code");
 
@@ -216,7 +230,7 @@ public class AuthController {
     }
 
     admin.setMfaEnabled(true);
-    supabaseClient.updateAdminMfaEnabled(admin.getId(), true); // implement this
+    supabaseClient.updateAdminMfaEnabled(admin.getId(), true);
 
     return ResponseEntity.ok("TOTP enabled successfully");
   }

@@ -133,7 +133,6 @@ class JwtAuthenticationFilterTest {
 
     jwtFilter.invokeDoFilter(request, response, filterChain);
 
-    // Nie powinien próbować ustawiać autoryzacji ponownie
     verify(filterChain, times(1)).doFilter(request, response);
   }
 

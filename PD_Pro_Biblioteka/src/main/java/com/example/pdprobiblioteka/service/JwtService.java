@@ -1,5 +1,7 @@
 package com.example.pdprobiblioteka.service;
 
+import com.example.pdprobiblioteka.model.Admin;
+import com.example.pdprobiblioteka.model.Uzytkownik;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -18,11 +20,14 @@ public class JwtService {
 
   private final String secretKey;
 
+  private final SupabaseClient supabaseClient;
+
   /**
    * Konstruktor klasy nadajacy wartość klucza do kenerowania tokenów Jwt.
    */
-  public JwtService() {
+  public JwtService(SupabaseClient supabaseClient) {
     this.secretKey = System.getenv("JWT_KEY");
+    this.supabaseClient = supabaseClient;
   }
 
   /**
@@ -63,6 +68,35 @@ public class JwtService {
    * @param userDetails dane użytkownika
    * @return token JWT z rolą oraz datą ważności
    */
+  public String generateToken(UserDetails userDetails, boolean isAdmin) {
+    String role = userDetails.getAuthorities().stream()
+        .findFirst()
+        .map(GrantedAuthority::getAuthority)
+        .orElse("ROLE_USER");
+
+    String userId = null;
+
+    if (isAdmin) {
+      Admin admin = supabaseClient.getAdminByUsername(userDetails.getUsername());
+      userId = String.valueOf(admin.getId());
+    } else {
+      Uzytkownik user = supabaseClient.getUserByUsername(userDetails.getUsername());
+      userId = String.valueOf(user.getId());
+    }
+
+    return Jwts.builder()
+        .setSubject(userDetails.getUsername())
+        .claim("role", role)
+        .claim("userId", userId)
+        .claim("isAdmin", isAdmin)
+        .setIssuedAt(new Date(System.currentTimeMillis()))
+        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+        .signWith(SignatureAlgorithm.HS256, secretKey)
+        .compact();
+  }
+
+
+  /*
   public String generateToken(UserDetails userDetails) {
     String role = userDetails.getAuthorities().stream()
         .findFirst()
@@ -78,10 +112,12 @@ public class JwtService {
         .compact();
   }
 
+   */
+
   /**
    * Sprawdza, czy token jest poprawny i nie wygasł.
    *
-   * @param token       token JWT
+   * @param token token JWT
    * @param userDetails dane użytkownika
    * @return true jeśli token jest ważny i należy do danego użytkownika
    */
