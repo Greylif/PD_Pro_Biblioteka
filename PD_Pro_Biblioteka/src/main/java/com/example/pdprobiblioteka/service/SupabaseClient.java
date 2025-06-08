@@ -63,6 +63,8 @@ public class SupabaseClient {
   private static final String ROK_URODZENIA = "Rok_Urodzenia";
   private static final String GATUNEK = "Gatunek";
   private static final String ID_KSIAZKI = "id_ksiazki";
+  private static final String SLADMIN = "/Admin";
+  private static final String SLUZYTKOWNIK = "/Uzytkownik";
   private static final Pattern SAFE_TEXT_PATTERN = Pattern.compile(
       "[\\wąćęłńóśźżĄĆĘŁŃÓŚŹŻ\\s@.+\\-:,$/]{1,200}");
   private final WebClient webClient;
@@ -1069,7 +1071,7 @@ public class SupabaseClient {
     try {
       String response = webClient.get()
           .uri(uriBuilder -> uriBuilder
-              .path("/Uzytkownik")
+              .path(SLUZYTKOWNIK)
               .queryParam(SELECT, "*")
               .queryParam(NAZWA_UZYTKOWNIKA, "eq." + username)
               .build())
@@ -1119,7 +1121,7 @@ public class SupabaseClient {
     try {
       String response = webClient.get()
           .uri(uriBuilder -> uriBuilder
-              .path("/Admin")
+              .path(SLADMIN)
               .queryParam(SELECT, "*")
               .queryParam(NAZWA_UZYTKOWNIKA, "eq." + username)
               .build())
@@ -1163,9 +1165,9 @@ public class SupabaseClient {
   public void updateUserMfaSecret(int userId, String secret) {
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
-        .path("/Uzytkownik")
+        .path(SLUZYTKOWNIK)
         .queryParam("id", "eq." + userId).build())
-        .bodyValue(Map.of("Mfa_Secret", secret))
+        .bodyValue(Map.of(MFA_SECRET, secret))
         .retrieve()
         .bodyToMono(Void.class)
         .block();
@@ -1175,9 +1177,9 @@ public class SupabaseClient {
   public void updateUserMfaEnabled(int userId, boolean enabled) {
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
-        .path("/Uzytkownik")
+        .path(SLUZYTKOWNIK)
         .queryParam("id", "eq." + userId).build())
-        .bodyValue(Map.of("Mfa_Enabled", enabled))
+        .bodyValue(Map.of(MFA_ENABLED, enabled))
         .retrieve()
         .bodyToMono(Void.class)
         .block();
@@ -1187,10 +1189,10 @@ public class SupabaseClient {
   public void updateAdminMfaSecret(int userId, String secret) {
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
-            .path("/Admin")
+            .path(SLADMIN)
             .queryParam("nazwa_uzytkownika", "eq." + userId)
             .build())
-        .bodyValue(Map.of("Mfa_Secret", secret))
+        .bodyValue(Map.of(MFA_SECRET, secret))
         .retrieve()
         .toBodilessEntity()
         .block();
@@ -1199,10 +1201,10 @@ public class SupabaseClient {
   public void updateAdminMfaEnabled(int userId, boolean enabled) {
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
-            .path("/Admin")
+            .path(SLADMIN)
             .queryParam("nazwa_uzytkownika", "eq." + userId)
             .build())
-        .bodyValue(Map.of("Mfa_Enabled", enabled))
+        .bodyValue(Map.of(MFA_ENABLED, enabled))
         .retrieve()
         .toBodilessEntity()
         .block();
