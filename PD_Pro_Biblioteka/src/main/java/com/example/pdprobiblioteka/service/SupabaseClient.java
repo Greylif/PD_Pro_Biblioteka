@@ -27,10 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * Klasa odpowiedzialna za komunikację z bazą danych Supabase poprzez WebClient.
- * Umożliwia wykonywanie operacji CRUD na różnych encjach takich jak Użytkownicy, Książki,
- * Wypożyczenia, Kary itp.
- * Zawiera również integrację z serwisem EmailService do wysyłania wiadomości e-mail.
+ * Klasa odpowiedzialna za komunikację z bazą danych Supabase poprzez WebClient. Umożliwia
+ * wykonywanie operacji CRUD na różnych encjach takich jak Użytkownicy, Książki, Wypożyczenia, Kary
+ * itp. Zawiera również integrację z serwisem EmailService do wysyłania wiadomości e-mail.
  */
 @Service
 public class SupabaseClient {
@@ -69,13 +68,13 @@ public class SupabaseClient {
   private final WebClient webClient;
   private final EmailService emailService;
 
-  private PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
   /**
    * Tworzy nową instancję klienta Supabase.
    *
    * @param webClientBuilder builder do tworzenia WebClienta z odpowiednimi nagłówkami
-   * @param emailService serwis odpowiedzialny za wysyłanie e-maili (np. do resetowania hasła)
+   * @param emailService     serwis odpowiedzialny za wysyłanie e-maili (np. do resetowania hasła)
    */
   public SupabaseClient(WebClient.Builder webClientBuilder,
       EmailService emailService, PasswordEncoder passwordEncoder) {
@@ -135,10 +134,10 @@ public class SupabaseClient {
    * Dodaje nowe wypożyczenie książki.
    *
    * @param dataWypozyczenia data wypożyczenia
-   * @param dataOddania data oddania (opcjonalna)
-   * @param terminOddania planowany termin oddania
-   * @param idKsiazki identyfikator książki
-   * @param idUzytkownika identyfikator użytkownika
+   * @param dataOddania      data oddania (opcjonalna)
+   * @param terminOddania    planowany termin oddania
+   * @param idKsiazki        identyfikator książki
+   * @param idUzytkownika    identyfikator użytkownika
    * @return odpowiedź z serwera po dodaniu danych
    */
   public String addWypozyczenie(String dataWypozyczenia, String dataOddania, String terminOddania,
@@ -226,11 +225,11 @@ public class SupabaseClient {
   /**
    * Dodaje nową karę dla użytkownika.
    *
-   * @param kwota wysokość kary
+   * @param kwota           wysokość kary
    * @param dataWydaniaKary data wystawienia kary
-   * @param terminZaplaty termin zapłaty
-   * @param idUzytkownika identyfikator użytkownika
-   * @param opis opcjonalny opis kary
+   * @param terminZaplaty   termin zapłaty
+   * @param idUzytkownika   identyfikator użytkownika
+   * @param opis            opcjonalny opis kary
    * @return odpowiedź z serwera po dodaniu danych
    */
   public String addKara(double kwota, String dataWydaniaKary, String terminZaplaty,
@@ -264,11 +263,11 @@ public class SupabaseClient {
   /**
    * Dodaje nową książkę do bazy danych.
    *
-   * @param tytul tytuł książki
-   * @param gatunek gatunek literacki
+   * @param tytul       tytuł książki
+   * @param gatunek     gatunek literacki
    * @param dataWydania data wydania książki
-   * @param idAutora identyfikator autora
-   * @param idPlacowki identyfikator placówki, do której przypisana jest książka
+   * @param idAutora    identyfikator autora
+   * @param idPlacowki  identyfikator placówki, do której przypisana jest książka
    * @return odpowiedź z serwera po dodaniu książki
    */
   public String addKsiazka(String tytul, String gatunek, String dataWydania, int idAutora,
@@ -294,7 +293,7 @@ public class SupabaseClient {
   /**
    * Logowanie użytkownika po nazwie i haśle.
    *
-   * @param login1 nazwa użytkownika
+   * @param login1   nazwa użytkownika
    * @param password hasło
    * @return dane JSON użytkownika, jeśli dane logowania są poprawne
    */
@@ -306,7 +305,7 @@ public class SupabaseClient {
   /**
    * Logowanie administratora po nazwie i haśle.
    *
-   * @param login1 login administratora
+   * @param login1   login administratora
    * @param password hasło
    * @return dane administratora, jeśli dane logowania są poprawne
    */
@@ -315,11 +314,11 @@ public class SupabaseClient {
   }
 
   /**
-   * Sprawdzanie bezpieczenstwa przekazanej wartości w kontekście SQL injection
-   * wykorzystywana w filtrowaniu książek.
+   * Sprawdzanie bezpieczenstwa przekazanej wartości w kontekście SQL injection wykorzystywana w
+   * filtrowaniu książek.
    *
    * @param column kolumna w ktorej znajduja się dane
-   * @param value wartość sprawdzanego pola
+   * @param value  wartość sprawdzanego pola
    * @return kolumna oraz wartość z wykorzystaniem like w celu filtrowania
    */
   private String safeLike(String column, String value) {
@@ -332,13 +331,13 @@ public class SupabaseClient {
   /**
    * Wyszukuje książki według różnych filtrów.
    *
-   * @param id identyfikator książki
-   * @param tytul tytuł książki
-   * @param gatunek gatunek literacki
-   * @param dataWydania data wydania
-   * @param autorImie imię autora
+   * @param id            identyfikator książki
+   * @param tytul         tytuł książki
+   * @param gatunek       gatunek literacki
+   * @param dataWydania   data wydania
+   * @param autorImie     imię autora
    * @param autorNazwisko nazwisko autora
-   * @param idPlacowki identyfikator placówki
+   * @param idPlacowki    identyfikator placówki
    * @return dane JSON książek pasujących do filtrów
    */
   public String getKsiazkaFiltr(Integer id, String tytul, String gatunek, String dataWydania,
@@ -391,12 +390,12 @@ public class SupabaseClient {
   /**
    * Dodaje nowego użytkownika do systemu.
    *
-   * @param imie Imię użytkownika
-   * @param nazwisko Nazwisko użytkownika
-   * @param dataUrodzenia Data urodzenia użytkownika
+   * @param imie             Imię użytkownika
+   * @param nazwisko         Nazwisko użytkownika
+   * @param dataUrodzenia    Data urodzenia użytkownika
    * @param nazwaUzytkownika Nazwa użytkownika
-   * @param haslo Hasło użytkownika
-   * @param email Adres e-mail użytkownika
+   * @param haslo            Hasło użytkownika
+   * @param email            Adres e-mail użytkownika
    * @return Odpowiedź z serwera po dodaniu użytkownika
    */
   public String addUzytkownik(String imie, String nazwisko, String dataUrodzenia,
@@ -424,11 +423,11 @@ public class SupabaseClient {
   /**
    * Dodaje nowego administratora do systemu.
    *
-   * @param imie Imię administratora
-   * @param nazwisko Nazwisko administratora
+   * @param imie             Imię administratora
+   * @param nazwisko         Nazwisko administratora
    * @param nazwaUzytkownika Nazwa użytkownika
-   * @param haslo Hasło administratora
-   * @param idPlacowki ID placówki przypisanej do administratora
+   * @param haslo            Hasło administratora
+   * @param idPlacowki       ID placówki przypisanej do administratora
    * @return Odpowiedź z serwera po dodaniu administratora
    */
   public String addAdmin(String imie, String nazwisko, String nazwaUzytkownika, String haslo,
@@ -454,8 +453,8 @@ public class SupabaseClient {
   /**
    * Dodaje nowego autora do systemu.
    *
-   * @param imie Imię autora
-   * @param nazwisko Nazwisko autora
+   * @param imie         Imię autora
+   * @param nazwisko     Nazwisko autora
    * @param rokUrodzenia Rok urodzenia autora
    * @return Odpowiedź z serwera po dodaniu autora
    */
@@ -470,7 +469,7 @@ public class SupabaseClient {
   /**
    * Aktualizuje dane placówki.
    *
-   * @param id ID placówki do zaktualizowania
+   * @param id    ID placówki do zaktualizowania
    * @param adres Nowy adres placówki
    * @return Odpowiedź z serwera po aktualizacji
    */
@@ -485,12 +484,12 @@ public class SupabaseClient {
   /**
    * Aktualizuje dane wypożyczenia.
    *
-   * @param id ID wypożyczenia
+   * @param id               ID wypożyczenia
    * @param dataWypozyczenia Data wypożyczenia
-   * @param dataOddania Data oddania
-   * @param terminOddania Termin oddania
-   * @param idKsiazki ID książki
-   * @param idUzytkownika ID użytkownika
+   * @param dataOddania      Data oddania
+   * @param terminOddania    Termin oddania
+   * @param idKsiazki        ID książki
+   * @param idUzytkownika    ID użytkownika
    * @return Odpowiedź z serwera po aktualizacji
    */
   public String updateWypozyczenie(int id, String dataWypozyczenia, String dataOddania,
@@ -518,13 +517,13 @@ public class SupabaseClient {
   /**
    * Aktualizuje dane kary.
    *
-   * @param id ID kary
-   * @param kwota Kwota kary
+   * @param id              ID kary
+   * @param kwota           Kwota kary
    * @param dataWydaniaKary Data wystawienia kary
-   * @param terminZaplaty Termin zapłaty kary
-   * @param czyZaplacono Informacja, czy kara została zapłacona
-   * @param idUzytkownika ID użytkownika
-   * @param opis Opis kary
+   * @param terminZaplaty   Termin zapłaty kary
+   * @param czyZaplacono    Informacja, czy kara została zapłacona
+   * @param idUzytkownika   ID użytkownika
+   * @param opis            Opis kary
    * @return Odpowiedź z serwera po aktualizacji
    */
   public String updateKara(int id, Double kwota, String dataWydaniaKary, String terminZaplaty,
@@ -619,8 +618,8 @@ public class SupabaseClient {
   }
 
   /**
-   * Aktualizuje dane administratora na podstawie przekazanego admina.
-   * Aktualizowane są tylko te pola, które nie są nullem.
+   * Aktualizuje dane administratora na podstawie przekazanego admina. Aktualizowane są tylko te
+   * pola, które nie są nullem.
    *
    * @param admin obiekt administratora zawierający zaktualizowane dane.
    * @return wynik operacji aktualizacji jako String.
@@ -653,12 +652,12 @@ public class SupabaseClient {
   }
 
   /**
-   * Aktualizuje dane autora o określonym identyfikatorze.
-   * Aktualizowane są tylko pola niebędące nullem.
+   * Aktualizuje dane autora o określonym identyfikatorze. Aktualizowane są tylko pola niebędące
+   * nullem.
    *
-   * @param id identyfikator autora.
-   * @param imie nowe imię autora (opcjonalne).
-   * @param nazwisko nowe nazwisko autora (opcjonalne).
+   * @param id           identyfikator autora.
+   * @param imie         nowe imię autora (opcjonalne).
+   * @param nazwisko     nowe nazwisko autora (opcjonalne).
    * @param rokUrodzenia nowy rok urodzenia autora (opcjonalny).
    * @return wynik operacji aktualizacji jako String.
    */
@@ -750,10 +749,9 @@ public class SupabaseClient {
   }
 
   /**
-   * Zaplanowane zadanie dodające automatyczne kary za przetrzymanie książek.
-   * Sprawdza wszystkie wypożyczenia i dodaje karę użytkownikowi,
-   * jeśli termin oddania minął, a książka nie została jeszcze zwrócona.
-   * Uruchamiane codziennie o 17:00.
+   * Zaplanowane zadanie dodające automatyczne kary za przetrzymanie książek. Sprawdza wszystkie
+   * wypożyczenia i dodaje karę użytkownikowi, jeśli termin oddania minął, a książka nie została
+   * jeszcze zwrócona. Uruchamiane codziennie o 17:00.
    */
   @Scheduled(cron = "0 00 17 * * ?")
   public void scheduledKara() {
@@ -781,7 +779,7 @@ public class SupabaseClient {
   /**
    * Pobiera dane z określonej tabeli i wskazanych kolumn.
    *
-   * @param table nazwa tabeli.
+   * @param table   nazwa tabeli.
    * @param columns kolumny do pobrania
    * @return wynik zapytania w formacie JSON jako String.
    * @throws SupabaseConnectionException w przypadku błędu połączenia.
@@ -803,12 +801,12 @@ public class SupabaseClient {
   }
 
   /**
-   * Pobiera dane z tabeli na podstawie określonego filtru, wykorzystywane
-   * do pobierania przez klucz obcy.
+   * Pobiera dane z tabeli na podstawie określonego filtru, wykorzystywane do pobierania przez klucz
+   * obcy.
    *
    * @param table nazwa tabeli.
    * @param filtr nazwa parametru filtru
-   * @param id wartość filtru.
+   * @param id    wartość filtru.
    * @return wynik zapytania w formacie JSON jako String.
    */
   private String fetchDatauid(String table, String filtr, String id) {
@@ -828,8 +826,8 @@ public class SupabaseClient {
   }
 
   /**
-   * Pobiera książki oraz autorów spełniających przekazane warunki
-   * i filtruje książki, których autorzy są zgodni z wynikami filtrowania.
+   * Pobiera książki oraz autorów spełniających przekazane warunki i filtruje książki, których
+   * autorzy są zgodni z wynikami filtrowania.
    *
    * @param kstatement warunek zapytania dla książek
    * @param astatement warunek zapytania dla autorów.
@@ -889,7 +887,7 @@ public class SupabaseClient {
    * Filtruje książki na podstawie listy identyfikatorów autorów.
    *
    * @param ksiazkiData dane książek w formacie JSON.
-   * @param autorIds lista dopuszczalnych identyfikatorów autorów.
+   * @param autorIds    lista dopuszczalnych identyfikatorów autorów.
    * @return przefiltrowana lista książek w formacie JSON.
    */
   private String filterKsiazkiByAutor(String ksiazkiData, List<Integer> autorIds) {
@@ -920,15 +918,15 @@ public class SupabaseClient {
   }
 
   /**
-   * Pobiera dane użytkownika na podstawie loginu i hasła.
-   * Waliduje dane wejściowe pod kątem bezpieczeństwa.
+   * Pobiera dane użytkownika na podstawie loginu i hasła. Waliduje dane wejściowe pod kątem
+   * bezpieczeństwa.
    *
-   * @param table nazwa tabeli.
-   * @param columns kolumny do pobrania.
-   * @param logindata nazwa użytkownika.
+   * @param table        nazwa tabeli.
+   * @param columns      kolumny do pobrania.
+   * @param logindata    nazwa użytkownika.
    * @param passworddata hasło.
    * @return dane użytkownika w formacie JSON.
-   * @throws IllegalArgumentException jeśli dane wejściowe są niebezpieczne.
+   * @throws IllegalArgumentException  jeśli dane wejściowe są niebezpieczne.
    * @throws InstanceNotFoundException jeśli użytkownik nie istnieje.
    */
   private String fetchDatalogin(String table, String columns, String logindata,
@@ -986,17 +984,16 @@ public class SupabaseClient {
         safeMap.put(entry.getKey(), value);
       } else {
         throw new IllegalArgumentException("Unsafe value for field: "
-            + entry.getKey() + value.toString());
+            + entry.getKey() + value);
       }
     }
     return safeMap;
   }
 
   /**
-   * Wysyła dane do wybranej tabeli.
-   * Sprawdza bezpieczeństwo danych wejściowych.
+   * Wysyła dane do wybranej tabeli. Sprawdza bezpieczeństwo danych wejściowych.
    *
-   * @param table nazwa tabeli.
+   * @param table       nazwa tabeli.
    * @param requestBody mapa danych do zapisania.
    * @return wynik operacji jako String.
    */
@@ -1020,8 +1017,8 @@ public class SupabaseClient {
   /**
    * Aktualizuje dane rekordu o określonym identyfikatorze w wybranej tabeli.
    *
-   * @param table nazwa tabeli.
-   * @param id identyfikator rekordu.
+   * @param table       nazwa tabeli.
+   * @param id          identyfikator rekordu.
    * @param requestBody mapa pól do aktualizacji.
    * @return wynik operacji jako String.
    */
@@ -1045,7 +1042,7 @@ public class SupabaseClient {
    * Usuwa rekord z wybranej tabeli na podstawie identyfikatora.
    *
    * @param table nazwa tabeli.
-   * @param id identyfikator rekordu do usunięcia.
+   * @param id    identyfikator rekordu do usunięcia.
    * @return wynik operacji usuwania jako String.
    */
   private String deleteData(String table, int id) {
@@ -1156,6 +1153,62 @@ public class SupabaseClient {
       throw new SupabaseConnectionException("Błąd pobierania admina: ", e);
     }
   }
+
+
+
+
+
+
+
+  public void updateUserMfaSecret(int userId, String secret) {
+    webClient.patch()
+        .uri(uriBuilder -> uriBuilder
+        .path("/Uzytkownik")
+        .queryParam("id", "eq." + userId).build())
+        .bodyValue(Map.of("Mfa_Secret", secret))
+        .retrieve()
+        .bodyToMono(Void.class)
+        .block();
+  }
+
+
+  public void updateUserMfaEnabled(int userId, boolean enabled) {
+    webClient.patch()
+        .uri(uriBuilder -> uriBuilder
+        .path("/Uzytkownik")
+        .queryParam("id", "eq." + userId).build())
+        .bodyValue(Map.of("Mfa_Enabled", enabled))
+        .retrieve()
+        .bodyToMono(Void.class)
+        .block();
+  }
+
+
+  public void updateAdminMfaSecret(int userId, String secret) {
+    webClient.patch()
+        .uri(uriBuilder -> uriBuilder
+            .path("/Admin")
+            .queryParam("nazwa_uzytkownika", "eq." + userId)
+            .build())
+        .bodyValue(Map.of("Mfa_Secret", secret))
+        .retrieve()
+        .toBodilessEntity()
+        .block();
+  }
+
+  public void updateAdminMfaEnabled(int userId, boolean enabled) {
+    webClient.patch()
+        .uri(uriBuilder -> uriBuilder
+            .path("/Admin")
+            .queryParam("nazwa_uzytkownika", "eq." + userId)
+            .build())
+        .bodyValue(Map.of("Mfa_Enabled", enabled))
+        .retrieve()
+        .toBodilessEntity()
+        .block();
+  }
+
+
 
 
 }

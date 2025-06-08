@@ -3,8 +3,10 @@ package com.example.pdprobiblioteka;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -1923,6 +1925,236 @@ class SupabaseClientTest {
             "Tolkien", 101);
       });
     }
+
+  }
+
+  @Nested
+  @DisplayName("Testy metod logowania getby")
+  class GetbyTests {
+
+    @Test
+    @DisplayName("Pobieranie użytkownika po nazwie użytkownika - sukces")
+    void getUserByUsername_success() {
+      String username = "john_doe";
+      String responseBody = """
+          [{
+            "id": 1,
+            "Imie": "Jan",
+            "Nazwisko": "Kowalski",
+            "Data_Urodzenia": "1990-01-01",
+            "Nazwa_Uzytkownika": "john_doe",
+            "Haslo": "hashedPass",
+            "Email": "john@example.com",
+            "Zablokowany": false,
+            "Mfa_Enabled": true,
+            "Mfa_Secret": "secret",
+            "role": "USER"
+          }]
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+      Uzytkownik user = supabaseClient.getUserByUsername(username);
+
+      assertNotNull(user);
+      assertEquals(username, user.getNazwaUzytkownika());
+      assertEquals("Jan", user.getImie());
+      assertEquals("Kowalski", user.getNazwisko());
+      assertEquals("1990-01-01", user.getDataUrodzenia());
+      assertEquals("john@example.com", user.getEmail());
+      assertFalse(user.getZablokowany());
+      assertTrue(user.getMfaEnabled());
+      assertEquals("secret", user.getMfaSecret());
+      assertEquals("USER", user.getRole());
+    }
+
+    @Test
+    @DisplayName("Pobieranie użytkownika po nazwie użytkownika - throw")
+    void getUserByUsernamethrow() {
+
+      String responseBody = """
+          [{
+            "id": 1,
+            "Imie": "Jan",
+            "Nazwisko": "Kowalski",
+            "Data_Urodzenia": "1990-01-01",
+            "Nazwa_Uzytkownika": "john_doe",
+            "Haslo": "hashedPass",
+            "Email": "john@example.com",
+            "Zablokowany": false,
+            "Mfa_Enabled": true,
+            "wrong_field": "secret",
+            "role": "USER"
+          }]
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+      String username = "john_doe";
+
+      assertThrows(SupabaseConnectionException.class,
+          () -> supabaseClient.getUserByUsername(username));
+
+    }
+
+    @Test
+    @DisplayName("Pobieranie admina po nazwie użytkownika - sukces")
+    void getAdminByUsernamesuccess() {
+      String username = "admin123";
+      String responseBody = """
+          [{
+            "id": 10,
+            "Imie": "Anna",
+            "Nazwisko": "Nowak",
+            "Nazwa_Uzytkownika": "admin123",
+            "Haslo": "adminHaslo",
+            "id_placowki": 5,
+            "Mfa_Enabled": false,
+            "Mfa_Secret": null,
+            "role": "ADMIN"
+          }]
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+      Admin admin = supabaseClient.getAdminByUsername(username);
+
+      assertNotNull(admin);
+      assertEquals(username, admin.getNazwaUzytkownika());
+      assertEquals("Anna", admin.getImie());
+      assertEquals("Nowak", admin.getNazwisko());
+      assertEquals(5, admin.getIdplacowki());
+      assertEquals("ADMIN", admin.getRole());
+      assertFalse(admin.getMfaEnabled());
+      assertNull(admin.getMfaSecret());
+    }
+
+    @Test
+    @DisplayName("Pobieranie admina po nazwie użytkownika - throw")
+    void getAdminByUsernamethrow() {
+      String responseBody = """
+          [{
+            "id": 10,
+            "Imie": "Anna",
+            "Nazwisko": "Nowak",
+            "Nazwa_Uzytkownika": "admin123",
+            "Haslo": "adminHaslo",
+            "id_placowki": 5,
+            "wrong_field": false,
+            "Mfa_Secret": null,
+            "role": "ADMIN"
+          }]
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+      String username = "admin123";
+
+      assertThrows(SupabaseConnectionException.class,
+          () -> supabaseClient.getAdminByUsername(username));
+
+    }
+
+    @Test
+    @DisplayName("Pobieranie użytkownika - brak wyników")
+    void getUserByUsernamenotFound() {
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[]"));
+
+      Uzytkownik user = supabaseClient.getUserByUsername("nonexistent");
+
+      assertNull(user);
+    }
+
+    @Test
+    @DisplayName("Pobieranie użytkownika - błędny format odpowiedzi")
+    void getUserByUsernamewrongformat() {
+      String username = "john_doe";
+      String responseBody = """
+          {"message": "unexpected error"}
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+      Uzytkownik uzytkownik = supabaseClient.getUserByUsername(username);
+      assertNull(uzytkownik);
+    }
+
+    @Test
+    @DisplayName("Pobieranie admina - brak wyników")
+    void getAdminByUsernamenotFound() {
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("[]"));
+
+      Admin admin = supabaseClient.getAdminByUsername("nonexistent");
+
+      assertNull(admin);
+    }
+
+    @Test
+    @DisplayName("Pobieranie admina - błędny format odpowiedzi")
+    void getAdminByUsernamenotwrongformat() {
+      String username = "john_doe";
+      String responseBody = """
+          {"message": "unexpected error"}
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(responseBody));
+
+      Admin admin = supabaseClient.getAdminByUsername(username);
+      assertNull(admin);
+    }
+
 
   }
 

@@ -89,7 +89,7 @@ class EmailServiceTest {
     void testScheduledEmail() throws MessagingException {
 
       String wypozyczeniaResponse = """
-          [{"id":1,"id_uzytkownika":101,"id_ksiazki":201,"Termin_Oddania":"%s"}]
+          [{"id":1,"id_uzytkownika":101,"id_ksiazki":201,"Termin_Oddania":"%s","Data_Oddania":null}]
           """.formatted(LocalDate.now().plusDays(2));
 
       String uzytkownicyResponse = """
@@ -158,6 +158,42 @@ class EmailServiceTest {
       verify(mailSender, times(0)).send(any(MimeMessage.class));
     }
 
+    @Test
+    @DisplayName("Testowanie poprawnego nie wysylania po minietym terminie")
+    void testScheduledEmailnotsendafter() throws MessagingException {
+
+      String wypozyczeniaResponse = """
+          [{"id":1,"id_uzytkownika":101,"id_ksiazki":201,"Termin_Oddania":"%s"}]
+          """.formatted(LocalDate.now().minusDays(5));
+
+      String uzytkownicyResponse = """
+          [{"id":101,"Email":"user@example.com"}]
+          """;
+
+      String ksiazkiResponse = """
+          [{"id":201,"Tytul":"Hobbit"}]
+          """;
+
+      when(webClient.get()).thenReturn(requestHeadersUriSpec);
+      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
+        Function<UriBuilder, URI> uriFn = invocation.getArgument(0);
+        uriFn.apply(UriComponentsBuilder.fromUriString("http://localhost"));
+        return requestHeadersSpec;
+      });
+
+      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
+      when(responseSpec.bodyToMono(String.class))
+          .thenReturn(Mono.just(wypozyczeniaResponse))
+          .thenReturn(Mono.just(uzytkownicyResponse))
+          .thenReturn(Mono.just(ksiazkiResponse));
+
+      MimeMessage dummyMessage = mock(MimeMessage.class);
+      when(mailSender.createMimeMessage()).thenReturn(dummyMessage);
+
+      emailService.scheduledEmail();
+
+      verify(mailSender, times(0)).send(any(MimeMessage.class));
+    }
 
     @Test
     @DisplayName("Testowanie poprawnego nie wysylania emailu gdy ksiazka jest oddana")

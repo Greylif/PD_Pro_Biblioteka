@@ -47,8 +47,6 @@ public class ControlTest {
   @Autowired
   private MockMvc mockMvc;
 
-
-
   @Nested
   @DisplayName("Testy POST")
   class PostTest {

@@ -20,7 +20,7 @@ public class Placowka {
   /**
    * Konstruktor Klasy.
    *
-   * @param id identyfikator placówki
+   * @param id    identyfikator placówki
    * @param adres adres placówki
    */
   public Placowka(int id, String adres) {

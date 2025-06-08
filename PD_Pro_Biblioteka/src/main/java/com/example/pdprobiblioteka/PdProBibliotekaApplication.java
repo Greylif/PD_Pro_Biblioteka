@@ -8,8 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * Główna klasa aplikacji bibliotecznej.
- * Uruchamia aplikację Spring Boot z włączonym harmonogramowaniem zadań.
+ * Główna klasa aplikacji bibliotecznej. Uruchamia aplikację Spring Boot z włączonym
+ * harmonogramowaniem zadań.
  */
 @SpringBootApplication
 @EnableScheduling

@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.pdprobiblioteka.model.Admin;
+import com.example.pdprobiblioteka.model.AuthRequest;
+import com.example.pdprobiblioteka.model.AuthResponse;
 import com.example.pdprobiblioteka.model.Autorzy;
 import com.example.pdprobiblioteka.model.Kary;
 import com.example.pdprobiblioteka.model.Ksiazka;
@@ -302,6 +304,37 @@ public class ModelTest {
           + "Data_Oddania=2025-03-10, "
           + "Termin_Oddania=2025-03-08, id_ksiazki=102, id_uzytkownika=202}";
       assertEquals(expected, w.toString());
+    }
+  }
+
+  @Nested
+  @DisplayName("Testy dla AuthRequest")
+  class AuthRequestTests {
+
+    @Test
+    @DisplayName("Sprawdzanie tworzenia klasy AuthRequest z wszystkimi argumentami")
+    void testAllArgs() {
+      AuthRequest authrequest = new AuthRequest();
+      authrequest.setUsername("username");
+      authrequest.setPassword("password");
+
+      assertEquals("username", authrequest.getUsername());
+      assertEquals("password", authrequest.getPassword());
+
+    }
+  }
+
+  @Nested
+  @DisplayName("Testy dla AuthResponse")
+  class AuthResponseTests {
+
+    @Test
+    @DisplayName("Sprawdzanie tworzenia klasy AuthResponse z wszystkimi argumentami")
+    void testAllArgs() {
+      AuthResponse authresponse = new AuthResponse("token");
+
+      assertEquals("token", authresponse.getToken());
+
     }
   }
 }

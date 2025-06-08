@@ -20,8 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Konfiguracja bezpieczeństwa aplikacji Spring Security.
- * Definiuje uprawnienia, dostęp do endpointów oraz sposób autoryzacji JWT.
+ * Konfiguracja bezpieczeństwa aplikacji Spring Security. Definiuje uprawnienia, dostęp do
+ * endpointów oraz sposób autoryzacji JWT.
  */
 @Configuration
 @EnableWebSecurity
@@ -34,9 +34,9 @@ public class SecurityConfig {
   /**
    * Definicja głównego łańcucha zabezpieczeń.
    *
-   * @param http                  obiekt konfiguracji HTTP
+   * @param http                    obiekt konfiguracji HTTP
    * @param jwtAuthenticationFilter filtr JWT do uwierzytelniania
-   * @param authManager           menedżer uwierzytelniania
+   * @param authManager             menedżer uwierzytelniania
    * @return skonfigurowany filtr bezpieczeństwa
    * @throws Exception w przypadku błędów konfiguracji
    */
@@ -51,6 +51,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/auth/loginadmin").permitAll()
             .requestMatchers(HttpMethod.POST, "/library/uzytkownicy").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/**").permitAll()
 
             .requestMatchers(HttpMethod.GET, "/library/placowki").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.GET, "/library/wypozyczenia/{id}").hasAnyRole(USER, ADMIN)
@@ -60,7 +61,6 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/library/autorzy").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.PUT, "/library/uzytkownicy/passwordreset/{email}")
             .hasAnyRole(USER, ADMIN)
-
 
             .requestMatchers("/library/**").hasRole(ADMIN)
 
@@ -76,8 +76,8 @@ public class SecurityConfig {
   }
 
   /**
-   * Konfiguracja menedżera uwierzytelniania z dwoma providerami:
-   * dla użytkowników i administratorów.
+   * Konfiguracja menedżera uwierzytelniania z dwoma providerami: dla użytkowników i
+   * administratorów.
    *
    * @param userDetailsService  serwis użytkownika
    * @param adminDetailsService serwis administratora
@@ -113,9 +113,9 @@ public class SecurityConfig {
   /**
    * Tworzy filtr JWT do wstrzyknięcia do łańcucha filtrów Spring Security.
    *
-   * @param jwtService            serwis JWT
-   * @param userDetailsService    serwis danych użytkownika
-   * @param adminDetailsService   serwis danych administratora
+   * @param jwtService          serwis JWT
+   * @param userDetailsService  serwis danych użytkownika
+   * @param adminDetailsService serwis danych administratora
    * @return instancja filtra
    */
   @Bean

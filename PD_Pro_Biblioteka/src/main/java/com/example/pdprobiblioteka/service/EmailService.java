@@ -23,9 +23,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * Serwis odpowiedzialny za wysyłanie wiadomości e-mail do użytkowników,
- * w tym przypomnień o zbliżającym się terminie zwrotu książki oraz resetu hasła.
- * Dane są pobierane z bazy danych Supabase.
+ * Serwis odpowiedzialny za wysyłanie wiadomości e-mail do użytkowników, w tym przypomnień o
+ * zbliżającym się terminie zwrotu książki oraz resetu hasła. Dane są pobierane z bazy danych
+ * Supabase.
  */
 @Service
 public class EmailService {
@@ -40,10 +40,10 @@ public class EmailService {
   private final WebClient webClient;
 
   /**
-   * Tworzy instancję serwisu EmailService i inicjalizuje klienta WebClient
-   * z ustawionymi domyślnymi nagłówkami do komunikacji z usługą Supabase.
+   * Tworzy instancję serwisu EmailService i inicjalizuje klienta WebClient z ustawionymi domyślnymi
+   * nagłówkami do komunikacji z usługą Supabase.
    *
-   * @param mailSender obiekt odpowiedzialny za wysyłanie e-maili (JavaMailSender)
+   * @param mailSender       obiekt odpowiedzialny za wysyłanie e-maili (JavaMailSender)
    * @param webClientBuilder budowniczy WebClienta używany do konfiguracji połączenia z Supabase
    * @throws SupabaseConnectionException jeśli inicjalizacja WebClienta nie powiedzie się
    */
@@ -91,8 +91,8 @@ public class EmailService {
   }
 
   /**
-   * Zaplanowane zadanie wysyłające e-maile z przypomnieniem o zwrocie książki.
-   * Uruchamiane codziennie o 17:00.
+   * Zaplanowane zadanie wysyłające e-maile z przypomnieniem o zwrocie książki. Uruchamiane
+   * codziennie o 17:00.
    *
    * @throws MessagingException w przypadku błędu wysyłki e-maila
    */
@@ -103,16 +103,16 @@ public class EmailService {
       JSONObject obj = arrayout.getJSONObject(i);
       LocalDate termin = LocalDate.parse(obj.getString(TERMIN_ODDANIA));
       Object dataoddania = obj.opt(DATA_ODDANIA);
-      if ((termin.minusDays(3)).isBefore(LocalDate.now())) {
-        assert dataoddania != null;
-        if ("null".equals(dataoddania.toString())) {
+      if (termin.isAfter(LocalDate.now().minusDays(1))
+          && termin.minusDays(3).isBefore(LocalDate.now())
+          && "null".equals(dataoddania.toString())) {
 
-          sendEmail(obj.getString(EMAIL), "Przypomnienie o oddaniu ksiazki",
-              "Termin oddania ksiazki o tytule: " + obj.getString(TYTUL) + " mija: "
-                  + obj.getString(
-                  TERMIN_ODDANIA));
-        }
+        sendEmail(obj.getString(EMAIL), "Przypomnienie o oddaniu ksiazki",
+            "Termin oddania ksiazki o tytule: " + obj.getString(TYTUL) + " mija: "
+                + obj.getString(
+                TERMIN_ODDANIA));
       }
+
     }
   }
 
@@ -120,8 +120,8 @@ public class EmailService {
    * Generuje nowe hasło, wysyła je użytkownikowi e-mailem i aktualizuje je w bazie danych.
    *
    * @param email adres e-mail użytkownika
-   * @throws EmailSendException             w przypadku błędu wysyłki wiadomości
-   * @throws SupabaseConnectionException    w przypadku błędu połączenia z bazą Supabase
+   * @throws EmailSendException          w przypadku błędu wysyłki wiadomości
+   * @throws SupabaseConnectionException w przypadku błędu połączenia z bazą Supabase
    */
   public void sendNewPassword(String email) {
     SecureRandom random = new SecureRandom();

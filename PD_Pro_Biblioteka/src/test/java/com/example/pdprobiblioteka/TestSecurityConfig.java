@@ -7,17 +7,16 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Konfiguracja bezpieczeństwa wykorzystywana w testach.
- * Ta konfiguracja wyłącza zabezpieczenia Spring Security (np. CSRF)
- * i pozwala na dostęp do wszystkich żądań bez autoryzacji.
- * Ułatwia testowanie aplikacji bez konieczności logowania się.
+ * Konfiguracja bezpieczeństwa wykorzystywana w testach. Ta konfiguracja wyłącza zabezpieczenia
+ * Spring Security (np. CSRF) i pozwala na dostęp do wszystkich żądań bez autoryzacji. Ułatwia
+ * testowanie aplikacji bez konieczności logowania się.
  */
 @TestConfiguration
 public class TestSecurityConfig {
 
   /**
-   * Definicja łańcucha filtrów zabezpieczeń na potrzeby testów.
-   * Wyłącza CSRF i pozwala na dostęp do wszystkich endpointów.
+   * Definicja łańcucha filtrów zabezpieczeń na potrzeby testów. Wyłącza CSRF i pozwala na dostęp do
+   * wszystkich endpointów.
    *
    * @param http konfiguracja bezpieczeństwa HTTP
    * @return SecurityFilterChain z wyłączoną autoryzacją
