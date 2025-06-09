@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.pdprobiblioteka.control.AuthController;
+import com.example.pdprobiblioteka.model.Admin;
 import com.example.pdprobiblioteka.model.Uzytkownik;
 import com.example.pdprobiblioteka.service.JwtService;
 import com.example.pdprobiblioteka.service.SupabaseAdminDetailsService;
@@ -124,6 +125,9 @@ public class AuthControllerTest {
       String token = "admin.jwt.token";
 
       UserDetails mockAdminDetails = Mockito.mock(UserDetails.class);
+      Admin mockAdmin = Mockito.mock(Admin.class);
+      Mockito.when(mockAdmin.getMfaEnabled()).thenReturn(false);
+      Mockito.when(supabaseClient.getAdminByUsername(username)).thenReturn(mockAdmin);
 
       Mockito.when(adminDetailsService.loadUserByUsername(username)).thenReturn(mockAdminDetails);
       Mockito.when(jwtService.generateToken(mockAdminDetails, true)).thenReturn(token);

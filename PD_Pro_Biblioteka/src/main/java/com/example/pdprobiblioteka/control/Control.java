@@ -388,7 +388,7 @@ public class Control {
 
       JSONObject json = new JSONObject(payload);
       System.out.println("userId z tokena: " + json.getString("userId"));
-      if (json.getString("userId").equals(String.valueOf(id))) {
+      if (!(json.getString("userId").equals(String.valueOf(id)))) {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied for this user");
       }
     } else {
@@ -434,7 +434,7 @@ public class Control {
 
       JSONObject json = new JSONObject(payload);
       System.out.println("userId z tokena: " + json.getString("userId"));
-      if (json.getString("userId").equals(String.valueOf(id))) {
+      if (!(json.getString("userId").equals(String.valueOf(id)))) {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied for this user");
       }
     } else {

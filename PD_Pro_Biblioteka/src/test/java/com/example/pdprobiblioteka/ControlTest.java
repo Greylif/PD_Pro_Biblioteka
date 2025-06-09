@@ -15,6 +15,7 @@ import com.example.pdprobiblioteka.model.Placowka;
 import com.example.pdprobiblioteka.model.Uzytkownik;
 import com.example.pdprobiblioteka.model.Wypozyczenia;
 import com.example.pdprobiblioteka.service.SupabaseClient;
+import java.util.Base64;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -479,9 +480,12 @@ public class ControlTest {
                   "USER")))
           .thenReturn("Uzytkownik zaktualizowany");
 
+      String payload = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"userId\":\"1\"}".getBytes());
+      String dummyJwt = "Bearer header." + payload + ".signature";
       try {
         mockMvc.perform(put("/library/uzytkownicy/1")
-                .param("Imie", "Jacek"))
+                .param("Imie", "Jacek")
+            .header("Authorization", dummyJwt))
             .andExpect(status().isOk());
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -611,9 +615,13 @@ public class ControlTest {
     @DisplayName("Usuniecie uzytkownika")
     void deleteUzytkownik() {
       Mockito.when(supabaseClient.deleteUzytkownik(1)).thenReturn("Uzytkownik usuniety");
+      String payload = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"userId\":\"1\"}".getBytes());
+      String dummyJwt = "Bearer header." + payload + ".signature";
+
 
       try {
-        mockMvc.perform(delete("/library/uzytkownicy/1"))
+        mockMvc.perform(delete("/library/uzytkownicy/1")
+            .header("Authorization", dummyJwt))
             .andExpect(status().isOk());
       } catch (Exception e) {
         throw new RuntimeException(e);
