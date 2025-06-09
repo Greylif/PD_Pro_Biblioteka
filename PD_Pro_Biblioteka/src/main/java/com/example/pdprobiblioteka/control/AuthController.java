@@ -82,6 +82,25 @@ public class AuthController {
 
       String jwt = jwtService.generateToken(userDetails, false);
 
+      /* To jest potrzebne do przyszłości jak odczytywać
+      String secretKey = System.getenv("JWT_KEY");
+
+      Claims claims = Jwts.parser()
+          .setSigningKey(secretKey)
+          .parseClaimsJws(jwt)
+          .getBody();
+
+      String username = claims.getSubject();
+      String role = claims.get("role", String.class);
+      String userId = claims.get("userId", String.class);
+      Boolean isAdmin = claims.get("isAdmin", Boolean.class);
+      System.out.println(username);
+      System.out.println(role);
+      System.out.println(userId);
+      System.out.println(isAdmin);
+
+ */
+
       return ResponseEntity.ok(new AuthResponse(jwt));
     } catch (AuthenticationException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login or password");
@@ -125,25 +144,6 @@ public class AuthController {
     }
   }
 
-
-  /* To jest potrzebne do przyszłości jak odczytywać
-
-      String secretKey = System.getenv("JWT_KEY");
-
-      Claims claims = Jwts.parser()
-              .setSigningKey(secretKey)
-              .parseClaimsJws(jwt)
-              .getBody();
-
-      String username = claims.getSubject();
-      String role = claims.get("role", String.class);
-      String userId = claims.get("userId", String.class);
-      Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-      System.out.println(username);
-      System.out.println(role);
-      System.out.println(userId);
-      System.out.println(isAdmin);
-      */
 
 
   /**

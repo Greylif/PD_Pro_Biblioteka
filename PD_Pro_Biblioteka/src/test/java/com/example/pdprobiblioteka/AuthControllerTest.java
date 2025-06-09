@@ -82,7 +82,6 @@ public class AuthControllerTest {
       Mockito.when(mockUser.getMfaEnabled()).thenReturn(false);
 
       String password = "pass";
-
       String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 
       mockMvc.perform(post("/api/auth/login")
