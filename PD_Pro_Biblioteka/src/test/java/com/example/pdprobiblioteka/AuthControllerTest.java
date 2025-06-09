@@ -6,9 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.example.pdprobiblioteka.control.AuthController;
-import com.example.pdprobiblioteka.service.JwtService;
-import com.example.pdprobiblioteka.service.SupabaseAdminDetailsService;
-import com.example.pdprobiblioteka.service.SupabaseUserDetailsService;
+import com.example.pdprobiblioteka.model.Uzytkownik;
+import com.example.pdprobiblioteka.service.*;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Map;
 
 /**
  * Testy Klasy AuthController.
@@ -46,9 +48,18 @@ public class AuthControllerTest {
   @MockitoBean
   private SupabaseAdminDetailsService adminDetailsService;
 
+  @MockitoBean
+  private SupabaseClient supabaseClient;
+
+  @MockitoBean
+  private TotpService totpService;
+
+
   @Nested
   @DisplayName("Testy logowania użytkownika")
   class LoginUserTest {
+
+
 
     @Test
     @DisplayName("Poprawne logowanie użytkownika")
@@ -58,18 +69,22 @@ public class AuthControllerTest {
       String token = "mocked.jwt.token";
 
       UserDetails mockUserDetails = Mockito.mock(UserDetails.class);
+      Uzytkownik mockUser = Mockito.mock(Uzytkownik.class);
 
       Mockito.when(userDetailsService.loadUserByUsername(username)).thenReturn(mockUserDetails);
       Mockito.when(jwtService.generateToken(mockUserDetails, false)).thenReturn(token);
+      Mockito.when(supabaseClient.getUserByUsername(username)).thenReturn(mockUser);
+      Mockito.when(mockUser.getMfaEnabled()).thenReturn(false);
 
       String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 
       mockMvc.perform(post("/api/auth/login")
-              .contentType(MediaType.APPLICATION_JSON)
-              .content(requestBody))
-          .andExpect(status().isOk())
-          .andExpect(jsonPath("$.token").value(token));
+                      .contentType(MediaType.APPLICATION_JSON)
+                      .content(requestBody))
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.token").value(token));
     }
+
 
     @Test
     @DisplayName("Niepoprawne logowanie użytkownika")

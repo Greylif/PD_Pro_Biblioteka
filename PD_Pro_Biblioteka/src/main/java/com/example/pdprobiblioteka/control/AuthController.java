@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * Kontroler odpowiedzialny za uwierzytelnianie użytkowników i administratorów.
+ * Kontroler odpowiedzialny za uwierzytelnianie użytkowników i administratorów oraz za obsługę TOTP.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -41,9 +41,9 @@ public class AuthController {
    * Konstruktor klasy.
    *
    * @param authenticationManager komponent odpowiedzialny za uwierzytelnianie użytkowników.
-   * @param jwtService            serwis obsługujący generowanie i walidację tokenów JWT.
-   * @param userDetailsService    serwis odpowiedzialny za ładowanie danych urzytkownika.
-   * @param adminDetailsService   serwis odpowiedzialny za ładowanie danych admina.
+   * @param jwtService serwis obsługujący generowanie i walidację tokenów JWT.
+   * @param userDetailsService serwis odpowiedzialny za ładowanie danych użytkownika.
+   * @param adminDetailsService serwis odpowiedzialny za ładowanie danych admina.
    */
   public AuthController(AuthenticationManager authenticationManager, JwtService jwtService,
       SupabaseUserDetailsService userDetailsService,
@@ -83,11 +83,12 @@ public class AuthController {
       }
 
       String jwt = jwtService.generateToken(userDetails, false);
+      /*
       String secretKey = System.getenv("JWT_KEY");
       Claims claims = Jwts.parser()
-          .setSigningKey(secretKey)
-          .parseClaimsJws(jwt)
-          .getBody();
+              .setSigningKey(secretKey)
+              .parseClaimsJws(jwt)
+              .getBody();
 
       String username = claims.getSubject();
       String role = claims.get("role", String.class);
@@ -97,7 +98,7 @@ public class AuthController {
       System.out.println(role);
       System.out.println(userId);
       System.out.println(isAdmin);
-
+*/
       return ResponseEntity.ok(new AuthResponse(jwt));
     } catch (AuthenticationException e) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login or password");
@@ -128,12 +129,12 @@ public class AuthController {
   }
 
 
-
-
-
-
-
-
+  /**
+   * Włączenie Totp u użytkownika.
+   *
+   * @param request dane logowania w celu uwierzytelnienia
+   * @return secret oraz ulr kodu QR w celu dodania 2FA przez klienta np. w telefonie
+   */
   @PostMapping("/setup-totp")
   public ResponseEntity<Object> setupTotp(@RequestBody AuthRequest request) {
     try {
@@ -161,6 +162,13 @@ public class AuthController {
     }
   }
 
+
+  /**
+   * Włączenie Totp u administratora.
+   *
+   * @param request dane logowania w celu uwierzytelnienia
+   * @return secret oraz ulr kodu QR w celu dodania 2FA przez administratora np. w telefonie
+   */
   @PostMapping("/setup-totp/admin")
   public ResponseEntity<Object> setupTotpAdmin(@RequestBody AuthRequest request) {
     try {
@@ -193,8 +201,13 @@ public class AuthController {
   }
 
 
-
-
+  /**
+   * Potwierdzenie założenia Totp przez użytkownika.
+   *
+   * @param payload dane zawierające nazwę użytkownika oraz kod
+   *                pobrany z aplikacji uwierzytelniającej
+   * @return wiadomość o błędzie lub, czy potwierdzenie przebiegło pomyślnie
+   */
   @PostMapping("/confirm-totp")
   public ResponseEntity<Object> confirmTotp(@RequestBody Map<String, Object> payload) {
     String username = (String) payload.get("username");
@@ -215,6 +228,13 @@ public class AuthController {
     return ResponseEntity.ok("TOTP enabled successfully");
   }
 
+  /**
+   * Potwierdzenie założenia Totp przez administratora.
+   *
+   * @param payload dane zawierające nazwę użytkownika oraz kod
+   *                pobrany z aplikacji uwierzytelniającej
+   * @return wiadomość o błędzie lub, czy potwierdzenie przebiegło pomyślnie
+   */
   @PostMapping("/confirm-totp/admin")
   public ResponseEntity<Object> confirmTotpAdmin(@RequestBody Map<String, Object> payload) {
     String username = (String) payload.get("username");
@@ -234,9 +254,5 @@ public class AuthController {
 
     return ResponseEntity.ok("TOTP enabled successfully");
   }
-
-
-
-
 
 }

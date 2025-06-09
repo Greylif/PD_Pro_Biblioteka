@@ -29,7 +29,7 @@ public class SupabaseAdminDetailsService implements UserDetailsService {
    * Wczytuje dane administratora na podstawie nazwy użytkownika.
    *
    * @param username nazwa użytkownika administratora
-   * @return dane użytkownika zgodne z interfejsem {@link UserDetails}
+   * @return dane użytkownika zgodne z interfejsem
    * @throws UsernameNotFoundException gdy administrator o podanej nazwie nie istnieje
    */
   @Override

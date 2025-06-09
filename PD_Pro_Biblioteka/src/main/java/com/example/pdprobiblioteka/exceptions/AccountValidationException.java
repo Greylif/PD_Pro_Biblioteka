@@ -13,7 +13,7 @@ public class AccountValidationException extends RuntimeException {
   /**
    * Tworzy nowy wyjątek AccountValidationException.
    *
-   * @param field   nazwa niepoprawnego pola
+   * @param field nazwa niepoprawnego pola
    * @param message opis błędu walidacji
    */
   public AccountValidationException(String field, String message) {

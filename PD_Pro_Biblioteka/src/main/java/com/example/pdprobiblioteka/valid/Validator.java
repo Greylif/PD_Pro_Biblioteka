@@ -29,7 +29,7 @@ public class Validator {
    * Sprawdza czy użytkownik spełnia wymagania wiekowe.
    *
    * @param uzytkownik obiekt użytkownika
-   * @return true jeśli wiek użytkownika jest pomiędzy 18 a 100 lat
+   * @return true, jeśli wiek użytkownika jest pomiędzy 18 a 100 lat
    * @throws AccountValidationException jeśli wystąpi błąd parsowania daty
    */
   public static boolean walidujUzytkownika(Uzytkownik uzytkownik) {
@@ -47,7 +47,7 @@ public class Validator {
    * Sprawdza czy adres placówki spełnia wymagany polski format.
    *
    * @param placowka obiekt placówki
-   * @return true jeśli adres jest zgodny ze wzorcem
+   * @return true, jeśli adres jest zgodny ze wzorcem
    */
   public static boolean walidujPlacowke(Placowka placowka) {
     return POLSKI_ADRES_PATTERN.matcher(placowka.getAdres()).matches();

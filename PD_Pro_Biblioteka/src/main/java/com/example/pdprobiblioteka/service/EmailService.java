@@ -43,7 +43,7 @@ public class EmailService {
    * Tworzy instancję serwisu EmailService i inicjalizuje klienta WebClient z ustawionymi domyślnymi
    * nagłówkami do komunikacji z usługą Supabase.
    *
-   * @param mailSender       obiekt odpowiedzialny za wysyłanie e-maili (JavaMailSender)
+   * @param mailSender obiekt odpowiedzialny za wysyłanie e-maili (JavaMailSender)
    * @param webClientBuilder budowniczy WebClienta używany do konfiguracji połączenia z Supabase
    * @throws SupabaseConnectionException jeśli inicjalizacja WebClienta nie powiedzie się
    */
@@ -74,9 +74,9 @@ public class EmailService {
   /**
    * Wysyła wiadomość e-mail do podanego adresata.
    *
-   * @param to      adres e-mail odbiorcy
+   * @param to adres e-mail odbiorcy
    * @param subject temat wiadomości
-   * @param text    treść wiadomości (HTML dozwolony)
+   * @param text treść wiadomości
    * @throws MessagingException w przypadku błędu wysyłki e-maila
    */
   public void sendEmail(String to, String subject, String text) throws MessagingException {
@@ -120,7 +120,7 @@ public class EmailService {
    * Generuje nowe hasło, wysyła je użytkownikowi e-mailem i aktualizuje je w bazie danych.
    *
    * @param email adres e-mail użytkownika
-   * @throws EmailSendException          w przypadku błędu wysyłki wiadomości
+   * @throws EmailSendException w przypadku błędu wysyłki wiadomości
    * @throws SupabaseConnectionException w przypadku błędu połączenia z bazą Supabase
    */
   public void sendNewPassword(String email) {
@@ -320,9 +320,9 @@ public class EmailService {
   /**
    * Łączy dane wypożyczeń z adresami e-mail i tytułami książek.
    *
-   * @param wypozyczeniaData  dane wypożyczeń
+   * @param wypozyczeniaData dane wypożyczeń
    * @param uzytkownicyEmails mapa ID użytkownika → e-mail
-   * @param ksiazkiTytuly     mapa ID książki → tytuł
+   * @param ksiazkiTytuly mapa ID książki → tytuł
    * @return tablica JSON gotowa do wysyłki przypomnień
    */
   private JSONArray polaczWypozyczeniazEmail(String wypozyczeniaData,

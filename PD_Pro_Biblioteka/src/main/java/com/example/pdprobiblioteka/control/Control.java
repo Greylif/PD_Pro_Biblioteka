@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Główny kontroler REST dla operacji na danych biblioteki, takich jak książki, wypożyczenia,
- * użytkownicy i administratorzy.
+ * kary, autorzy, placówki, użytkownicy i administratorzy.
  */
 @RestController
 @RequestMapping("/library")
@@ -66,7 +66,7 @@ public class Control {
   /**
    * Aktualizuje dane istniejącej placówki.
    *
-   * @param id    identyfikator placówki
+   * @param id identyfikator placówki
    * @param adres nowy adres placówki (opcjonalny)
    * @return odpowiedź serwera po aktualizacji
    */
@@ -97,7 +97,7 @@ public class Control {
   }
 
   /**
-   * Zwraca szczegóły wypożyczenia o podanym ID wyporzyczajacego.
+   * Zwraca szczegóły wypożyczenia o podanym ID wypożyczającego.
    *
    * @param id identyfikator wypożyczenia
    * @return JSON z danymi wypożyczenia
@@ -111,10 +111,10 @@ public class Control {
    * Dodaje nowe wypożyczenie.
    *
    * @param dataWypozyczenia data wypożyczenia (opcjonalna)
-   * @param dataOddania      data oddania (opcjonalna)
-   * @param terminOddania    termin oddania
-   * @param idKsiazki        ID książki
-   * @param idUzytkownika    ID użytkownika
+   * @param dataOddania data oddania (opcjonalna)
+   * @param terminOddania termin oddania
+   * @param idKsiazki ID książki
+   * @param idUzytkownika ID użytkownika
    * @return JSON z wynikiem operacji
    */
   @PostMapping("/wypozyczenia")
@@ -141,12 +141,12 @@ public class Control {
   /**
    * Aktualizuje dane wypożyczenia.
    *
-   * @param id               identyfikator wypożyczenia
+   * @param id identyfikator wypożyczenia
    * @param dataWypozyczenia data wypożyczenia (opcjonalna)
-   * @param dataOddania      data oddania (opcjonalna)
-   * @param terminOddania    termin oddania (opcjonalny)
-   * @param idKsiazki        ID książki (opcjonalny)
-   * @param idUzytkownika    ID użytkownika (opcjonalny)
+   * @param dataOddania data oddania (opcjonalna)
+   * @param terminOddania termin oddania (opcjonalny)
+   * @param idKsiazki ID książki (opcjonalny)
+   * @param idUzytkownika ID użytkownika (opcjonalny)
    * @return JSON z wynikiem operacji
    */
   @PutMapping("/wypozyczenia/{id}")
@@ -185,11 +185,11 @@ public class Control {
   /**
    * Dodaje nową karę.
    *
-   * @param kwota           wysokość kary
+   * @param kwota wysokość kary
    * @param dataWydaniaKary data wydania (opcjonalna)
-   * @param terminZaplaty   termin zapłaty
-   * @param idUzytkownika   ID użytkownika
-   * @param opis            opis (opcjonalny)
+   * @param terminZaplaty termin zapłaty
+   * @param idUzytkownika ID użytkownika
+   * @param opis opis (opcjonalny)
    * @return JSON z wynikiem operacji
    */
   @PostMapping("/kary")
@@ -215,13 +215,13 @@ public class Control {
   /**
    * Aktualizuje dane kary.
    *
-   * @param id              identyfikator kary
-   * @param kwota           wysokość kary (opcjonalna)
+   * @param id identyfikator kary
+   * @param kwota wysokość kary (opcjonalna)
    * @param dataWydaniaKary data wydania (opcjonalna)
-   * @param terminZaplaty   termin zapłaty (opcjonalny)
-   * @param czyZaplacono    czy zapłacono (opcjonalne)
-   * @param idUzytkownika   ID użytkownika (opcjonalne)
-   * @param opis            opis (opcjonalny)
+   * @param terminZaplaty termin zapłaty (opcjonalny)
+   * @param czyZaplacono czy zapłacono (opcjonalne)
+   * @param idUzytkownika ID użytkownika (opcjonalne)
+   * @param opis opis (opcjonalny)
    * @return JSON z wynikiem operacji
    */
   @PutMapping("/kary/{id}")
@@ -249,11 +249,11 @@ public class Control {
   /**
    * Dodaje nową książkę.
    *
-   * @param tytul       tytuł książki
-   * @param gatunek     gatunek
+   * @param tytul tytuł książki
+   * @param gatunek gatunek
    * @param dataWydania data wydania
-   * @param idAutora    ID autora
-   * @param idPlacowki  ID placówki
+   * @param idAutora ID autora
+   * @param idPlacowki ID placówki
    * @return JSON z wynikiem operacji
    */
   @PostMapping("/ksiazki")
@@ -279,14 +279,14 @@ public class Control {
   /**
    * Aktualizuje dane książki.
    *
-   * @param id              identyfikator książki
-   * @param tytul           tytuł (opcjonalny)
-   * @param gatunek         gatunek (opcjonalny)
-   * @param dataWydania     data wydania (opcjonalna)
-   * @param dodano          data dodania (opcjonalna)
-   * @param idAutora        ID autora (opcjonalny)
-   * @param idPlacowki      ID placówki (opcjonalny)
-   * @param rezerwacja      czy zarezerwowano (opcjonalne)
+   * @param id identyfikator książki
+   * @param tytul tytuł (opcjonalny)
+   * @param gatunek gatunek (opcjonalny)
+   * @param dataWydania data wydania (opcjonalna)
+   * @param dodano data dodania (opcjonalna)
+   * @param idAutora ID autora (opcjonalny)
+   * @param idPlacowki ID placówki (opcjonalny)
+   * @param rezerwacja czy zarezerwowano (opcjonalne)
    * @param czywyporzyczono czy wypożyczono (opcjonalne)
    * @return JSON z wynikiem operacji
    */
@@ -308,13 +308,13 @@ public class Control {
   /**
    * Zwraca książki spełniające kryteria filtru.
    *
-   * @param id            ID książki (opcjonalne)
-   * @param tytul         tytuł (opcjonalny)
-   * @param gatunek       gatunek (opcjonalny)
-   * @param dataWydania   data wydania (opcjonalna)
-   * @param autorImie     imię autora (opcjonalne)
+   * @param id ID książki (opcjonalne)
+   * @param tytul tytuł (opcjonalny)
+   * @param gatunek gatunek (opcjonalny)
+   * @param dataWydania data wydania (opcjonalna)
+   * @param autorImie imię autora (opcjonalne)
    * @param autorNazwisko nazwisko autora (opcjonalne)
-   * @param idPlacowki    ID placówki (opcjonalne)
+   * @param idPlacowki ID placówki (opcjonalne)
    * @return JSON z wynikami filtru
    */
   @GetMapping("/ksiazki/filtr")
@@ -343,12 +343,12 @@ public class Control {
   /**
    * Dodaje nowego użytkownika.
    *
-   * @param imie             imię
-   * @param nazwisko         nazwisko
-   * @param dataUrodzenia    data urodzenia
+   * @param imie imię
+   * @param nazwisko nazwisko
+   * @param dataUrodzenia data urodzenia
    * @param nazwaUzytkownika login
-   * @param haslo            hasło
-   * @param email            adres e-mail
+   * @param haslo hasło
+   * @param email adres e-mail
    * @return JSON z wynikiem operacji
    */
   @PostMapping("/uzytkownicy")
@@ -376,16 +376,16 @@ public class Control {
   /**
    * Aktualizuje dane użytkownika.
    *
-   * @param id               identyfikator użytkownika
-   * @param imie             imię (opcjonalne)
-   * @param nazwisko         nazwisko (opcjonalne)
-   * @param dataUrodzenia    data urodzenia (opcjonalna)
+   * @param id identyfikator użytkownika
+   * @param imie imię (opcjonalne)
+   * @param nazwisko nazwisko (opcjonalne)
+   * @param dataUrodzenia data urodzenia (opcjonalna)
    * @param nazwaUzytkownika login (opcjonalny)
-   * @param haslo            hasło (opcjonalne)
-   * @param email            e-mail (opcjonalny)
-   * @param zablokowany      czy zablokowany (opcjonalny)
-   * @param mfaEnabled       MFA włączone (opcjonalne)
-   * @param mfaSecret        sekret MFA (opcjonalny)
+   * @param haslo hasło (opcjonalne)
+   * @param email e-mail (opcjonalny)
+   * @param zablokowany czy zablokowany (opcjonalny)
+   * @param mfaEnabled MFA czy włączone (opcjonalne)
+   * @param mfaSecret sekret MFA (opcjonalny)
    * @return JSON z wynikiem operacji
    */
   @PutMapping("/uzytkownicy/{id}")
@@ -419,7 +419,7 @@ public class Control {
   /**
    * Logowanie użytkownika.
    *
-   * @param login1   login użytkownika
+   * @param login1 login użytkownika
    * @param password hasło
    * @return JSON z danymi użytkownika
    */
@@ -432,7 +432,7 @@ public class Control {
   /**
    * Logowanie administratora.
    *
-   * @param login1   login administratora
+   * @param login1 login administratora
    * @param password hasło
    * @return JSON z danymi administratora
    */
@@ -465,11 +465,11 @@ public class Control {
   /**
    * Dodaje nowego administratora.
    *
-   * @param imie             imię
-   * @param nazwisko         nazwisko
+   * @param imie imię
+   * @param nazwisko nazwisko
    * @param nazwaUzytkownika login
-   * @param haslo            hasło
-   * @param idPlacowki       ID placówki
+   * @param haslo hasło
+   * @param idPlacowki ID placówki
    * @return JSON z wynikiem operacji
    */
   @PostMapping("/admini")
@@ -495,14 +495,14 @@ public class Control {
   /**
    * Aktualizuje dane administratora.
    *
-   * @param id               identyfikator administratora
-   * @param imie             imię (opcjonalne)
-   * @param nazwisko         nazwisko (opcjonalne)
+   * @param id identyfikator administratora
+   * @param imie imię (opcjonalne)
+   * @param nazwisko nazwisko (opcjonalne)
    * @param nazwaUzytkownika login (opcjonalny)
-   * @param haslo            hasło (opcjonalne)
-   * @param idPlacowki       ID placówki (opcjonalne)
-   * @param mfaEnabled       MFA włączone (opcjonalne)
-   * @param mfaSecret        sekret MFA (opcjonalny)
+   * @param haslo hasło (opcjonalne)
+   * @param idPlacowki ID placówki (opcjonalne)
+   * @param mfaEnabled MFA czy włączone (opcjonalne)
+   * @param mfaSecret sekret MFA (opcjonalny)
    * @return JSON z wynikiem operacji
    */
   @PutMapping("/admini/{id}")
@@ -532,8 +532,8 @@ public class Control {
   /**
    * Dodaje nowego autora.
    *
-   * @param imie         imię
-   * @param nazwisko     nazwisko
+   * @param imie imię
+   * @param nazwisko nazwisko
    * @param rokUrodzenia rok urodzenia
    * @return JSON z wynikiem operacji
    */
@@ -558,9 +558,9 @@ public class Control {
   /**
    * Aktualizuje dane autora.
    *
-   * @param id           identyfikator autora
-   * @param imie         imię (opcjonalne)
-   * @param nazwisko     nazwisko (opcjonalne)
+   * @param id identyfikator autora
+   * @param imie imię (opcjonalne)
+   * @param nazwisko nazwisko (opcjonalne)
    * @param rokUrodzenia rok urodzenia (opcjonalny)
    * @return JSON z wynikiem operacji
    */

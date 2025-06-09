@@ -23,7 +23,7 @@ public class JwtService {
   private final SupabaseClient supabaseClient;
 
   /**
-   * Konstruktor klasy nadajacy wartość klucza do kenerowania tokenów Jwt.
+   * Konstruktor klasy nadajacy wartość klucza do generowania tokenów Jwt.
    */
   public JwtService(SupabaseClient supabaseClient) {
     this.secretKey = System.getenv("JWT_KEY");
@@ -31,7 +31,7 @@ public class JwtService {
   }
 
   /**
-   * Pobiera nazwę użytkownika (subject) z podanego tokena.
+   * Pobiera nazwę użytkownika z podanego tokena.
    *
    * @param token token JWT
    * @return nazwa użytkownika
@@ -41,11 +41,11 @@ public class JwtService {
   }
 
   /**
-   * Wyciąga dowolne dane (claim) z tokena.
+   * Wyciąga dowolne dane z tokena.
    *
-   * @param token          token JWT
+   * @param token token JWT
    * @param claimsResolver funkcja przetwarzająca obiekt Claims
-   * @param <T>            typ zwracanych danych
+   * @param <T> typ zwracanych danych
    * @return wartość danego claimu
    */
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -53,7 +53,7 @@ public class JwtService {
   }
 
   /**
-   * Parsuje i zwraca wszystkie dane (claims) zawarte w tokenie.
+   * Parsuje i zwraca wszystkie dane zawarte w tokenie.
    *
    * @param token token JWT
    * @return obiekt Claims
@@ -95,31 +95,12 @@ public class JwtService {
         .compact();
   }
 
-
-  /*
-  public String generateToken(UserDetails userDetails) {
-    String role = userDetails.getAuthorities().stream()
-        .findFirst()
-        .map(GrantedAuthority::getAuthority)
-        .orElse("ROLE_USER");
-
-    return Jwts.builder()
-        .setSubject(userDetails.getUsername())
-        .claim("role", role)
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-        .signWith(SignatureAlgorithm.HS256, secretKey)
-        .compact();
-  }
-
-   */
-
   /**
    * Sprawdza, czy token jest poprawny i nie wygasł.
    *
    * @param token token JWT
    * @param userDetails dane użytkownika
-   * @return true jeśli token jest ważny i należy do danego użytkownika
+   * @return true, jeśli token jest ważny i należy do danego użytkownika
    */
   public boolean isTokenValid(String token, UserDetails userDetails) {
     final String username = extractUsername(token);
@@ -130,7 +111,7 @@ public class JwtService {
    * Sprawdza, czy token wygasł.
    *
    * @param token token JWT
-   * @return true jeśli token jest nieważny
+   * @return true, jeśli token jest nieważny
    */
   private boolean isTokenExpired(String token) {
     return extractExpiration(token).before(new Date());
@@ -151,7 +132,7 @@ public class JwtService {
    * Wyciąga rolę użytkownika z tokena JWT.
    *
    * @param token token JWT
-   * @return rola użytkownika (np. ROLE_ADMIN)
+   * @return rola użytkownika
    */
   public String extractRole(String token) {
     return extractClaim(token, claims -> claims.get("role", String.class));

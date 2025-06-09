@@ -29,7 +29,7 @@ public class SupabaseUserDetailsService implements UserDetailsService {
    * Wczytuje dane użytkownika na podstawie nazwy użytkownika.
    *
    * @param username nazwa użytkownika
-   * @return dane użytkownika zgodne z interfejsem {@link UserDetails}
+   * @return dane użytkownika zgodne z interfejsem
    * @throws UsernameNotFoundException gdy użytkownik o podanej nazwie nie istnieje
    */
   @Override
