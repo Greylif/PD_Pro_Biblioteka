@@ -434,11 +434,12 @@ public class SupabaseClient {
    */
   public String addAdmin(String imie, String nazwisko, String nazwaUzytkownika, String haslo,
       int idPlacowki) {
+    String hashedPassword = passwordEncoder.encode(haslo);
     return postData(ADMIN, Map.of(
         "Imie", imie,
         NAZWISKO, nazwisko,
         NAZWA_UZYTKOWNIKA, nazwaUzytkownika,
-        HASLO, haslo,
+        HASLO, hashedPassword,
         ID_PLACOWKI, idPlacowki
     ));
   }

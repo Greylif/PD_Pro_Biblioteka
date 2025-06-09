@@ -7,8 +7,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.example.pdprobiblioteka.control.AuthController;
 import com.example.pdprobiblioteka.model.Uzytkownik;
-import com.example.pdprobiblioteka.service.*;
-import org.junit.jupiter.api.BeforeEach;
+import com.example.pdprobiblioteka.service.JwtService;
+import com.example.pdprobiblioteka.service.SupabaseAdminDetailsService;
+import com.example.pdprobiblioteka.service.SupabaseClient;
+import com.example.pdprobiblioteka.service.SupabaseUserDetailsService;
+import com.example.pdprobiblioteka.service.TotpService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Map;
 
 /**
  * Testy Klasy AuthController.
@@ -64,17 +66,22 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Poprawne logowanie użytkownika")
     void loginUserSuccess() throws Exception {
-      String username = "user";
-      String password = "pass";
-      String token = "mocked.jwt.token";
-
       UserDetails mockUserDetails = Mockito.mock(UserDetails.class);
       Uzytkownik mockUser = Mockito.mock(Uzytkownik.class);
+
+      String username = "user";
+
+      mockUser.setMfaEnabled(false);
+      mockUser.setNazwaUzytkownika(username);
+
+      String token = "mocked.jwt.token";
 
       Mockito.when(userDetailsService.loadUserByUsername(username)).thenReturn(mockUserDetails);
       Mockito.when(jwtService.generateToken(mockUserDetails, false)).thenReturn(token);
       Mockito.when(supabaseClient.getUserByUsername(username)).thenReturn(mockUser);
       Mockito.when(mockUser.getMfaEnabled()).thenReturn(false);
+
+      String password = "pass";
 
       String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 

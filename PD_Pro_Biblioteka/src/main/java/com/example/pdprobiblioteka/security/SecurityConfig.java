@@ -52,6 +52,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/auth/loginadmin").permitAll()
             .requestMatchers(HttpMethod.POST, "/library/uzytkownicy").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/**").permitAll() // to removal
+            .requestMatchers(HttpMethod.POST, "/library/admini").permitAll()
 
             .requestMatchers(HttpMethod.GET, "/library/placowki").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.GET, "/library/wypozyczenia/{id}").hasAnyRole(USER, ADMIN)
@@ -61,6 +62,8 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/library/autorzy").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/auth/setup-totp").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/auth/confirm-totp").hasAnyRole(USER, ADMIN)
+            .requestMatchers(HttpMethod.PUT, "/library/uzytkownicy/{id}").hasAnyRole(USER, ADMIN)
+            .requestMatchers(HttpMethod.DELETE, "/library/uzytkownicy/{id}").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.PUT, "/library/uzytkownicy/passwordreset/{email}")
             .hasAnyRole(USER, ADMIN)
 

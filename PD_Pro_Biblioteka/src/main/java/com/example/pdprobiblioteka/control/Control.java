@@ -4,18 +4,23 @@ import com.example.pdprobiblioteka.model.Admin;
 import com.example.pdprobiblioteka.model.Ksiazka;
 import com.example.pdprobiblioteka.model.Uzytkownik;
 import com.example.pdprobiblioteka.service.SupabaseClient;
+import java.util.Base64;
+import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Główny kontroler REST dla operacji na danych biblioteki, takich jak książki, wypożyczenia,
- * kary, autorzy, placówki, użytkownicy i administratorzy.
+ * Główny kontroler REST dla operacji na danych biblioteki, takich jak książki, wypożyczenia, kary,
+ * autorzy, placówki, użytkownicy i administratorzy.
  */
 @RestController
 @RequestMapping("/library")
@@ -37,10 +42,12 @@ public class Control {
    *
    * @return lista placówek w formacie JSON
    */
+
   @GetMapping("/placowki")
   public String getPlacowki() {
     return supabaseService.getPlacowki();
   }
+
 
   /*
     @GetMapping("/placowki")
@@ -369,7 +376,24 @@ public class Control {
    * @return JSON z wynikiem operacji
    */
   @DeleteMapping("/uzytkownicy/{id}")
-  public String deleteUzytkownik(@PathVariable int id) {
+  public String deleteUzytkownik(@PathVariable int id,
+      @RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.replace("Bearer ", "");
+    System.out.println("JWT: " + token);
+
+    String[] parts = token.split("\\.");
+    if (parts.length == 3) {
+      String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
+      System.out.println("Payload: " + payload);
+
+      JSONObject json = new JSONObject(payload);
+      System.out.println("userId z tokena: " + json.getString("userId"));
+      if (json.getString("userId").equals(String.valueOf(id))) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied for this user");
+      }
+    } else {
+      System.out.println("Nieprawidłowy format tokena JWT");
+    }
     return supabaseService.deleteUzytkownik(id);
   }
 
@@ -398,11 +422,29 @@ public class Control {
       @RequestParam(required = false) String email,
       @RequestParam(required = false) Boolean zablokowany,
       @RequestParam(required = false) Boolean mfaEnabled,
-      @RequestParam(required = false) String mfaSecret) {
+      @RequestParam(required = false) String mfaSecret,
+      @RequestHeader("Authorization") String authHeader) {
+    String token = authHeader.replace("Bearer ", "");
+    System.out.println("JWT: " + token);
+
+    String[] parts = token.split("\\.");
+    if (parts.length == 3) {
+      String payload = new String(Base64.getUrlDecoder().decode(parts[1]));
+      System.out.println("Payload: " + payload);
+
+      JSONObject json = new JSONObject(payload);
+      System.out.println("userId z tokena: " + json.getString("userId"));
+      if (json.getString("userId").equals(String.valueOf(id))) {
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Access denied for this user");
+      }
+    } else {
+      System.out.println("Nieprawidłowy format tokena JWT");
+    }
     return supabaseService.updateUzytkownik(
         new Uzytkownik(id, imie, nazwisko, dataUrodzenia, nazwaUzytkownika, haslo, email,
             zablokowany, mfaEnabled, mfaSecret, "USER"));
   }
+
 
   /**
    * Resetuje hasło użytkownika na podstawie e-maila.
