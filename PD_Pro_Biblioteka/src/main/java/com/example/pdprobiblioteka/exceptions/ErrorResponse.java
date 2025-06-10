@@ -24,8 +24,8 @@ public class ErrorResponse {
   /**
    * Tworzy nową instancję ErrorResponse.
    *
-   * @param status kod HTTP
-   * @param error krótki opis błędu
+   * @param status  kod HTTP
+   * @param error   krótki opis błędu
    * @param message szczegółowa wiadomość o błędzie
    */
   public ErrorResponse(int status, String error, String message) {

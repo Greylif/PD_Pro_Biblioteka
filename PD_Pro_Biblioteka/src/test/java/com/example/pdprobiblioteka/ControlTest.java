@@ -480,12 +480,13 @@ public class ControlTest {
                   "USER")))
           .thenReturn("Uzytkownik zaktualizowany");
 
-      String payload = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"userId\":\"1\"}".getBytes());
+      String payload = Base64.getUrlEncoder().withoutPadding()
+          .encodeToString("{\"userId\":\"1\"}".getBytes());
       String dummyJwt = "Bearer header." + payload + ".signature";
       try {
         mockMvc.perform(put("/library/uzytkownicy/1")
                 .param("Imie", "Jacek")
-            .header("Authorization", dummyJwt))
+                .header("Authorization", dummyJwt))
             .andExpect(status().isOk());
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -615,13 +616,13 @@ public class ControlTest {
     @DisplayName("Usuniecie uzytkownika")
     void deleteUzytkownik() {
       Mockito.when(supabaseClient.deleteUzytkownik(1)).thenReturn("Uzytkownik usuniety");
-      String payload = Base64.getUrlEncoder().withoutPadding().encodeToString("{\"userId\":\"1\"}".getBytes());
+      String payload = Base64.getUrlEncoder().withoutPadding()
+          .encodeToString("{\"userId\":\"1\"}".getBytes());
       String dummyJwt = "Bearer header." + payload + ".signature";
-
 
       try {
         mockMvc.perform(delete("/library/uzytkownicy/1")
-            .header("Authorization", dummyJwt))
+                .header("Authorization", dummyJwt))
             .andExpect(status().isOk());
       } catch (Exception e) {
         throw new RuntimeException(e);

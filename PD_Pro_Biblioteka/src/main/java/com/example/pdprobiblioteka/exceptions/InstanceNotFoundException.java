@@ -18,7 +18,7 @@ public class InstanceNotFoundException extends RuntimeException {
   /**
    * Tworzy wyjątek z nazwą tabeli i wiadomością.
    *
-   * @param name nazwa tabeli
+   * @param name    nazwa tabeli
    * @param message szczegółowa wiadomość o błędzie
    */
   public InstanceNotFoundException(String name, String message) {

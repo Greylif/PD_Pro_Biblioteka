@@ -25,7 +25,7 @@ public class TotpService {
    * Generowanie URL dla kodu QR w celu łatwiejszej weryfikacji TOTP.
    *
    * @param username nazwa użytkownika wykorzystywana w generowaniu
-   * @param secret klucz sekretny nadany użytkownikowi
+   * @param secret   klucz sekretny nadany użytkownikowi
    * @return URL kodu QR
    */
   public String getQrBarcodeUrl(String username, String secret) {
@@ -37,7 +37,7 @@ public class TotpService {
    * Weryfikacja otrzymanego kodu, na podstawie secretu użytkownika.
    *
    * @param secret klucz sekretny nadany użytkownikowi
-   * @param code kod podany przez użytkownika, wygenerowany w aplikacji uwierzytelniającej
+   * @param code   kod podany przez użytkownika, wygenerowany w aplikacji uwierzytelniającej
    * @return wartość boolean, czy kod jest poprawny, czy nie
    */
   public boolean verifyCode(String secret, int code) {

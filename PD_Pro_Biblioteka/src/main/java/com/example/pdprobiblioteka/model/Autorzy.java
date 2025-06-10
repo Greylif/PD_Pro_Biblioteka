@@ -26,9 +26,9 @@ public class Autorzy {
   /**
    * Konstruktor klasy.
    *
-   * @param id identyfikator autora
-   * @param imie imie autora
-   * @param nazwisko nazwisko autora
+   * @param id           identyfikator autora
+   * @param imie         imie autora
+   * @param nazwisko     nazwisko autora
    * @param rokUrodzenia rok urodzenia autora
    */
   public Autorzy(int id, String imie, String nazwisko, int rokUrodzenia) {

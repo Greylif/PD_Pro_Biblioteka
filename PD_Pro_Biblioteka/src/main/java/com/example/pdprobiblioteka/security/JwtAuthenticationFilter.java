@@ -27,8 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   /**
    * Konstruktor filtra JWT.
    *
-   * @param jwtService serwis do obsługi tokenów JWT
-   * @param userDetailsService serwis wczytujący dane użytkownika (rola USER)
+   * @param jwtService          serwis do obsługi tokenów JWT
+   * @param userDetailsService  serwis wczytujący dane użytkownika (rola USER)
    * @param adminDetailsService serwis wczytujący dane administratora (rola ADMIN)
    */
   public JwtAuthenticationFilter(JwtService jwtService,
@@ -44,11 +44,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    * Metoda wykonująca filtrację żądania. Sprawdza nagłówek Authorization, odczytuje token JWT i
    * ustawia kontekst bezpieczeństwa, jeśli token jest ważny.
    *
-   * @param request żądanie HTTP
-   * @param response odpowiedź HTTP
+   * @param request     żądanie HTTP
+   * @param response    odpowiedź HTTP
    * @param filterChain łańcuch filtrów
    * @throws ServletException wyjątek servletu
-   * @throws IOException wyjątek wejścia/wyjścia
+   * @throws IOException      wyjątek wejścia/wyjścia
    */
   @Override
   protected void doFilterInternal(HttpServletRequest request,

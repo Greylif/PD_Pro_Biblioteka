@@ -63,7 +63,6 @@ public class AuthControllerTest {
   class LoginUserTest {
 
 
-
     @Test
     @DisplayName("Poprawne logowanie użytkownika")
     void loginUserSuccess() throws Exception {
@@ -86,10 +85,10 @@ public class AuthControllerTest {
       String requestBody = "{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}";
 
       mockMvc.perform(post("/api/auth/login")
-                      .contentType(MediaType.APPLICATION_JSON)
-                      .content(requestBody))
-              .andExpect(status().isOk())
-              .andExpect(jsonPath("$.token").value(token));
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(requestBody))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.token").value(token));
     }
 
 

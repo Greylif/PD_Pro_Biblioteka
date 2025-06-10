@@ -43,9 +43,9 @@ public class JwtService {
   /**
    * Wyciąga dowolne dane z tokena.
    *
-   * @param token token JWT
+   * @param token          token JWT
    * @param claimsResolver funkcja przetwarzająca obiekt Claims
-   * @param <T> typ zwracanych danych
+   * @param <T>            typ zwracanych danych
    * @return wartość danego claimu
    */
   public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -84,13 +84,20 @@ public class JwtService {
       userId = String.valueOf(user.getId());
     }
 
+    long expirationMillis = isAdmin
+        ? 1000L * 60 * 60 * 12
+        : 1000L * 60 * 60;
+
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + expirationMillis);
+
     return Jwts.builder()
         .setSubject(userDetails.getUsername())
         .claim("role", role)
         .claim("userId", userId)
         .claim("isAdmin", isAdmin)
-        .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+        .setIssuedAt(now)
+        .setExpiration(expiryDate)
         .signWith(SignatureAlgorithm.HS256, secretKey)
         .compact();
   }
@@ -98,7 +105,7 @@ public class JwtService {
   /**
    * Sprawdza, czy token jest poprawny i nie wygasł.
    *
-   * @param token token JWT
+   * @param token       token JWT
    * @param userDetails dane użytkownika
    * @return true, jeśli token jest ważny i należy do danego użytkownika
    */

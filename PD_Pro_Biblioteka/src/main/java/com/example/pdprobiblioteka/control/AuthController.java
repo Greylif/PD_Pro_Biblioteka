@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * Kontroler odpowiedzialny za uwierzytelnianie użytkowników i administratorów oraz za obsługę TOTP.
+ * Kontroler odpowiedzialny za uwierzytelnianie użytkowników i administratorów oraz za obsługę
+ * TOTP.
  */
 @RestController
 @RequestMapping("/api/auth")
@@ -39,9 +40,9 @@ public class AuthController {
    * Konstruktor klasy.
    *
    * @param authenticationManager komponent odpowiedzialny za uwierzytelnianie użytkowników.
-   * @param jwtService serwis obsługujący generowanie i walidację tokenów JWT.
-   * @param userDetailsService serwis odpowiedzialny za ładowanie danych użytkownika.
-   * @param adminDetailsService serwis odpowiedzialny za ładowanie danych admina.
+   * @param jwtService            serwis obsługujący generowanie i walidację tokenów JWT.
+   * @param userDetailsService    serwis odpowiedzialny za ładowanie danych użytkownika.
+   * @param adminDetailsService   serwis odpowiedzialny za ładowanie danych admina.
    */
   public AuthController(AuthenticationManager authenticationManager, JwtService jwtService,
       SupabaseUserDetailsService userDetailsService,
@@ -81,25 +82,6 @@ public class AuthController {
       }
 
       String jwt = jwtService.generateToken(userDetails, false);
-
-      /* To jest potrzebne do przyszłości jak odczytywać
-      String secretKey = System.getenv("JWT_KEY");
-
-      Claims claims = Jwts.parser()
-          .setSigningKey(secretKey)
-          .parseClaimsJws(jwt)
-          .getBody();
-
-      String username = claims.getSubject();
-      String role = claims.get("role", String.class);
-      String userId = claims.get("userId", String.class);
-      Boolean isAdmin = claims.get("isAdmin", Boolean.class);
-      System.out.println(username);
-      System.out.println(role);
-      System.out.println(userId);
-      System.out.println(isAdmin);
-
- */
 
       return ResponseEntity.ok(new AuthResponse(jwt));
     } catch (AuthenticationException e) {
@@ -143,7 +125,6 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TOTP code must be numeric");
     }
   }
-
 
 
   /**
@@ -221,8 +202,8 @@ public class AuthController {
   /**
    * Potwierdzenie założenia Totp przez użytkownika.
    *
-   * @param payload dane zawierające nazwę użytkownika oraz kod
-   *                pobrany z aplikacji uwierzytelniającej
+   * @param payload dane zawierające nazwę użytkownika oraz kod pobrany z aplikacji
+   *                uwierzytelniającej
    * @return wiadomość o błędzie lub, czy potwierdzenie przebiegło pomyślnie
    */
   @PostMapping("/confirm-totp")
@@ -248,8 +229,8 @@ public class AuthController {
   /**
    * Potwierdzenie założenia Totp przez administratora.
    *
-   * @param payload dane zawierające nazwę użytkownika oraz kod
-   *                pobrany z aplikacji uwierzytelniającej
+   * @param payload dane zawierające nazwę użytkownika oraz kod pobrany z aplikacji
+   *                uwierzytelniającej
    * @return wiadomość o błędzie lub, czy potwierdzenie przebiegło pomyślnie
    */
   @PostMapping("/confirm-totp/admin")

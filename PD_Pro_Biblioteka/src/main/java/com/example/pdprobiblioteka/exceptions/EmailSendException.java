@@ -9,7 +9,7 @@ public class EmailSendException extends RuntimeException {
    * Tworzy nowy wyjątek EmailSendException.
    *
    * @param message opis błędu
-   * @param cause przyczyna błędu
+   * @param cause   przyczyna błędu
    */
   public EmailSendException(String message, Throwable cause) {
     super(message, cause);

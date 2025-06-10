@@ -34,9 +34,9 @@ public class SecurityConfig {
   /**
    * Definicja głównego łańcucha zabezpieczeń.
    *
-   * @param http obiekt konfiguracji HTTP
+   * @param http                    obiekt konfiguracji HTTP
    * @param jwtAuthenticationFilter filtr JWT do uwierzytelniania
-   * @param authManager menedżer uwierzytelniania
+   * @param authManager             menedżer uwierzytelniania
    * @return skonfigurowany filtr bezpieczeństwa
    * @throws Exception w przypadku błędów konfiguracji
    */
@@ -51,7 +51,6 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
             .requestMatchers(HttpMethod.POST, "/api/auth/loginadmin").permitAll()
             .requestMatchers(HttpMethod.POST, "/library/uzytkownicy").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/**").permitAll() // to removal
             .requestMatchers(HttpMethod.POST, "/library/admini").permitAll()
 
             .requestMatchers(HttpMethod.GET, "/library/placowki").hasAnyRole(USER, ADMIN)
@@ -85,7 +84,7 @@ public class SecurityConfig {
    * Konfiguracja menedżera uwierzytelniania z dwoma providerami: dla użytkowników i
    * administratorów.
    *
-   * @param userDetailsService serwis użytkownika
+   * @param userDetailsService  serwis użytkownika
    * @param adminDetailsService serwis administratora
    * @return menedżer uwierzytelniania
    */

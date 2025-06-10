@@ -36,13 +36,13 @@ public class Kary {
   /**
    * Konstruktor klasy.
    *
-   * @param id identyfikator kary
-   * @param kwota kwota pieniężna kary
+   * @param id              identyfikator kary
+   * @param kwota           kwota pieniężna kary
    * @param dataWydaniaKary data nałożenia kary
-   * @param terminZaplaty termin na zapłatę kary
-   * @param czyZaplacono boolean czy kara zaostała zapłacona
-   * @param iduzytkownika id użytkownika, który otrzymał karę
-   * @param opis opis kary
+   * @param terminZaplaty   termin na zapłatę kary
+   * @param czyZaplacono    boolean czy kara zaostała zapłacona
+   * @param iduzytkownika   id użytkownika, który otrzymał karę
+   * @param opis            opis kary
    */
   public Kary(int id, double kwota, String dataWydaniaKary, String terminZaplaty,
       Boolean czyZaplacono, int iduzytkownika, String opis) {
