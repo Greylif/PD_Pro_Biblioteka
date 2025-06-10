@@ -1,4 +1,4 @@
-package com.example.pdprobiblioteka;
+package com.example.pdprobiblioteka.tests;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

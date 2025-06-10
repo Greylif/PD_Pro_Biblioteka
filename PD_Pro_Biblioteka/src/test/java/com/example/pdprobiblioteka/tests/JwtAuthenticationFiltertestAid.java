@@ -1,4 +1,4 @@
-package com.example.pdprobiblioteka;
+package com.example.pdprobiblioteka.tests;
 
 import com.example.pdprobiblioteka.security.JwtAuthenticationFilter;
 import com.example.pdprobiblioteka.service.JwtService;

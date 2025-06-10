@@ -1,4 +1,4 @@
-package com.example.pdprobiblioteka;
+package com.example.pdprobiblioteka.tests;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

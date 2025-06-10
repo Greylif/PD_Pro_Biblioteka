@@ -1,4 +1,4 @@
-package com.example.pdprobiblioteka;
+package com.example.pdprobiblioteka.tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;

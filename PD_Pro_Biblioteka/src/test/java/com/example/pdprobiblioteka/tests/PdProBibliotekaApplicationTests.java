@@ -1,7 +1,8 @@
-package com.example.pdprobiblioteka;
+package com.example.pdprobiblioteka.tests;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
+import com.example.pdprobiblioteka.PdProBibliotekaApplication;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
