@@ -5,6 +5,7 @@ import com.example.pdprobiblioteka.exceptions.InstanceNotFoundException;
 import com.example.pdprobiblioteka.exceptions.JsonFileException;
 import com.example.pdprobiblioteka.exceptions.SupabaseConnectionException;
 import com.example.pdprobiblioteka.model.Admin;
+import com.example.pdprobiblioteka.model.Autorzy;
 import com.example.pdprobiblioteka.model.Ksiazka;
 import com.example.pdprobiblioteka.model.Uzytkownik;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -357,10 +358,12 @@ public class SupabaseClient {
     if (dataWydania != null) {
       kstatement.append(safeLike(DATA_WYDANIA, dataWydania)).append(",");
     }
-    if (idPlacowki != null) {
-      kstatement.append(safeLike(ID_PLACOWKI, String.valueOf(idPlacowki))).append(",");
+    StringBuilder placstatement = new StringBuilder();
+    if (idPlacowki != null && isSafe(String.valueOf(idPlacowki))) {
+      placstatement.append("eq.").append(idPlacowki);
+    } else {
+      placstatement = new StringBuilder("gt.0");
     }
-
     if (kstatement.length() > 1) {
       kstatement.setLength(kstatement.length() - 1);
     }
@@ -385,7 +388,8 @@ public class SupabaseClient {
       astatement = new StringBuilder("(id.gt.0)");
     }
 
-    return fetchKsiazkaFiltr(kstatement.toString(), astatement.toString());
+    return fetchKsiazkaFiltr(kstatement.toString(),
+        astatement.toString(), placstatement.toString());
 
   }
 
@@ -834,13 +838,15 @@ public class SupabaseClient {
    *
    * @param kstatement warunek zapytania dla książek
    * @param astatement warunek zapytania dla autorów.
+   * @param placstatement warunek zapytania dla id placowki
    * @return przefiltrowana lista książek w formacie JSON jako String.
    */
-  private String fetchKsiazkaFiltr(String kstatement, String astatement) {
+  private String fetchKsiazkaFiltr(String kstatement, String astatement, String placstatement) {
     try {
       String data = webClient.get()
           .uri(uriBuilder -> uriBuilder
               .path("/" + KSIAZKA)
+              .queryParam(ID_PLACOWKI, placstatement)
               .queryParam("and", kstatement)
               .build())
           .retrieve()
@@ -857,7 +863,7 @@ public class SupabaseClient {
           .bodyToMono(String.class)
           .block();
 
-      List<Integer> autorIds = extractAutorIds(autor);
+      List<Autorzy> autorIds = extractAutorIds(autor);
       return filterKsiazkiByAutor(data, autorIds);
     } catch (JsonFileException e) {
       throw e;
@@ -867,41 +873,51 @@ public class SupabaseClient {
   }
 
   /**
-   * Wydobywa identyfikatory autorów z przekazanego JSON-a.
+   *  Budowanie listy autorów.
    *
    * @param autorzyData dane JSON zawierające listę autorów.
-   * @return lista identyfikatorów autorów.
+   * @return lista autorów.
    */
-  private List<Integer> extractAutorIds(String autorzyData) {
-    List<Integer> autorIds = new ArrayList<>();
+  private List<Autorzy> extractAutorIds(String autorzyData) {
+    List<Autorzy> autorzy = new ArrayList<>();
     try {
       JSONArray jsonArray = new JSONArray(autorzyData);
       for (int i = 0; i < jsonArray.length(); i++) {
-        JSONObject autor = jsonArray.getJSONObject(i);
-        autorIds.add(autor.getInt("id"));
+        JSONObject autorJson = jsonArray.getJSONObject(i);
+        int id = autorJson.getInt("id");
+        String imie = autorJson.getString("Imie");
+        String nazwisko = autorJson.getString(NAZWISKO);
+        int rokUrodzenia = autorJson.getInt(ROK_URODZENIA);
+        autorzy.add(new Autorzy(id, imie, nazwisko, rokUrodzenia));
       }
     } catch (Exception e) {
       throw new JsonFileException("Failed work on JSON ", e);
     }
-    return autorIds;
+    return autorzy;
   }
 
   /**
-   * Filtruje książki na podstawie listy identyfikatorów autorów.
+   * Filtruje książki na podstawie listy autorów.
    *
    * @param ksiazkiData dane książek w formacie JSON.
-   * @param autorIds    lista dopuszczalnych identyfikatorów autorów.
+   * @param autorzyLista    lista dopuszczalnych autorów.
    * @return przefiltrowana lista książek w formacie JSON.
    */
-  private String filterKsiazkiByAutor(String ksiazkiData, List<Integer> autorIds) {
+  private String filterKsiazkiByAutor(String ksiazkiData, List<Autorzy> autorzyLista) {
     JSONArray filteredArray = new JSONArray();
     try {
       JSONArray jsonArray = new JSONArray(ksiazkiData);
       for (int i = 0; i < jsonArray.length(); i++) {
         JSONObject ksiazka = jsonArray.getJSONObject(i);
         int idAutora = ksiazka.getInt(ID_AUTORA);
-        if (autorIds.contains(idAutora)) {
-          filteredArray.put(ksiazka);
+        for (Autorzy autor : autorzyLista) {
+          if (autor.getId() == idAutora) {
+            ksiazka.put("Imie", autor.getImie());
+            ksiazka.put(NAZWISKO, autor.getNazwisko());
+            ksiazka.put(ROK_URODZENIA, autor.getRokUrodzenia());
+            filteredArray.put(ksiazka);
+            break;
+          }
         }
       }
     } catch (Exception e) {

@@ -362,7 +362,7 @@ public class Control {
   /**
    * Usuwa użytkownika o podanym ID.
    *
-   * @param id identyfikator użytkownika
+   * @param id         identyfikator użytkownika
    * @param authHeader otrzymany nagłówek zawierający token autoryzacji
    * @return JSON z wynikiem operacji
    */
