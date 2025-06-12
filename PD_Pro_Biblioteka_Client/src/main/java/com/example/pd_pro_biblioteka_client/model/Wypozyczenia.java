@@ -35,11 +35,11 @@ public class Wypozyczenia {
     private final StringProperty dataWypozyczenia = new SimpleStringProperty();
     private final StringProperty terminOddania = new SimpleStringProperty();
 
-    public Wypozyczenia(int ID, String Data, String Termin, String oddania, int id_ksiazki, int id_uzytkownika) {
+    public Wypozyczenia(int ID, String Wyp, String Odd, String Ter, int id_ksiazki, int id_uzytkownika) {
         this.id.set(ID);
-        this.Data_Wypozyczenia.set(Data);
-        this.Data_Oddania.set(oddania);
-        this.Termin_Oddania.set(Termin);
+        this.Data_Wypozyczenia.set(Wyp);
+        this.Data_Oddania.set(Odd);
+        this.Termin_Oddania.set(Ter);
         this.id_ksiazki.set(id_ksiazki);
         this.id_uzytkownika.set(id_uzytkownika);
     }
@@ -51,12 +51,18 @@ public class Wypozyczenia {
     public IntegerProperty id_ksiazkiProperty() {return id_ksiazki;}
     public IntegerProperty id_uzytkownikaProperty() {return id_uzytkownika;}
 
-    public StringProperty imieProperty() { return imie; }
-    public StringProperty nazwiskoProperty() { return nazwisko; }
-    public StringProperty tytulProperty() { return tytul; }
-    public StringProperty autorProperty() { return autor; }
-    public StringProperty dataWypozyczeniaProperty() { return dataWypozyczenia; }
-    public StringProperty terminOddaniaProperty() { return terminOddania; }
+
+    private StringProperty autorName = new SimpleStringProperty();
+    public StringProperty autorNameProperty() {return autorName;}
+    public void setAutorName(String autorName) {this.autorName.set(autorName);}
+
+    private StringProperty userData = new SimpleStringProperty();
+    public StringProperty userDataProperty() {return userData;}
+    public void setUserData(String userData) {this.userData.set(userData);}
+
+    private StringProperty bookTitle = new SimpleStringProperty();
+    public StringProperty bookTitleProperty() {return bookTitle;}
+    public void setBookTitle(String tytul) {this.bookTitle.set(tytul);}
 
 
     public String getImie() { return imie.get(); }
@@ -78,8 +84,11 @@ public class Wypozyczenia {
     public void setTerminOddania(String termin) { this.terminOddania.set(termin); }
 
 
+
     @Override
     public String toString() {
         return "Wypozyczenia{id=" + id + ", Data_Wypozyczenia=" + Data_Wypozyczenia + ", Data_Oddania=" + Data_Oddania + ", Termin_Oddania=" + Termin_Oddania + ", id_ksiazki=" + id_ksiazki + ", id_uzytkownika=" + id_uzytkownika + "}";
     }
+
+
 }

@@ -1,56 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.AdminAddbook"
-      alignment="TOP_CENTER" style="-fx-background-color: #726C6C; -fx-padding: 20;" prefHeight="600.0" prefWidth="600.0">
+<VBox alignment="TOP_CENTER" prefHeight="451.0" prefWidth="600.0" style="-fx-background-color: #726C6C; -fx-padding: 20;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.example.pd_pro_biblioteka_client.controller.AdminAddbook">
 
-    <Region prefHeight="20"/>
+    <Region prefHeight="20" />
 
-    <Label text="Dodaj książkę:" style="-fx-font-size: 32px; -fx-text-fill: #FFFFFF"/>
+    <Label style="-fx-font-size: 32px; -fx-text-fill: #FFFFFF" text="Dodaj książkę:" />
 
-    <Region prefHeight="20"/>
-
-    <VBox alignment="CENTER_LEFT" spacing="5">
-        <Label text="Tytuł"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <TextField fx:id="a_title" prefWidth="600" style="-fx-font-size: 16px;"/>
-    </VBox>
-
-    <Region prefHeight="20"/>
+    <Region prefHeight="20" />
 
     <VBox alignment="CENTER_LEFT" spacing="5">
-        <Label text="Gatunek"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <TextField fx:id="a_genre" prefWidth="600" style="-fx-font-size: 16px;"/>
+        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Tytuł" />
+        <TextField fx:id="a_title" prefWidth="600" style="-fx-font-size: 16px;" />
     </VBox>
 
-    <Region prefHeight="20"/>
+    <Region prefHeight="20" />
 
     <VBox alignment="CENTER_LEFT" spacing="5">
-        <Label text="Rok Wydania"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <TextField fx:id="a_relaseDate" prefWidth="600" style="-fx-font-size: 16px;"/>
+        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Gatunek" />
+        <TextField fx:id="a_genre" prefWidth="600" style="-fx-font-size: 16px;" />
     </VBox>
 
-    <Region prefHeight="20"/>
+    <Region prefHeight="20" />
 
-
-    <HBox spacing="50">
-        <VBox alignment="CENTER_LEFT" spacing="5">
-            <Label text="Imię autora"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-            <TextField fx:id="au_name" prefWidth="300" style="-fx-font-size: 16px;"/>
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <VBox>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Rok Wydania" />
+            <TextField fx:id="a_relaseDate" prefWidth="600" style="-fx-font-size: 16px;" />
         </VBox>
-        <VBox alignment="CENTER_LEFT" spacing="5">
-            <Label text="Nazwisko autora"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-            <TextField fx:id="au_surname" prefWidth="300" style="-fx-font-size: 16px;"/>
+        <VBox>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="ID autora" />
+            <TextField fx:id="a_id_author" prefWidth="600" style="-fx-font-size: 16px;" />
+        </VBox>
+        <VBox>
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="ID placówki" />
+            <TextField fx:id="a_id_plac" prefWidth="600" style="-fx-font-size: 16px;" />
         </VBox>
     </HBox>
 
-    <Region prefHeight="20"/>
+    <Region prefHeight="39.0" prefWidth="560.0" />
 
-    <Button fx:id="add_button" text="Dodaj" onAction="#add_act"
-            style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5"/>
+
+
+
+    <Button fx:id="add_button" onAction="#add_act" style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj" />
 
 </VBox>

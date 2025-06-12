@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -24,6 +25,7 @@ public class MainApp extends Application {
 
         primaryStage.setTitle("Logowanie");
         primaryStage.setScene(new Scene(fxmlLoader.load(), 600, 600));
+        primaryStage.initStyle(StageStyle.DECORATED);
         primaryStage.show();
     }
 

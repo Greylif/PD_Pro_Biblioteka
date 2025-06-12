@@ -39,6 +39,9 @@ public class Ksiazka {
 
     private BooleanProperty Wypozyczenie = new SimpleBooleanProperty();
 
+    private StringProperty autorName = new SimpleStringProperty();
+    public StringProperty autorNameProperty() {return autorName;}
+    public void setAutorName(String autorName) {this.autorName.set(autorName);}
 
 
     public Ksiazka(int id, String tytul, String gatunek, int dataWydania, String dodano, int idAutora, int idPlacowki, Boolean rezerwacja, Boolean wypozyczenia) {

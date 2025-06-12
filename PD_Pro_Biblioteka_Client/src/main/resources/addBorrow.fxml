@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #726C6C; -fx-padding: 20;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.example.pd_pro_biblioteka_client.controller.addBorrow">
+
+    <Region prefHeight="20" />
+
+    <Label style="-fx-font-size: 32px; -fx-text-fill: #FFFFFF" text="Dodawanie wypożyczenia:" />
+
+    <Region prefHeight="20" />
+
+    <HBox spacing="50">
+        <VBox alignment="CENTER_LEFT" spacing="5">
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="ID użytkownika" />
+            <TextField fx:id="borrowUserID" prefWidth="300" style="-fx-font-size: 16px;" />
+        </VBox>
+        <VBox alignment="CENTER_LEFT" spacing="5">
+            <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="ID książki" />
+            <TextField fx:id="borrowBookID" prefWidth="300" style="-fx-font-size: 16px;" />
+        </VBox>
+    </HBox>
+
+    <Region prefHeight="20" />
+
+    <VBox alignment="CENTER_LEFT" spacing="5">
+        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Termin oddania" />
+        <DatePicker fx:id="borrowReturnDate" prefWidth="600" style="-fx-font-size: 16px;" />
+    </VBox>
+
+
+    <Region prefHeight="30" />
+
+    <Button fx:id="b_add" onAction="#button_act" style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj" />
+
+</VBox>

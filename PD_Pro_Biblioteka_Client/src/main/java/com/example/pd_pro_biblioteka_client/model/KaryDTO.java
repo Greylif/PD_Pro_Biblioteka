@@ -2,9 +2,6 @@ package com.example.pd_pro_biblioteka_client.model;
 
 import jakarta.validation.constraints.NotNull;
 import javafx.beans.property.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -15,4 +12,7 @@ public class KaryDTO {
     public String Termin_Zaplaty;
     public String Czy_Zaplacono;
     public int id_uzytkownika;
+    public String opis;
+
+
 }

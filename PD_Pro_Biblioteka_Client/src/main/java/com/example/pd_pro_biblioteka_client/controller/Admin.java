@@ -15,6 +15,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
@@ -22,9 +25,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,9 +40,34 @@ import java.util.stream.Collectors;
 
 @Component
 public class Admin {
-
     @FXML
-    private TableColumn b_person;
+    private Button add_penalty_button;
+    @FXML
+    private Button addPenaltyButton;
+    @FXML
+    private Button refr_button;
+    @FXML
+    private CheckBox showPassword;
+    @FXML
+    private TextField textField;
+    @FXML
+    private TableView<Uzytkownik> userTable;
+    @FXML
+    private TableColumn<Uzytkownik, String> u_id;
+    @FXML
+    private TableColumn<Uzytkownik, String> u_name;
+    @FXML
+    private TableColumn<Uzytkownik, String> u_surname;
+    @FXML
+    private TableColumn<Uzytkownik, String> u_login;
+    @FXML
+    private TableColumn<Uzytkownik, String> u_password;
+    @FXML
+    private TableColumn<Uzytkownik, String> u_year;
+    @FXML
+    private TableColumn<Uzytkownik, Boolean> u_status;
+    @FXML
+    private TableColumn<Wypozyczenia, String> b_person;
     @FXML
     private TableColumn<Wypozyczenia, String> b_id;
     @FXML
@@ -53,6 +83,8 @@ public class Admin {
     @FXML
     private TableView borrowTable;
     @FXML
+    private TableColumn<Ksiazka, String> s_id;
+    @FXML
     private TableColumn<Ksiazka,Boolean> s_select;
     @FXML
     private TableColumn<Ksiazka,String> s_genre;
@@ -63,7 +95,7 @@ public class Admin {
     @FXML
     private TableColumn<Ksiazka,String> s_autor;
     @FXML
-    private TableView<Ksiazka> serachTable;
+    private TableView<Ksiazka> searachTable;
     @FXML
     private TableColumn<Ksiazka,String> s_title;
     @FXML
@@ -73,31 +105,29 @@ public class Admin {
     @FXML
     private TextField admin_surname;
     @FXML
-    private DatePicker admin_date;
-    @FXML
-    private TextField admin_email;
-    @FXML
     private TextField admin_login;
     @FXML
     private PasswordField admin_password;
     @FXML
-    private TableView penaltyTable;
+    private TextField admin_location_id;
+    @FXML
+    private TextField admin_id;
+    @FXML
+    private TableView<Kary> penaltyTable;
     @FXML
     private TableColumn<Kary, Integer> p_id;
     @FXML
-    private TableColumn<Kary, String> p_title;
+    private TableColumn<Kary, String> p_desc;
     @FXML
-    private TableColumn<Kary, String> p_autor;
-    @FXML
-    private TableColumn<Kary, String> p_return_date;
-    @FXML
-    private TableColumn<Placowka, String> p_place_name;
+    private TableColumn<Kary, String> p_payment_date;
     @FXML
     private TableColumn<Kary, Double> p_value;
     @FXML
     private TableColumn<Kary, Boolean> p_status;
     @FXML
     private TableColumn<Kary, String> p_userid;
+    @FXML
+    private TableColumn<Kary, String> p_date;
     @FXML
     private Button save_button;
     @FXML
@@ -109,49 +139,107 @@ public class Admin {
     public void initialize() {
         fetchAllData();
         //Tab 1 - książki
+        s_id.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
         s_title.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
-//        s_autor.setCellValueFactory(cellData -> cellData.getValue().autorFullNameProperty());
-//        s_genre.setCellValueFactory(cellData -> cellData.getValue().gatunekProperty());
-//        s_year.setCellValueFactory(cellData -> cellData.getValue().dataWydaniaProperty().asString());
-//        s_status.setCellValueFactory(cellData -> {
-//            Boolean status = cellData.getValue().getStatus();
-//            String readableStatus;
-//
-//            if (status == null) {
-//                readableStatus = "Dostępne";
-//            } else if (status) {
-//                readableStatus = "Wypożyczone";
-//            } else {
-//                readableStatus = "Zarezerwowane";
-//            }
-//
-//            return new SimpleStringProperty(readableStatus);
-//        });
-//
-//        s_select.setCellValueFactory(cellData -> cellData.getValue().selectedProperty());
-//        s_select.setCellFactory(CheckBoxTableCell.forTableColumn(s_select));
-//
-//        serachTable.setEditable(true);
-//        s_select.setEditable(true);
+        s_autor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
+        s_genre.setCellValueFactory(cellData -> cellData.getValue().gatunekProperty());
+        s_year.setCellValueFactory(cellData -> cellData.getValue().dataWydaniaProperty().asString());
+        s_status.setCellValueFactory(cellData -> cellData.getValue().WypozyczenieProperty().asString());
+
 
         //tab 2 - wypożyczenia
         b_id.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
-        b_title.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
-        b_autor.setCellValueFactory(cellData -> cellData.getValue().autorProperty());
-        borrow_date.setCellValueFactory(cellData -> cellData.getValue().dataWypozyczeniaProperty());
-        return_date.setCellValueFactory(cellData -> cellData.getValue().terminOddaniaProperty());
+        b_person.setCellValueFactory(cellData -> cellData.getValue().userDataProperty());
+        b_title.setCellValueFactory(cellData -> cellData.getValue().bookTitleProperty());
+        b_autor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
+        borrow_date.setCellValueFactory(cellData -> cellData.getValue().data_WypozyczeniaProperty());
+        return_date.setCellValueFactory(cellData -> cellData.getValue().data_OddaniaProperty());
 
         //tab 3 - kary
+        penaltyTable.setEditable(true);
         p_id.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
         p_value.setCellValueFactory(cellData -> cellData.getValue().KwotaProperty().asObject());
-        p_status.setCellValueFactory(cellData -> cellData.getValue().CzyZaplaconoProperty());
-        p_return_date.setCellValueFactory(cellData -> cellData.getValue().Termin_Zaplaty_Property());
-        p_title.setCellValueFactory(cellData -> cellData.getValue().bookTitleProperty());
-        p_autor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
+        p_date.setCellValueFactory(cellData -> cellData.getValue().getData_Wydania_Kary());
+        p_payment_date.setCellValueFactory(cellData -> cellData.getValue().getTermin_Zaplaty());
+        p_desc.setCellValueFactory(cellData -> cellData.getValue().getOpis());
         p_userid.setCellValueFactory(cellData -> cellData.getValue().id_uzytkownikaProperty().asString());
+
+        p_status.setCellValueFactory(cellData -> cellData.getValue().CzyZaplaconoProperty());
+        p_status.setCellFactory(ComboBoxTableCell.forTableColumn(true, false));
+        p_status.setEditable(true);
+        p_status.setOnEditCommit(event -> {
+            Kary kary = event.getRowValue();
+            kary.setCzyZaplacono(event.getNewValue());
+            sendUpdateKary(kary);
+        });
+
+        //tab 4 - uzytkownicy
+        u_id.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
+        u_login.setCellValueFactory(cellData -> cellData.getValue().nazwaProperty());
+        u_password.setCellValueFactory(cellData -> cellData.getValue().hasloProperty());
+        u_name.setCellValueFactory(cellData -> cellData.getValue().imieProperty());
+        u_surname.setCellValueFactory(cellData -> cellData.getValue().nazwiskoProperty());
+        u_year.setCellValueFactory(cellData -> cellData.getValue().wiekProperty());
+        u_status.setCellValueFactory(cellData -> cellData.getValue().ZablokowanyProperty().asObject());
+
+        userTable.setEditable(true);
+
+        u_name.setCellFactory(TextFieldTableCell.forTableColumn());
+        u_name.setOnEditCommit(event -> {
+            Uzytkownik user = event.getRowValue();
+            user.setImie(event.getNewValue());
+            sendUpdate(user);
+        });
+
+        u_surname.setCellFactory(TextFieldTableCell.forTableColumn());
+        u_surname.setOnEditCommit(event -> {
+            Uzytkownik user = event.getRowValue();
+            user.setNazwisko(event.getNewValue());
+            sendUpdate(user);
+        });
+
+        u_year.setCellFactory(TextFieldTableCell.forTableColumn());
+        u_year.setOnEditCommit(event -> {
+            Uzytkownik user = event.getRowValue();
+            user.setDataUrodzenia(event.getNewValue());
+            sendUpdate(user);
+        });
+
+        u_login.setCellFactory(TextFieldTableCell.forTableColumn());
+        u_login.setOnEditCommit(event -> {
+            Uzytkownik user = event.getRowValue();
+            user.setNazwaUzytkownika(event.getNewValue());
+            sendUpdate(user);
+        });
+
+        u_password.setCellFactory(TextFieldTableCell.forTableColumn());
+        u_password.setOnEditCommit(event -> {
+            Uzytkownik user = event.getRowValue();
+            user.setHaslo(event.getNewValue());
+            sendUpdate(user);
+        });
+
+        u_status.setCellFactory(ComboBoxTableCell.forTableColumn(true, false));
+        u_status.setEditable(true);
+        u_status.setOnEditCommit(event -> {
+            Uzytkownik user = event.getRowValue();
+            user.setZablokowany(event.getNewValue());
+            sendUpdate(user);
+        });
+
+        //tab 5 - dane admina
+        AdminModel adm = logAdmin.get();
+        admin_name.setText(String.valueOf(adm.getImie().get()));
+        admin_surname.setText(String.valueOf(adm.getNazwisko().get()));
+        admin_login.setText(String.valueOf(adm.getNazwa_Uzytkownika().get()));
+        admin_password.setText(String.valueOf(adm.getHaslo().get()));
+        admin_location_id.setText(String.valueOf(adm.getId_placowki().get()));
+        admin_id.setText(String.valueOf(adm.getId().get()));
 
 
     }
+
+
 
     private void fetchAllData() {
         HttpClient client = HttpClient.newHttpClient();
@@ -165,7 +253,6 @@ public class Admin {
             );
             List<KsiazkaDTO> ksiazkiDTOs = gson.fromJson(ksiazkiResponse.body(), new TypeToken<List<KsiazkaDTO>>(){}.getType());
 
-            System.out.println(ksiazkiDTOs);
 
             HttpResponse<String> autorzyResponse = client.send(
                     HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/autorzy")).GET().build(),
@@ -185,6 +272,12 @@ public class Admin {
             );
             List<KaryDTO> karyDTOs = gson.fromJson(karyResponse.body(), new TypeToken<List<KaryDTO>>(){}.getType());
 
+            HttpResponse<String> uzytkownicyResponse = client.send(
+                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/uzytkownicy")).GET().build(),
+                    HttpResponse.BodyHandlers.ofString()
+            );
+            List<UzytkownikDTO> uzytkownicyDTOs = gson.fromJson(uzytkownicyResponse.body(), new TypeToken<List<UzytkownikDTO>>(){}.getType());
+
             // Mapy pomocnicze
             Map<Integer, KsiazkaDTO> ksiazkaMap = ksiazkiDTOs.stream()
                     .collect(Collectors.toMap(k -> k.id, k -> k));
@@ -192,6 +285,37 @@ public class Admin {
             Map<Integer, AutorzyDTO> autorMap = autorzyDTOs.stream()
                     .collect(Collectors.toMap(a -> a.id, a -> a));
 
+            Map<Integer, UzytkownikDTO> uzytkownikMap = uzytkownicyDTOs.stream()
+                    .collect(Collectors.toMap(u -> u.id, u -> u));
+
+            //Tab - 2
+            List<Wypozyczenia> wypozyczeniaList = new ArrayList<>();
+
+            for (WypozyczeniaDTO dto : wypoDTOs) {
+                Wypozyczenia wyp = convertDtoToWypozyczenia(dto);
+
+                // Pobierz użytkownika
+                UzytkownikDTO user = uzytkownikMap.get(dto.id_uzytkownika);
+                if (user != null) {
+                    wyp.setUserData(user.Imie + " " + user.Nazwisko);
+                }
+
+                // Pobierz książkę
+                KsiazkaDTO ksiazka = ksiazkaMap.get(dto.id_ksiazki);
+                if (ksiazka != null) {
+                    wyp.setBookTitle(ksiazka.Tytul);
+
+                    // Pobierz autora
+                    AutorzyDTO autor = autorMap.get(ksiazka.id_autora);
+                    if (autor != null) {
+                        wyp.setAutorName(autor.Imie + " " + autor.Nazwisko);
+                    }
+                }
+
+                wypozyczeniaList.add(wyp);
+            }
+
+            //Tab - 3
             List<Kary> karyList = new ArrayList<>();
 
             for (KaryDTO dto : karyDTOs) {
@@ -218,24 +342,148 @@ public class Admin {
                 karyList.add(kara);
             }
 
+            //Tab - 1
+            List<Ksiazka> ksiazkaList = new ArrayList<>();
+
+            for (KsiazkaDTO dto : ksiazkiDTOs) {
+                Ksiazka ksiazka = convertDtoToKsiazka(dto);
+
+                AutorzyDTO autor = autorMap.get(dto.id_autora);
+                if (autor != null) {
+                    ksiazka.setAutorName(autor.Imie + " " + autor.Nazwisko);
+                }
+
+                ksiazkaList.add(ksiazka);
+            }
+
+
+            //Tab - 4
+            List<Uzytkownik> uzytkownikList = new ArrayList<>();
+
+            for (UzytkownikDTO dto : uzytkownicyDTOs) {
+                System.out.println(dto);
+                Uzytkownik uzytkownik = convertDtoToUzytkownik(dto);
+
+                uzytkownikList.add(uzytkownik);
+            }
+
             // Wyświetlenie w TableView
             Platform.runLater(() -> penaltyTable.setItems(FXCollections.observableArrayList(karyList)));
+            Platform.runLater(() -> searachTable.setItems(FXCollections.observableArrayList(ksiazkaList)));
+            Platform.runLater(() -> userTable.setItems(FXCollections.observableArrayList(uzytkownikList)));
+            Platform.runLater(() -> borrowTable.setItems(FXCollections.observableArrayList(wypozyczeniaList)));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void sendUpdate(Uzytkownik user) {
+        try {
+            String url = String.format("http://localhost:8080/library/uzytkownicy/%d", user.getId());
+
+            StringBuilder bodyBuilder = new StringBuilder();
+
+            // Dodawaj tylko te pola, które nie są nullem
+            if (user.getImie() != null)
+                bodyBuilder.append("imie=").append(URLEncoder.encode(user.getImie(), StandardCharsets.UTF_8)).append("&");
+
+            if (user.getNazwisko() != null)
+                bodyBuilder.append("nazwisko=").append(URLEncoder.encode(user.getNazwisko(), StandardCharsets.UTF_8)).append("&");
+
+            if (user.getDataUrodzenia() != null)
+                bodyBuilder.append("dataUrodzenia=").append(URLEncoder.encode(user.getDataUrodzenia(), StandardCharsets.UTF_8)).append("&");
+
+            if (user.getNazwaUzytkownika() != null)
+                bodyBuilder.append("nazwaUzytkownika=").append(URLEncoder.encode(user.getNazwaUzytkownika(), StandardCharsets.UTF_8)).append("&");
+
+            if (user.getHaslo() != null)
+                bodyBuilder.append("haslo=").append(URLEncoder.encode(user.getHaslo(), StandardCharsets.UTF_8)).append("&");
+
+            if (user.getEmail() != null)
+                bodyBuilder.append("email=").append(URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8)).append("&");
+
+            // boolean zawsze wysyłamy (zależnie od Twoich potrzeb)
+            bodyBuilder.append("zablokowany=").append(user.isZablokowany()).append("&");
+            bodyBuilder.append("mfaEnabled=").append(user.isMfaEnabled()).append("&");
+
+            // MFA secret – wysyłamy tylko jeśli nie jest nullem
+            if (user.getMfaSecret() != null)
+                bodyBuilder.append("mfaSecret=").append(URLEncoder.encode(user.getMfaSecret(), StandardCharsets.UTF_8)).append("&");
+
+            // Usuń ostatni "&" jeśli istnieje
+            if (bodyBuilder.length() > 0 && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
+                bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
+            }
+
+            System.out.println(bodyBuilder.toString());
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
+                    .build();
+
+            client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenAccept(response -> {
+                        System.out.println("Response: " + response.body());
+                    });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void sendUpdateKary(Kary kary) {
+        try {
+            String url = String.format("http://localhost:8080/library/kary/%d", kary.getId());
+
+            StringBuilder bodyBuilder = new StringBuilder();
+
+            // Dodawaj tylko te pola, które nie są nullem
+            if (kary.getKwota() != null)
+                bodyBuilder.append("kwota=").append(URLEncoder.encode(String.valueOf(kary.getKwota().get()), StandardCharsets.UTF_8)).append("&");
+
+            if (kary.getData_Wydania_Kary() != null)
+                bodyBuilder.append("dataWydaniaKary=").append(URLEncoder.encode(String.valueOf(kary.getData_Wydania_Kary().get()), StandardCharsets.UTF_8)).append("&");
+
+            if (kary.getTermin_Zaplaty() != null)
+                bodyBuilder.append("terminZaplaty=").append(URLEncoder.encode(String.valueOf(kary.getTermin_Zaplaty().get()), StandardCharsets.UTF_8)).append("&");
+
+            bodyBuilder.append("czyZaplacono=").append(kary.getCzy_Zaplacono().get()).append("&");
+
+            if (kary.getId_uzytkownika() != null)
+                bodyBuilder.append("idUzytkownika=").append(URLEncoder.encode(String.valueOf(kary.getId_uzytkownika().get()), StandardCharsets.UTF_8)).append("&");
+
+            if (kary.getOpis() != null)
+                bodyBuilder.append("opis=").append(URLEncoder.encode(String.valueOf(kary.getOpis().get()), StandardCharsets.UTF_8)).append("&");
 
 
+            // Usuń ostatni "&" jeśli istnieje
+            if (bodyBuilder.length() > 0 && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
+                bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
+            }
 
-    private Autorzy convertDtoToAutorzy(AutorzyDTO dto) {
-        return new Autorzy(
-                dto.id,
-                dto.Imie,
-                dto.Nazwisko,
-                dto.Rok_Urodzenia
-        );
+            System.out.println(bodyBuilder.toString());
+
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
+                    .build();
+
+            client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenAccept(response -> {
+                        System.out.println("Response: " + response.body());
+                    });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Uzytkownik convertDtoToUzytkownik(UzytkownikDTO dto) {
@@ -253,34 +501,15 @@ public class Admin {
         );
     }
 
-    private AdminModel convertDtoToAdmin(AdminDTO dto) {
-        return new AdminModel(
-                dto.id,
-                dto.Imie,
-                dto.Nazwisko,
-                dto.Nazwa_Uzytkownika,
-                dto.Haslo,
-                dto.id_placowki,
-                dto.Mfa_Enabled,
-                dto.Mfa_Secret
-        );
-    }
-
-    private Kary convertDtoToKary(KaryDTO dto_k) {
+    private Kary convertDtoToKary(KaryDTO dtoK) {
         return new Kary(
-                dto_k.id,
-                dto_k.Kwota,
-                dto_k.Data_Wydania_Kary,
-                dto_k.Termin_Zaplaty,
-                Boolean.valueOf(dto_k.Czy_Zaplacono),
-                dto_k.id_uzytkownika
-        );
-    }
-
-    private Placowka convertDtoToPlacowka(PlacowkaDTO dto) {
-        return new Placowka(
-                dto.id,
-                dto.Adres
+                dtoK.id,
+                dtoK.Kwota,
+                dtoK.Data_Wydania_Kary,
+                dtoK.Termin_Zaplaty,
+                Boolean.valueOf(dtoK.Czy_Zaplacono),
+                dtoK.id_uzytkownika,
+                dtoK.opis
         );
     }
 
@@ -311,6 +540,19 @@ public class Admin {
 
     @FXML
     public void borrow(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addBorrow.fxml"));
+            Parent logRoot = fxmlLoader.load();
+
+            Stage logStage = new Stage();
+            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            logStage.setTitle("Logowanie");
+            logStage.setScene(new Scene(logRoot));
+            logStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void logout(ActionEvent actionEvent) {
@@ -336,7 +578,7 @@ public class Admin {
         try {
 //            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 //            stage.close();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/admin_addbook.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addbook_modal.fxml"));
             Parent logRoot = fxmlLoader.load();
             Stage logStage = new Stage();
             logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
@@ -349,6 +591,46 @@ public class Admin {
     }
 
     public void save(ActionEvent actionEvent) {
+        // Odczytaj dane z pól
+        String id = admin_id.getText();
+        String imie = admin_name.getText();
+        String nazwisko = admin_surname.getText();
+        String login = admin_login.getText();
+        String haslo = admin_password.getText();
+        String locationId = admin_location_id.getText(); // Możesz sparsować na int jeśli trzeba
+
+        // Wywołaj metodę wysyłającą PUT na serwer
+        sendAdminUpdate(id, imie, nazwisko, login, haslo, locationId);
+
+    }
+
+    private void sendAdminUpdate(String ID, String imie, String nazwisko, String login, String haslo, String locationId) {
+        try {
+            String url = "http://localhost:8080/library/admini/" + Integer.parseInt(ID);
+
+            String body = String.format(
+                    "imie=%s&nazwisko=%s&login=%s&haslo=%s&locationId=%s",
+                    URLEncoder.encode(imie, StandardCharsets.UTF_8),
+                    URLEncoder.encode(nazwisko, StandardCharsets.UTF_8),
+                    URLEncoder.encode(login, StandardCharsets.UTF_8),
+                    URLEncoder.encode(haslo, StandardCharsets.UTF_8),
+                    URLEncoder.encode(locationId, StandardCharsets.UTF_8)
+            );
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .PUT(HttpRequest.BodyPublishers.ofString(body))
+                    .build();
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            System.out.println("Odpowiedź serwera: " + response.body());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void delete_acc(ActionEvent actionEvent) throws IOException {
@@ -381,4 +663,41 @@ public class Admin {
 
     public void delete_book(ActionEvent actionEvent) {
     }
+
+    public void refresh(ActionEvent actionEvent) {
+        fetchAllData();
+    }
+
+    @FXML
+    private void togglePasswordVisibility() {
+        if (showPassword.isSelected()) {
+            textField.setText(admin_password.getText());
+            textField.setVisible(true);
+            textField.setManaged(true);
+            admin_password.setVisible(false);
+            admin_password.setManaged(false);
+        } else {
+            admin_password.setText(textField.getText());
+            admin_password.setVisible(true);
+            admin_password.setManaged(true);
+            textField.setVisible(false);
+            textField.setManaged(false);
+        }
+    }
+
+    public void AddPenalty(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addPenalty.fxml"));
+            Parent logRoot = fxmlLoader.load();
+            Stage logStage = new Stage();
+            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            logStage.setTitle("Dodawanie kary");
+            logStage.setScene(new Scene(logRoot));
+            logStage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

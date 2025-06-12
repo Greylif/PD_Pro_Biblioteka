@@ -15,12 +15,17 @@ public class UzytkownikDTO {
     public int id;
     public String Imie;
     public String Nazwisko;
-    public String Data_Urodzenia;
-    public String Haslo;
     public String Nazwa_Uzytkownika;
+    public String Haslo;
     public String Email;
+    public String Data_Urodzenia;
     public boolean Zablokowany;
     public boolean Mfa_Enabled;
     public String Mfa_Secret;
 
+
+    @Override
+    public String toString() {
+        return "Uzytkownik{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko + "', Wiek=" + Data_Urodzenia + ", Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', Haslo='" + Haslo + "', Email='" + Email + "'}";
+    }
 }
