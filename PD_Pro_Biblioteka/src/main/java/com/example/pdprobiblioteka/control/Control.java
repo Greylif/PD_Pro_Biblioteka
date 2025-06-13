@@ -337,6 +337,17 @@ public class Control {
     return supabaseService.getUzytkownicy();
   }
 
+
+  /**
+   * Zwraca użytkownika o podanym id.
+   *
+   * @return JSON z danymi użytkowników
+   */
+  @GetMapping("/uzytkownicy/{id}")
+  public String getUzytkownicyId(@PathVariable Integer id) {
+    return supabaseService.getUzytkownicyid(id);
+  }
+
   /**
    * Dodaje nowego użytkownika.
    *

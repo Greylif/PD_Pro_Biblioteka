@@ -29,6 +29,7 @@ public class SecurityConfig {
 
   private static final String ADMIN = "ADMIN";
   private static final String USER = "USER";
+  private static final String LIBUSERID = "/library/uzytkownicy/{id}";
 
 
   /**
@@ -67,8 +68,9 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/library/autorzy").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/auth/setup-totp").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/auth/confirm-totp").hasAnyRole(USER, ADMIN)
-            .requestMatchers(HttpMethod.PUT, "/library/uzytkownicy/{id}").hasAnyRole(USER, ADMIN)
-            .requestMatchers(HttpMethod.DELETE, "/library/uzytkownicy/{id}").hasAnyRole(USER, ADMIN)
+            .requestMatchers(HttpMethod.PUT, LIBUSERID).hasAnyRole(USER, ADMIN)
+            .requestMatchers(HttpMethod.DELETE, LIBUSERID).hasAnyRole(USER, ADMIN)
+            .requestMatchers(HttpMethod.GET, LIBUSERID).hasAnyRole(USER, ADMIN)
 
             .requestMatchers("/library/**").hasRole(ADMIN)
             .requestMatchers("/api/**").hasRole(ADMIN)

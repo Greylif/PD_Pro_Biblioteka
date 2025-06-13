@@ -358,6 +358,15 @@ public class SupabaseClient {
   }
 
   /**
+   * Pobiera użytkownika o danym id.
+   *
+   * @return dane z użytkownikami
+   */
+  public String getUzytkownicyid(Integer id) {
+    return fetchDatauid(UZYTKOWNIK, "id", Integer.toString(id));
+  }
+
+  /**
    * Logowanie użytkownika po nazwie i haśle.
    *
    * @param login1   nazwa użytkownika
