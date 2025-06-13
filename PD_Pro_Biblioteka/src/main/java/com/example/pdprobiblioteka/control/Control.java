@@ -437,6 +437,29 @@ public class Control {
     return supabaseService.putResetpasswordbyemail(email);
   }
 
+  /**
+   * Resetuje 2FA użytkownika na podstawie e-maila.
+   *
+   * @param email adres e-mail użytkownika
+   * @return JSON z wynikiem operacji
+   */
+  @PutMapping("/uzytkownicy/2fa/{email}")
+  public String update2faUzytkownik(@PathVariable String email) {
+    return supabaseService.putResetTotpbyemail(email);
+  }
+
+  /**
+   * Potwierdza usunięcie TOTP z konta użytkownika.
+   *
+   * @param code kod potrzebny do resetu
+   * @return JSON z wynikiem operacji
+   */
+  @PutMapping("/uzytkownicy/2fa/confirm/{code}/{email}")
+  public String update2faUzytkownikConfirm(@PathVariable String code,
+      @PathVariable String email) {
+    return supabaseService.putResetTotpConfirm(code, email);
+  }
+
 
   /**
    * Logowanie użytkownika.

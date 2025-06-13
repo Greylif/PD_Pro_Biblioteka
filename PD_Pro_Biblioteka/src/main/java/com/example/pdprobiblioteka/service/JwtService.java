@@ -95,7 +95,7 @@ public class JwtService {
         .setSubject(userDetails.getUsername())
         .claim("role", role)
         .claim("userId", userId)
-        .claim("isAdmin", isAdmin)
+        //.claim("isAdmin", isAdmin) Chyba można usunąć
         .setIssuedAt(now)
         .setExpiration(expiryDate)
         .signWith(SignatureAlgorithm.HS256, secretKey)

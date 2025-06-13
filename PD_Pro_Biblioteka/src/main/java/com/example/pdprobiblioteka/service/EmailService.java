@@ -157,6 +157,46 @@ public class EmailService {
 
 
   /**
+   * Generuje nowe hasło, wysyła je użytkownikowi e-mailem i aktualizuje je w bazie danych.
+   *
+   * @param email adres e-mail użytkownika
+   * @throws EmailSendException          w przypadku błędu wysyłki wiadomości
+   * @throws SupabaseConnectionException w przypadku błędu połączenia z bazą Supabase
+   */
+  public void sendTotpCode(String email) {
+    SecureRandom random = new SecureRandom();
+    StringBuilder code = new StringBuilder();
+
+    for (int i = 0; i < 12; i++) {
+      code.append(CHARS.charAt(random.nextInt(CHARS.length())));
+    }
+
+    try {
+      sendEmail(email, "Library 2FA", "Your code for TOTP removal is: " + code);
+    } catch (MessagingException e) {
+      throw new EmailSendException("Failed to send code", e);
+    }
+
+    Map<String, Object> body = new HashMap<>();
+    body.put("reset_code", code.toString());
+
+    try {
+      webClient.patch()
+          .uri(uriBuilder -> uriBuilder.path("/" + "Uzytkownik")
+              .queryParam(EMAIL, "eq." + email).build())
+          .contentType(MediaType.APPLICATION_JSON)
+          .bodyValue(body)
+          .retrieve()
+          .bodyToMono(String.class)
+          .block();
+    } catch (Exception e) {
+      throw new SupabaseConnectionException("Failed to update to table Email" + ": ", e);
+    }
+
+  }
+
+
+  /**
    * Pobiera dane wypożyczeń i łączy je z adresami e-mail oraz tytułami książek.
    *
    * @return tablica JSON zawierająca dane do wysyłki e-maili

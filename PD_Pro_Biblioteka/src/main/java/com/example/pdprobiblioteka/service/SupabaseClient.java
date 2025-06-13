@@ -214,6 +214,70 @@ public class SupabaseClient {
     return request;
   }
 
+  /**
+   * Wysyła e-mail do użytkownika z kodem pozwalającym na reset TOTP, jeżeli adres istnieje w
+   * bazie.
+   *
+   * @param email adres e-mail użytkownika
+   * @return wynik operacji w formacie JSON lub komunikat błędu
+   */
+  public String putResetTotpbyemail(String email) {
+    String request = fetchDatauid(UZYTKOWNIK, EMAIL, email);
+
+    if (request == null) {
+      return "Error while sending 2FA reset code, null request";
+    }
+
+    try {
+      if (!request.equals("[]")) {
+        emailService.sendTotpCode(email);
+      }
+    } catch (EmailSendException e) {
+      return "Error while sending new password";
+    }
+
+    return request;
+  }
+
+  /**
+   * Potwierdza reset TOTP na podstawie emaila oraz kodu
+   *
+   * @param email adres e-mail użytkownika
+   * @param code kod do resetu TOTP
+   * @return wynik operacji w formacie JSON lub komunikat błędu
+   */
+  public String putResetTotpConfirm(String code, String email) {
+    String request = fetchDatauid(UZYTKOWNIK, EMAIL, email);
+
+    if (request == null) {
+      return "Error while confirming 2FA reset, null request";
+    }
+
+    Map<String, Object> body = new HashMap<>();
+    body.put(MFA_ENABLED, false);
+    body.put(MFA_SECRET, null);
+    body.put("reset_code", null);
+
+    try {
+      webClient.patch()
+          .uri(uriBuilder -> uriBuilder
+              .path("/" + UZYTKOWNIK)
+              .queryParam(EMAIL, "eq." + email)
+              .queryParam("reset_code", "eq." + code)
+              .build())
+          .contentType(MediaType.APPLICATION_JSON)
+          .bodyValue(body)
+          .retrieve()
+          .bodyToMono(String.class)
+          .block();
+    } catch (Exception e) {
+      throw new SupabaseConnectionException("Failed to update to table Email: ", e);
+    }
+
+    return request;
+
+  }
+
 
   /**
    * Pobiera dane administratora na podstawie identyfikatora.
@@ -836,8 +900,8 @@ public class SupabaseClient {
    * Pobiera książki oraz autorów spełniających przekazane warunki i filtruje książki, których
    * autorzy są zgodni z wynikami filtrowania.
    *
-   * @param kstatement warunek zapytania dla książek
-   * @param astatement warunek zapytania dla autorów.
+   * @param kstatement    warunek zapytania dla książek
+   * @param astatement    warunek zapytania dla autorów.
    * @param placstatement warunek zapytania dla id placowki
    * @return przefiltrowana lista książek w formacie JSON jako String.
    */
@@ -873,7 +937,7 @@ public class SupabaseClient {
   }
 
   /**
-   *  Budowanie listy autorów.
+   * Budowanie listy autorów.
    *
    * @param autorzyData dane JSON zawierające listę autorów.
    * @return lista autorów.
@@ -899,8 +963,8 @@ public class SupabaseClient {
   /**
    * Filtruje książki na podstawie listy autorów.
    *
-   * @param ksiazkiData dane książek w formacie JSON.
-   * @param autorzyLista    lista dopuszczalnych autorów.
+   * @param ksiazkiData  dane książek w formacie JSON.
+   * @param autorzyLista lista dopuszczalnych autorów.
    * @return przefiltrowana lista książek w formacie JSON.
    */
   private String filterKsiazkiByAutor(String ksiazkiData, List<Autorzy> autorzyLista) {
