@@ -680,7 +680,8 @@ public class SupabaseClient {
       data.put(NAZWA_UZYTKOWNIKA, uzytkownik.getNazwaUzytkownika());
     }
     if (uzytkownik.getHaslo() != null) {
-      data.put(HASLO, uzytkownik.getHaslo());
+      String hashedPassword = passwordEncoder.encode(uzytkownik.getHaslo());
+      data.put(HASLO, hashedPassword);
     }
     if (uzytkownik.getEmail() != null) {
       data.put(EMAIL, uzytkownik.getEmail());
@@ -717,7 +718,8 @@ public class SupabaseClient {
       data.put(NAZWA_UZYTKOWNIKA, admin.getNazwaUzytkownika());
     }
     if (admin.getHaslo() != null) {
-      data.put(HASLO, admin.getHaslo());
+      String hashedPassword = passwordEncoder.encode(admin.getHaslo());
+      data.put(HASLO, hashedPassword);
     }
     if (admin.getIdplacowki() != null) {
       data.put(ID_PLACOWKI, admin.getIdplacowki());
