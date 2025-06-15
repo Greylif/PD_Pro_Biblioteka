@@ -1293,7 +1293,7 @@ public class SupabaseClient {
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
             .path(SLADMIN)
-            .queryParam("nazwa_uzytkownika", "eq." + userId)
+            .queryParam("id", "eq." + userId)
             .build())
         .bodyValue(Map.of(MFA_SECRET, secret))
         .retrieve()
@@ -1311,7 +1311,7 @@ public class SupabaseClient {
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
             .path(SLADMIN)
-            .queryParam("nazwa_uzytkownika", "eq." + userId)
+            .queryParam("id", "eq." + userId)
             .build())
         .bodyValue(Map.of(MFA_ENABLED, enabled))
         .retrieve()

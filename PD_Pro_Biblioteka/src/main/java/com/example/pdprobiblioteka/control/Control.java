@@ -432,7 +432,7 @@ public class Control {
       }
     }
     return supabaseService.updateUzytkownik(
-        new Uzytkownik(id, imie, nazwisko, dataUrodzenia, nazwaUzytkownika, haslo, email,
+        new Uzytkownik(id, imie, nazwisko, dataUrodzenia, haslo, nazwaUzytkownika, email,
             zablokowany, mfaEnabled, mfaSecret, "USER"));
   }
 
