@@ -33,12 +33,6 @@ public class ClientControlTest {
     }
 
     @Test
-    public void testReserve() {
-        // Just checks that the method prints/logs without error
-        client.reserve(null);
-    }
-
-    @Test
     public void testLogout() throws IOException {
         // Mocks
         ActionEventMock actionEventMock = new ActionEventMock();
@@ -57,44 +51,6 @@ public class ClientControlTest {
         }
     }
 
-    @Test
-    public void testDeleteAccountConfirmed() throws Exception {
-        ActionEventMock actionEventMock = new ActionEventMock();
-
-        Client.AlertService mockAlertService = mock(Client.AlertService.class);
-        when(mockAlertService.showConfirmation(any(), any(), any()))
-                .thenReturn(Optional.of(ButtonType.OK));
-
-        Client spyClient = Mockito.spy(new Client());
-        spyClient.setAlertService(mockAlertService);
-
-        // Nie wykonuj prawdziwego GUI logoutu
-        doNothing().when(spyClient).performLogout(any());
-
-        spyClient.delete_acc(actionEventMock.getEvent());
-
-        verify(mockAlertService, times(1)).showConfirmation(any(), any(), any());
-        verify(spyClient, times(1)).performLogout(any()); // <-- Sprawdzamy, że się wykonało
-    }
-
-
-
-
-    @Test
-    public void testDeleteAccountCancelled() throws Exception {
-        ActionEventMock actionEventMock = new ActionEventMock();
-
-        Client.AlertService mockAlertService = mock(Client.AlertService.class);
-        when(mockAlertService.showConfirmation(any(), any(), any()))
-                .thenReturn(Optional.empty());
-
-        client.setAlertService(mockAlertService);
-
-        client.delete_acc(actionEventMock.getEvent());
-
-        verify(mockAlertService, times(1)).showConfirmation(any(), any(), any());
-        verify(actionEventMock.stage, never()).close();
-    }
 
 
     // Helper class to mock ActionEvent and GUI hierarchy

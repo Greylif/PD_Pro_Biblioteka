@@ -1,5 +1,8 @@
 package com.example.pd_pro_biblioteka_client.model;
 
+import lombok.Data;
+
+@Data
 public class TOTPRequest {
     private String username;
     private Integer totp; // może być null
@@ -9,4 +12,5 @@ public class TOTPRequest {
         this.username = username;
         this.totp = twoFA;
     }
+
 }

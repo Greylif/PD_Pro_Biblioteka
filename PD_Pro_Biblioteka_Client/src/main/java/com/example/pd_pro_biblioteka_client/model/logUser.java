@@ -48,6 +48,10 @@ public class logUser {
         userToken = token;
     }
 
+    public static void setUserIdStr(String token) {
+        userIdStr = token;
+    }
+
 
     public static void clearUser() {
         userToken = null;

@@ -68,6 +68,4 @@ public class Ksiazka {
     public BooleanProperty RezerwacjaProperty() { return Rezerwacja; }
     public BooleanProperty WypozyczenieProperty() { return Wypozyczenie; }
 
-
-
 }

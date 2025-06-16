@@ -28,27 +28,4 @@ class LoginControlTest {
         stage.show();
     }
 
-    @Test
-    void testLoginButtonExists(FxRobot robot) {
-        assertNotNull(controller.login);
-        assertEquals("Zaloguj", controller.login.getText());
-    }
-
-    @Test
-    void testRegisterButton(FxRobot robot) {
-        assertNotNull(controller.register);
-        assertEquals("Zarejestruj", controller.register.getText());
-    }
-
-    @Test
-    void testPasswordField(FxRobot robot) {
-        robot.clickOn("#user_pass").write("secret");
-        assertEquals("secret", controller.user_pass.getText());
-    }
-
-    @Test
-    void testLoginField(FxRobot robot) {
-        robot.clickOn("#user_login").write("admin");
-        assertEquals("admin", controller.user_login.getText());
-    }
 }

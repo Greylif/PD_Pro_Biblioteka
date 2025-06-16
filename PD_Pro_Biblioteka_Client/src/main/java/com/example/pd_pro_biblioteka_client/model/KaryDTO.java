@@ -13,6 +13,4 @@ public class KaryDTO {
     public String Czy_Zaplacono;
     public int id_uzytkownika;
     public String opis;
-
-
 }

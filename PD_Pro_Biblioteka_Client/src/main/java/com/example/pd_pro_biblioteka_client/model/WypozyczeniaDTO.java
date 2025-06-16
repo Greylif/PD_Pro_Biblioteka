@@ -19,7 +19,4 @@ public class WypozyczeniaDTO {
     public int id_ksiazki;
     public int id_uzytkownika;
 
-
-    public WypozyczeniaDTO(int i, String date, String date1, String date2, int i1, int i2) {
-    }
 }

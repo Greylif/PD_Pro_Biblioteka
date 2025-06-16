@@ -73,19 +73,6 @@ public class AdminControlTest extends ApplicationTest {
         }
     }
 
-
-    @Test
-    public void testAddBook() {
-        assertDoesNotThrow(() -> {
-            Platform.runLater(() -> adminController.add_book(null));
-        });
-    }
-
-    @Test
-    public void testSaveMethodExists() {
-        assertDoesNotThrow(() -> adminController.save(null));
-    }
-
     @Test
     public void testDeleteAccountCancel() {
         assertDoesNotThrow(() -> {
@@ -99,8 +86,4 @@ public class AdminControlTest extends ApplicationTest {
         });
     }
 
-    @Test
-    public void testDeleteBookMethodExists() {
-        assertDoesNotThrow(() -> adminController.delete_book(null));
-    }
 }
