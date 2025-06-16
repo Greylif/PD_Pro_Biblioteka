@@ -24,7 +24,6 @@
                 <VBox alignment="BOTTOM_RIGHT" spacing="30">
                     <Button fx:id="borrow_button" onAction="#borrow" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Wypożycz książkę" />
                     <Button fx:id="add_button" onAction="#add_book" prefHeight="35.0" prefWidth="109.0" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj" />
-                    <Button fx:id="delete_button" onAction="#delete_book" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Usuń książki" />
                 </VBox>
             </HBox>
         </Tab>
@@ -129,9 +128,11 @@
                 </HBox>
                 <Region prefHeight="20" />
                 <HBox spacing="10">
+                    <Button fx:id="2FA_button" onAction="#on2FA" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Włącz składnik 2-etapowy" />
+                    <Region prefHeight="20" />
                     <Button fx:id="save_button" onAction="#save" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Zapisz zmiany" />
                     <Region prefHeight="20" />
-                    <Button fx:id="del_button" onAction="#delete_acc" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Usuń konto" />
+<!--                <Button fx:id="del_button" onAction="#delete_acc" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Usuń konto" />-->
                 </HBox>
             </VBox>
         </Tab>

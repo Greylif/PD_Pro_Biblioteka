@@ -5,7 +5,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.pd_pro_biblioteka_client.controller.addbook_modal"
+      fx:controller="com.example.pd_pro_biblioteka_client.controller.Addbookmodal"
       prefWidth="250" prefHeight="150" alignment="CENTER" spacing="20"
       style="-fx-padding: 20; -fx-background-color: #726C6C;">
 

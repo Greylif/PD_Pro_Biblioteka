@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -66,5 +67,7 @@ public class Ksiazka {
     public IntegerProperty idPlacowkiProperty() { return idPlacowki; }
     public BooleanProperty RezerwacjaProperty() { return Rezerwacja; }
     public BooleanProperty WypozyczenieProperty() { return Wypozyczenie; }
+
+
 
 }

@@ -19,28 +19,28 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class Register {
 
-    public TextField user_name;
-    public TextField user_surname;
-    public DatePicker user_date;
-    public TextField user_email;
-    public TextField user_login;
-    public TextField user_password;
-    public Button register;
+    @FXML private TextField user_name;
+    @FXML private TextField user_surname;
+    @FXML private DatePicker user_date;
+    @FXML private TextField user_email;
+    @FXML private TextField user_login;
+    @FXML private TextField user_password;
+    private static final Logger logger = Logger.getLogger(Register.class.getName());
 
     @FXML
     public void reg_act(javafx.event.ActionEvent actionEvent) {
-        System.out.println("Kliknięto REGISTER w GUI");
-
         try {
+            @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
 
             LocalDate selectedDate = user_date.getValue();
             String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            System.out.println(formattedDate);
 
             // Tworzymy dane formularza
             String form = "imie=" + URLEncoder.encode(user_name.getText(), StandardCharsets.UTF_8) +
@@ -60,11 +60,9 @@ public class Register {
             // Wysyłamy request
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Odpowiedź serwera: " + response.statusCode());
-            System.out.println("Tresc odpowiedzi: " + response.body());
 
             if(response.statusCode() == 200) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/register_popup.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/donePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
@@ -77,7 +75,7 @@ public class Register {
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.close();}
             else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/register_popup_1.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
@@ -92,7 +90,8 @@ public class Register {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }

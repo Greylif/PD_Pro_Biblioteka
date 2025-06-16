@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      fx:controller="com.example.pd_pro_biblioteka_client.controller.TotpRestart"
+      alignment="CENTER"
+      spacing="20"
+      prefWidth="400.0"
+      prefHeight="300.0"
+      style="-fx-background-color: #726C6C; -fx-padding: 30;">
+
+    <Label text="Podaj kod z E-Maila:" style="-fx-font-size: 20px; -fx-text-fill: #FFFFFF;"/>
+
+    <TextField fx:id="codeField" promptText="Np. 123456"
+               style="-fx-font-size: 18px;"/>
+
+    <Button text="Zatwierdź"
+            fx:id="submitButton"
+            onAction="#onClick"
+            style="-fx-font-size: 16px; -fx-background-radius: 10px; -fx-border-radius: 10px;
+                   -fx-padding: 10px 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5"/>
+</VBox>

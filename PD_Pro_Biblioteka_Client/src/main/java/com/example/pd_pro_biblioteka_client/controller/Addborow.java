@@ -1,5 +1,6 @@
 package com.example.pd_pro_biblioteka_client.controller;
 
+import com.example.pd_pro_biblioteka_client.model.logAdmin;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -20,50 +22,50 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class addPenalty {
+@Component
+public class Addborow {
+    private static final Logger logger = Logger.getLogger(Addborow.class.getName());
     @FXML
-    private TextField pen_desc;
+    private TextField borrowUserID;
     @FXML
-    private Button p_add;
+    private TextField borrowBookID;
     @FXML
-    private TextField userID;
+    private DatePicker borrowReturnDate;
     @FXML
-    private TextField userPen;
-    @FXML
-    private DatePicker pen_date;
+    private Button b_add;
 
+    @FXML
     public void button_act(ActionEvent actionEvent) {
         try {
+            @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
 
-            LocalDate selectedDate = pen_date.getValue();
+            LocalDate selectedDate = borrowReturnDate.getValue();
             String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             String formattedToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
             // Tworzymy dane formularza
-            String form = "kwota=" + URLEncoder.encode(userPen.getText(), StandardCharsets.UTF_8) +
-                    "&dataWydaniaKary=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8) +
-                    "&terminZaplaty=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8) +
-                    "&idUzytkownika=" + URLEncoder.encode(userID.getText(), StandardCharsets.UTF_8)+
-                    "&opis=" + URLEncoder.encode(pen_desc.getText(), StandardCharsets.UTF_8);
-
-            System.out.println(form);
+            String form = "dataWypozyczenia=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8) +
+                    "&terminOddania=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8) +
+                    "&idKsiazki=" + URLEncoder.encode(borrowBookID.getText(), StandardCharsets.UTF_8)+
+                    "&idUzytkownika=" + URLEncoder.encode(borrowUserID.getText(), StandardCharsets.UTF_8);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/library/kary"))
+                    .uri(URI.create("http://localhost:8080/library/wypozyczenia"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
                     .POST(HttpRequest.BodyPublishers.ofString(form))
                     .build();
 
             // Wysyłamy request
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Odpowiedź serwera: " + response.statusCode());
-            System.out.println("Tresc odpowiedzi: " + response.body());
 
             if(response.statusCode() == 200) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/penalty_popup.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/donePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
@@ -75,7 +77,7 @@ public class addPenalty {
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.close();}
             else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/penalty_popup_1.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
@@ -89,11 +91,9 @@ public class addPenalty {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
-
-
-
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.close();
     }

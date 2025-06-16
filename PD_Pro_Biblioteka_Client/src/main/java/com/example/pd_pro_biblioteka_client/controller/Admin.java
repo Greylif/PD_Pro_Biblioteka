@@ -4,9 +4,7 @@ import com.example.pd_pro_biblioteka_client.model.*;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,30 +12,29 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class Admin {
     @FXML
@@ -46,6 +43,10 @@ public class Admin {
     private Button addPenaltyButton;
     @FXML
     private Button refr_button;
+    @FXML
+    private Button logg_button;
+    @FXML
+    private Button save_button;
     @FXML
     private CheckBox showPassword;
     @FXML
@@ -79,13 +80,9 @@ public class Admin {
     @FXML
     private TableColumn<Wypozyczenia, String> return_date;
     @FXML
-    private TableColumn place_name;
-    @FXML
-    private TableView borrowTable;
+    private TableView<Wypozyczenia> borrowTable;
     @FXML
     private TableColumn<Ksiazka, String> s_id;
-    @FXML
-    private TableColumn<Ksiazka,Boolean> s_select;
     @FXML
     private TableColumn<Ksiazka,String> s_genre;
     @FXML
@@ -98,8 +95,6 @@ public class Admin {
     private TableView<Ksiazka> searachTable;
     @FXML
     private TableColumn<Ksiazka,String> s_title;
-    @FXML
-    private Button logg_button;
     @FXML
     private TextField admin_name;
     @FXML
@@ -128,10 +123,8 @@ public class Admin {
     private TableColumn<Kary, String> p_userid;
     @FXML
     private TableColumn<Kary, String> p_date;
-    @FXML
-    private Button save_button;
-    @FXML
-    private Button del_button;
+
+    private static final Logger logger = Logger.getLogger(Admin.class.getName());
 
 
 
@@ -242,38 +235,40 @@ public class Admin {
 
 
     private void fetchAllData() {
+        @SuppressWarnings("java:S2095")
         HttpClient client = HttpClient.newHttpClient();
         Gson gson = new Gson();
 
         try {
             // Fetch wszystkie dane
             HttpResponse<String> ksiazkiResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/ksiazki")).GET().build(),
+                    HttpRequest.newBuilder()
+                            .uri(URI.create("http://localhost:8080/library/ksiazki")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KsiazkaDTO> ksiazkiDTOs = gson.fromJson(ksiazkiResponse.body(), new TypeToken<List<KsiazkaDTO>>(){}.getType());
 
 
             HttpResponse<String> autorzyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/autorzy")).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/autorzy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<AutorzyDTO> autorzyDTOs = gson.fromJson(autorzyResponse.body(), new TypeToken<List<AutorzyDTO>>(){}.getType());
 
             HttpResponse<String> wypoResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/wypozyczenia")).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/wypozyczenia")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<WypozyczeniaDTO> wypoDTOs = gson.fromJson(wypoResponse.body(), new TypeToken<List<WypozyczeniaDTO>>(){}.getType());
 
             HttpResponse<String> karyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/kary")).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/kary")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KaryDTO> karyDTOs = gson.fromJson(karyResponse.body(), new TypeToken<List<KaryDTO>>(){}.getType());
 
             HttpResponse<String> uzytkownicyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/uzytkownicy")).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/uzytkownicy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<UzytkownikDTO> uzytkownicyDTOs = gson.fromJson(uzytkownicyResponse.body(), new TypeToken<List<UzytkownikDTO>>(){}.getType());
@@ -361,7 +356,6 @@ public class Admin {
             List<Uzytkownik> uzytkownikList = new ArrayList<>();
 
             for (UzytkownikDTO dto : uzytkownicyDTOs) {
-                System.out.println(dto);
                 Uzytkownik uzytkownik = convertDtoToUzytkownik(dto);
 
                 uzytkownikList.add(uzytkownik);
@@ -374,7 +368,8 @@ public class Admin {
             Platform.runLater(() -> borrowTable.setItems(FXCollections.observableArrayList(wypozyczeniaList)));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -416,8 +411,8 @@ public class Admin {
                 bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
             }
 
-            System.out.println(bodyBuilder.toString());
 
+            @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -427,12 +422,11 @@ public class Admin {
                     .build();
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenAccept(response -> {
-                        System.out.println("Response: " + response.body());
-                    });
+                    .thenAccept(response -> {});
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -462,27 +456,27 @@ public class Admin {
 
 
             // Usuń ostatni "&" jeśli istnieje
-            if (bodyBuilder.length() > 0 && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
+            if (!bodyBuilder.isEmpty() && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
                 bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
             }
 
-            System.out.println(bodyBuilder.toString());
 
+            @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
                     .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
                     .build();
 
             client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                    .thenAccept(response -> {
-                        System.out.println("Response: " + response.body());
-                    });
+                    .thenAccept(response -> {});
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -546,17 +540,18 @@ public class Admin {
 
             Stage logStage = new Stage();
             logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-            logStage.setTitle("Logowanie");
             logStage.setScene(new Scene(logRoot));
             logStage.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
     public void logout(ActionEvent actionEvent) {
         try {
+            logAdmin.clearAdmin();
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.close();
 
@@ -570,14 +565,13 @@ public class Admin {
             logStage.show();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
-    public void add_book(ActionEvent actionEvent) {
+    public void add_book() {
         try {
-//            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-//            stage.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addbook_modal.fxml"));
             Parent logRoot = fxmlLoader.load();
             Stage logStage = new Stage();
@@ -586,11 +580,12 @@ public class Admin {
             logStage.setScene(new Scene(logRoot));
             logStage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
-    public void save(ActionEvent actionEvent) {
+    public void save() {
         // Odczytaj dane z pól
         String id = admin_id.getText();
         String imie = admin_name.getText();
@@ -606,7 +601,7 @@ public class Admin {
 
     private void sendAdminUpdate(String ID, String imie, String nazwisko, String login, String haslo, String locationId) {
         try {
-            String url = "http://localhost:8080/library/admini/" + Integer.parseInt(ID);
+            String url = "http://localhost:8080/library/admini/" + ID;
 
             String body = String.format(
                     "imie=%s&nazwisko=%s&login=%s&haslo=%s&locationId=%s",
@@ -620,20 +615,23 @@ public class Admin {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
                     .PUT(HttpRequest.BodyPublishers.ofString(body))
                     .build();
 
+            @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Odpowiedź serwera: " + response.body());
+            logger.info("Odpowiedź serwera: " + response.body());
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
-    public void delete_acc(ActionEvent actionEvent) throws IOException {
+    public void delete_acc(ActionEvent actionEvent) throws IOException, InterruptedException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Potwierdzenie");
         alert.setHeaderText("Czy jesteś pewny?");
@@ -641,30 +639,46 @@ public class Admin {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Tu wykonaj akcję po zatwierdzeniu
-            System.out.println("Użytkownik zatwierdził.");
 
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.close();
+            @SuppressWarnings("java:S2095")
+            HttpClient client = HttpClient.newHttpClient();
+            String url = "http://localhost:8080/library/admini/" + logAdmin.getAdmIdStr();
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-            Parent logRoot = fxmlLoader.load();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+                    .DELETE()
+                    .build();
 
-            Stage logStage = new Stage();
-            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-            logStage.setTitle("Logowanie");
-            logStage.setScene(new Scene(logRoot));
-            logStage.show();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() == 200){
+                logAdmin.clearAdmin();
+                logger.info("Użytkownik zatwierdził.");
+
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.close();
+
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+                Parent logRoot = fxmlLoader.load();
+
+                Stage logStage = new Stage();
+                logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+                logStage.setTitle("Logowanie");
+                logStage.setScene(new Scene(logRoot));
+                logStage.show();
+            }
+
+
         } else {
             // Anulowano
-            System.out.println("Użytkownik anulował.");
+            logger.info("Użytkownik anulował.");
         }
     }
 
-    public void delete_book(ActionEvent actionEvent) {
-    }
 
-    public void refresh(ActionEvent actionEvent) {
+    public void refresh() {
         fetchAllData();
     }
 
@@ -685,7 +699,7 @@ public class Admin {
         }
     }
 
-    public void AddPenalty(ActionEvent actionEvent) {
+    public void AddPenalty() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addPenalty.fxml"));
             Parent logRoot = fxmlLoader.load();
@@ -695,9 +709,24 @@ public class Admin {
             logStage.setScene(new Scene(logRoot));
             logStage.show();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 
 
+    public void on2FA() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/setup_totp.fxml"));
+            Parent logRoot = fxmlLoader.load();
+
+            Stage logStage = new Stage();
+            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            logStage.setTitle("Logowanie");
+            logStage.setScene(new Scene(logRoot));
+            logStage.show();
+        } catch (Exception e){
+            logger.log(Level.SEVERE, e.getMessage());
+        }
+    }
 }

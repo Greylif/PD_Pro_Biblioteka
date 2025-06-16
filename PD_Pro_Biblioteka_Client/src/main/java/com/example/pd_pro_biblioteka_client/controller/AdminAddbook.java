@@ -1,14 +1,12 @@
 package com.example.pd_pro_biblioteka_client.controller;
 
+import com.example.pd_pro_biblioteka_client.model.logAdmin;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Modality;
@@ -21,19 +19,20 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.function.UnaryOperator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Component
 public class AdminAddbook {
 
-    public TextField a_title;
-    public TextField a_genre;
-    public TextField a_relaseDate;
-    public Button add_button;
-    public TextField a_id_author;
-    public TextField a_id_plac;
+    @FXML private TextField a_title;
+    @FXML private TextField a_genre;
+    @FXML private TextField a_relaseDate;
+    @FXML private TextField a_id_author;
+    @FXML private TextField a_id_plac;
+    private static final Logger logger = Logger.getLogger(AdminAddbook.class.getName());
+
 
     @FXML
     public void initialize() {
@@ -54,6 +53,7 @@ public class AdminAddbook {
     public void add_act(ActionEvent actionEvent) {
 
         try {
+            @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
 
             // Tworzymy dane formularza
@@ -67,43 +67,41 @@ public class AdminAddbook {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:8080/library/ksiazki?"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
                     .POST(HttpRequest.BodyPublishers.ofString(form))
                     .build();
 
             // Wysyłamy request
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            System.out.println("Odpowiedź serwera: " + response.statusCode());
-            System.out.println("Tresc odpowiedzi: " + response.body());
 
             if(response.statusCode() == 200) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/add_bookpop.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/donePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setTitle("Dodaj");
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.showAndWait();
 
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 stage.close();}
             else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/add_bookpop_1.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/indonePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setTitle("Dodaj");
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.showAndWait();
 
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 }

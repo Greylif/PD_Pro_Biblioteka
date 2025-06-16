@@ -8,7 +8,12 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class addbook_modal {
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Addbookmodal {
+    private static final Logger logger = Logger.getLogger(Addbookmodal.class.getName());
+
     public void onDodajAutora(ActionEvent actionEvent) {
         try {
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -21,7 +26,7 @@ public class addbook_modal {
             logStage.setScene(new Scene(logRoot));
             logStage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -37,7 +42,7 @@ public class addbook_modal {
             logStage.setScene(new Scene(logRoot));
             logStage.show();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 }
