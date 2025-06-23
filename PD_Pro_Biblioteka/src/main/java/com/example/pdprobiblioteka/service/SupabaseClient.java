@@ -883,6 +883,30 @@ public class SupabaseClient {
   }
 
   /**
+   * Budowanie listy autorów.
+   *
+   * @param autorzyData dane JSON zawierające listę autorów.
+   * @return lista autorów.
+   */
+  private List<Autorzy> extractAutorIds(String autorzyData) {
+    List<Autorzy> autorzy = new ArrayList<>();
+    try {
+      JSONArray jsonArray = new JSONArray(autorzyData);
+      for (int i = 0; i < jsonArray.length(); i++) {
+        JSONObject autorJson = jsonArray.getJSONObject(i);
+        int id = autorJson.getInt("id");
+        String imie = autorJson.getString("Imie");
+        String nazwisko = autorJson.getString(NAZWISKO);
+        int rokUrodzenia = autorJson.getInt(ROK_URODZENIA);
+        autorzy.add(new Autorzy(id, imie, nazwisko, rokUrodzenia));
+      }
+    } catch (Exception e) {
+      throw new JsonFileException("Failed work on JSON ", e);
+    }
+    return autorzy;
+  }
+
+  /**
    * Pobiera dane z tabeli na podstawie określonego filtru, wykorzystywane do pobierania przez klucz
    * obcy.
    *
@@ -945,30 +969,6 @@ public class SupabaseClient {
     } catch (Exception e) {
       throw new SupabaseConnectionException("Failed to fetch filtered data: ", e);
     }
-  }
-
-  /**
-   * Budowanie listy autorów.
-   *
-   * @param autorzyData dane JSON zawierające listę autorów.
-   * @return lista autorów.
-   */
-  private List<Autorzy> extractAutorIds(String autorzyData) {
-    List<Autorzy> autorzy = new ArrayList<>();
-    try {
-      JSONArray jsonArray = new JSONArray(autorzyData);
-      for (int i = 0; i < jsonArray.length(); i++) {
-        JSONObject autorJson = jsonArray.getJSONObject(i);
-        int id = autorJson.getInt("id");
-        String imie = autorJson.getString("Imie");
-        String nazwisko = autorJson.getString(NAZWISKO);
-        int rokUrodzenia = autorJson.getInt(ROK_URODZENIA);
-        autorzy.add(new Autorzy(id, imie, nazwisko, rokUrodzenia));
-      }
-    } catch (Exception e) {
-      throw new JsonFileException("Failed work on JSON ", e);
-    }
-    return autorzy;
   }
 
   /**

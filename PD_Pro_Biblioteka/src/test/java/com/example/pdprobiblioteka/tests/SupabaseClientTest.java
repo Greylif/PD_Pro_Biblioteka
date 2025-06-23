@@ -1674,7 +1674,7 @@ class SupabaseClientTest {
       String ksiazkiResponse = "[{\"id\":1,\"Tytul\":\"Silmarillion\","
           + "\"Gatunek\":\"Fantasy\",\"Data_Wydania\":\"1977-09-15\","
           + "\"id_autora\":101,\"id_placowki\":201}]";
-      String autorzyResponse = "[{\"id\":101,\"Imie\":\"John\",\"Nazwisko\":\"Tolkien\"}]";
+      String autorzyResponse = "[{\"id\":101,\"Imie\":\"John\",\"Nazwisko\":\"Tolkien\", \"Rok_Urodzenia\":1892}]}]";
 
       when(webClient.get()).thenReturn(requestHeadersUriSpec);
 
@@ -1708,7 +1708,8 @@ class SupabaseClientTest {
       String ksiazkiResponse = "[{\"id\":1,\"Tytul\":\"Silmarillion\","
           + "\"Gatunek\":\"Fantasy\",\"Data_Wydania\":\"1977-09-15\","
           + "\"id_autora\":101,\"id_placowki\":201}]";
-      String autorzyResponse = "[{\"id\":102,\"Imie\":\"Andrzej\",\"Nazwisko\":\"Sapkowski\"}]";
+      String autorzyResponse = "[{\"id\":102,\"Imie\":\"John\",\"Nazwisko\":\"Tolkien\", \"Rok_Urodzenia\":1892}]";
+
 
       when(webClient.get()).thenReturn(requestHeadersUriSpec);
 
