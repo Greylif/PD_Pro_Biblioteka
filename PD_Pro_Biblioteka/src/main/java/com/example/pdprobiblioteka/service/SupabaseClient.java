@@ -1337,7 +1337,8 @@ public class SupabaseClient {
   }
 
   /**
-   * Sprawdzenie, czy dany token jest w black liscie. Tokeny po dacie unieważnienia są z niej usuwane.
+   * Sprawdzenie, czy dany token jest w black liscie.
+   * Tokeny po dacie unieważnienia są z niej usuwane.
    *
    * @param token token, który ma być sprawdzony, czy znajduje się w black liście
    * @return wartość boolean zależna od tego, czy token znajduje się w black liście
@@ -1360,13 +1361,6 @@ public class SupabaseClient {
   @Scheduled(fixedRate = 60 * 60 * 1000)
   public void cleanUpBlacklist() {
     Date now = new Date();
-    for(Object wpis : blacklist.entrySet()){
-      System.out.println(wpis);
-    }
     blacklist.entrySet().removeIf(entry -> entry.getValue().before(now));
-    for(Object wpis : blacklist.entrySet()){
-      System.out.println(wpis);
-    }
   }
-
 }
