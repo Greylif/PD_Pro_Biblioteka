@@ -85,7 +85,7 @@ public class JwtService {
     }
 
     long expirationMillis = isAdmin
-        ? 1000L * 60 * 60 * 12
+        ? 1000L * 60 * 60 * 10
         : 1000L * 60 * 60;
 
     Date now = new Date();
@@ -143,6 +143,27 @@ public class JwtService {
    */
   public String extractRole(String token) {
     return extractClaim(token, claims -> claims.get("role", String.class));
+  }
+
+
+  /**
+   * Dodanie tokenu do black listy.
+   *
+   * @param token unieważniany token
+   */
+  public void revokeToken(String token) {
+    Date expiry = extractExpiration(token);
+    supabaseClient.blacklistToken(token, expiry);
+  }
+
+  /**
+   * Sprawdzanie, czy token jest black liscie.
+   *
+   * @param token sprawdzany token
+   * @return wartość boolean, czy token jest w black liscie
+   */
+  public boolean isTokenRevoked(String token) {
+    return supabaseClient.isTokenBlacklisted(token);
   }
 
 }

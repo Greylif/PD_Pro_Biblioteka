@@ -68,6 +68,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.GET, "/library/autorzy").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/auth/setup-totp").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.POST, "/api/auth/confirm-totp").hasAnyRole(USER, ADMIN)
+            .requestMatchers(HttpMethod.POST, "/api/auth/logout").hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.PUT, LIBUSERID).hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.DELETE, LIBUSERID).hasAnyRole(USER, ADMIN)
             .requestMatchers(HttpMethod.GET, LIBUSERID).hasAnyRole(USER, ADMIN)

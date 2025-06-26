@@ -14,14 +14,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +36,7 @@ import org.springframework.web.reactive.function.client.WebClient;
  * itp. Zawiera również integrację z serwisem EmailService do wysyłania wiadomości e-mail.
  */
 @Service
+@EnableScheduling
 public class SupabaseClient {
 
   private static final String PLACOWKA = "Placowka";
@@ -72,6 +76,8 @@ public class SupabaseClient {
   private final EmailService emailService;
 
   private final PasswordEncoder passwordEncoder;
+
+  private final Map<String, Date> blacklist = new ConcurrentHashMap<>();
 
   /**
    * Tworzy nową instancję klienta Supabase.
@@ -240,10 +246,10 @@ public class SupabaseClient {
   }
 
   /**
-   * Potwierdza reset TOTP na podstawie emaila oraz kodu
+   * Potwierdza reset TOTP na podstawie emaila oraz kodu.
    *
    * @param email adres e-mail użytkownika
-   * @param code kod do resetu TOTP
+   * @param code  kod do resetu TOTP
    * @return wynik operacji w formacie JSON lub komunikat błędu
    */
   public String putResetTotpConfirm(String code, String email) {
@@ -1317,6 +1323,50 @@ public class SupabaseClient {
         .retrieve()
         .toBodilessEntity()
         .block();
+  }
+
+
+  /**
+   * Dodanie tokenu do black listy w celu jego unieważnienia.
+   *
+   * @param token token, który ma być unieważniony
+   * @param expirationDate data automatycznego unieważnienia tokenu
+   */
+  public void blacklistToken(String token, Date expirationDate) {
+    blacklist.put(token, expirationDate);
+  }
+
+  /**
+   * Sprawdzenie, czy dany token jest w black liscie. Tokeny po dacie unieważnienia są z niej usuwane.
+   *
+   * @param token token, który ma być sprawdzony, czy znajduje się w black liście
+   * @return wartość boolean zależna od tego, czy token znajduje się w black liście
+   */
+  public boolean isTokenBlacklisted(String token) {
+    Date expiry = blacklist.get(token);
+    if (expiry == null) {
+      return false;
+    }
+    if (expiry.before(new Date())) {
+      blacklist.remove(token);
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * Schedul czyszczacy co 1h black liste z tokenów, które i tak są przedawnione.
+   */
+  @Scheduled(fixedRate = 60 * 60 * 1000)
+  public void cleanUpBlacklist() {
+    Date now = new Date();
+    for(Object wpis : blacklist.entrySet()){
+      System.out.println(wpis);
+    }
+    blacklist.entrySet().removeIf(entry -> entry.getValue().before(now));
+    for(Object wpis : blacklist.entrySet()){
+      System.out.println(wpis);
+    }
   }
 
 }

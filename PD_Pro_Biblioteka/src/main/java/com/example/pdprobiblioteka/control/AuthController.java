@@ -9,6 +9,7 @@ import com.example.pdprobiblioteka.service.SupabaseAdminDetailsService;
 import com.example.pdprobiblioteka.service.SupabaseClient;
 import com.example.pdprobiblioteka.service.SupabaseUserDetailsService;
 import com.example.pdprobiblioteka.service.TotpService;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -252,5 +253,23 @@ public class AuthController {
 
     return ResponseEntity.ok("TOTP enabled successfully");
   }
+
+  /**
+   * Wylogowanie uzytkownika poprzez dodanie jego tokenu do black listy.
+   *
+   * @param request dane zapytania
+   * @return wiadomość o błędzie lub, potwierdzeniu poprawnego wylogowania
+   */
+  @PostMapping("/logout")
+  public ResponseEntity<Object> logout(HttpServletRequest request) {
+    final String authHeader = request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      return ResponseEntity.badRequest().body("Missing token");
+    }
+    String token = authHeader.substring(7);
+    jwtService.revokeToken(token);
+    return ResponseEntity.ok("Token revoked");
+  }
+
 
 }
