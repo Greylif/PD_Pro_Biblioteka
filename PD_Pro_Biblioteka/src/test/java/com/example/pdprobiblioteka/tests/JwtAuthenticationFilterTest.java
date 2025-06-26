@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import com.example.pdprobiblioteka.service.JwtService;
@@ -179,6 +180,6 @@ class JwtAuthenticationFilterTest {
     jwtFilter.invokeDoFilter(request, response, filterChain);
 
     assertNull(SecurityContextHolder.getContext().getAuthentication());
-    verify(filterChain).doFilter(request, response);
+    verifyNoInteractions(filterChain);
   }
 }
