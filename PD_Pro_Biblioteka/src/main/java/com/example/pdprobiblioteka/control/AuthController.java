@@ -44,6 +44,8 @@ public class AuthController {
    * @param jwtService            serwis obsługujący generowanie i walidację tokenów JWT.
    * @param userDetailsService    serwis odpowiedzialny za ładowanie danych użytkownika.
    * @param adminDetailsService   serwis odpowiedzialny za ładowanie danych admina.
+   * @param supabaseClient        serwis odpowiedzialny za połączenia z Supabase
+   * @param totpService           serwis odpowiadający za 2FA
    */
   public AuthController(AuthenticationManager authenticationManager, JwtService jwtService,
       SupabaseUserDetailsService userDetailsService,

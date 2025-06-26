@@ -406,6 +406,8 @@ public class Control {
    * @param email            e-mail (opcjonalny)
    * @param zablokowany      czy zablokowany (opcjonalny)
    * @param mfaEnabled       MFA czy włączone (opcjonalne)
+   * @param mfaSecret        sekret MFA (opcjonalny)
+   * @param authHeader       otrzymany nagłówek zawierający token autoryzacji
    * @return JSON z wynikiem operacji
    */
   @PutMapping("/uzytkownicy/{id}")
