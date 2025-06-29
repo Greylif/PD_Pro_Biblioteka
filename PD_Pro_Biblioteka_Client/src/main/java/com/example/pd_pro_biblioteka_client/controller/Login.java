@@ -58,7 +58,7 @@ public class Login {
             String requestBody = gson.toJson(loginData);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/auth/login"))
+                    .uri(URI.create("https://localhost:8443/api/auth/login"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
@@ -76,7 +76,7 @@ public class Login {
                 if(jsonObject.get("token") != null) {
                     JWTdecoder.decodeToLogUser(String.valueOf(jsonObject.get("token")));
 
-                     String url = "http://localhost:8080/library/uzytkownicy/" + logUser.getUserIdStr();
+                     String url = "http://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
 
                      HttpRequest requestClient = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -175,7 +175,7 @@ public class Login {
             String requestBody = gson.toJson(loginData);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/auth/loginadmin"))
+                    .uri(URI.create("https://localhost:8443/api/auth/loginadmin"))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
@@ -191,7 +191,7 @@ public class Login {
                 if (jsonObject.get("token") != null) {
                     JWTdecoder.decodeToLogAdm(String.valueOf(jsonObject.get("token")));
 
-                    String url = "http://localhost:8080/library/admini/" + logAdmin.getAdmIdStr();
+                    String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
 
                     HttpRequest requestClient = HttpRequest.newBuilder()
                             .uri(URI.create(url))

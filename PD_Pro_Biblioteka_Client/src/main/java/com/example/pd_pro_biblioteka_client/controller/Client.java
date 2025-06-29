@@ -227,7 +227,7 @@ public class Client {
 
     private void sendUserUpdate(String ID, String imie, String nazwisko, String login, String haslo) {
         try {
-            String url = "http://localhost:8080/library/uzytkownicy/" + ID + "?";
+            String url = "https://localhost:8443/library/uzytkownicy/" + ID + "?";
 
             String body = String.format(
                     "imie=%s&nazwisko=%s&nazwaUzytkownika=%s&haslo=%s",
@@ -265,7 +265,7 @@ public class Client {
 
             @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
-            String url = "http://localhost:8080/library/uzytkownicy/" + logUser.getUserIdStr();
+            String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
@@ -324,25 +324,25 @@ public class Client {
         try {
             HttpResponse<String> ksiazkiResponse = client.send(
                     HttpRequest.newBuilder()
-                            .uri(URI.create("http://localhost:8080/library/ksiazki")).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                            .uri(URI.create("https://localhost:8443/library/ksiazki")).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KsiazkaDTO> ksiazkiDTOs = gson.fromJson(ksiazkiResponse.body(), new TypeToken<List<KsiazkaDTO>>(){}.getType());
 
             HttpResponse<String> autorzyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/autorzy")).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/autorzy")).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<AutorzyDTO> autorzyDTOs = gson.fromJson(autorzyResponse.body(), new TypeToken<List<AutorzyDTO>>(){}.getType());
 
             HttpResponse<String> wypoResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/wypozyczenia/" + Integer.parseInt(logUser.userIdStr))).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/wypozyczenia/" + Integer.parseInt(logUser.userIdStr))).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<WypozyczeniaDTO> wypoDTOs = gson.fromJson(wypoResponse.body(), new TypeToken<List<WypozyczeniaDTO>>(){}.getType());
 
             HttpResponse<String> karyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/kary/" + Integer.parseInt(logUser.userIdStr))).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/kary/" + Integer.parseInt(logUser.userIdStr))).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KaryDTO> karyDTOs = gson.fromJson(karyResponse.body(), new TypeToken<List<KaryDTO>>(){}.getType());
@@ -502,7 +502,7 @@ public class Client {
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/library/ksiazki/filtr?" + form))
+                    .uri(URI.create("https://localhost:8443/library/ksiazki/filtr?" + form))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Authorization", "Bearer " + logUser.getUserToken())
                     .GET()

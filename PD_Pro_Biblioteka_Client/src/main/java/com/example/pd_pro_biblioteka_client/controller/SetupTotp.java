@@ -59,14 +59,14 @@ public class SetupTotp {
                 loginData.put("username", u.getNazwaUzytkownika());
                 loginData.put("password", u.getHaslo());
                 header = "Bearer " + logUser.getUserToken();
-                URL = "http://localhost:8080/api/auth/setup-totp";
+                URL = "https://localhost:8443/api/auth/setup-totp";
             }
             else {
                 if (logAdmin.getAdmIdStr() != null && logAdmin.getAdminToken() != null) {
                     loginData.put("password", adm.getHaslo().get());
                     loginData.put("username", adm.getNazwa_Uzytkownika().get());
                     header = "Bearer " + logAdmin.getAdminToken();
-                    URL = "http://localhost:8080/api/auth/setup-totp/admin";
+                    URL = "https://localhost:8443/api/auth/setup-totp/admin";
                 }
             }
 
@@ -115,14 +115,14 @@ public class SetupTotp {
                 loginData.put("username", u.getNazwaUzytkownika());
                 loginData.put("code", Integer.parseInt(totpCodeField.getText()));
                 header = "Bearer " + logUser.getUserToken();
-                URL = "http://localhost:8080/api/auth/confirm-totp";
+                URL = "https://localhost:8443/api/auth/confirm-totp";
             }
             else {
                 if (logAdmin.getAdmIdStr() != null && logAdmin.getAdminToken() != null) {
                     loginData.put("username", adm.getNazwa_Uzytkownika().get());
                     loginData.put("code", Integer.parseInt(totpCodeField.getText()));
                     header = "Bearer " + logAdmin.getAdminToken();
-                    URL = "http://localhost:8080/api/auth/confirm-totp/admin";
+                    URL = "https://localhost:8443/api/auth/confirm-totp/admin";
                 }
             }
 

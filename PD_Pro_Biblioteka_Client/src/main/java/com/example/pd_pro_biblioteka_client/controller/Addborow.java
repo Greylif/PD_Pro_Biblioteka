@@ -54,7 +54,7 @@ public class Addborow {
                     "&idUzytkownika=" + URLEncoder.encode(borrowUserID.getText(), StandardCharsets.UTF_8);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/library/wypozyczenia"))
+                    .uri(URI.create("https://localhost:8443/library/wypozyczenia"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Authorization", "Bearer " + logAdmin.getAdminToken())
                     .POST(HttpRequest.BodyPublishers.ofString(form))

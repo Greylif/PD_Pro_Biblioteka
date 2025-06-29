@@ -35,7 +35,7 @@ public class Reminder {
             HttpClient client = HttpClient.newHttpClient();
             // Tworzymy request POST
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/library/uzytkownicy/passwordreset/" + user_email.getText()))
+                    .uri(URI.create("https://localhost:8443/library/uzytkownicy/passwordreset/" + user_email.getText()))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .PUT(HttpRequest.BodyPublishers.noBody())
                     .build();
@@ -85,7 +85,7 @@ public class Reminder {
             HttpClient client = HttpClient.newHttpClient();
             // Tworzymy request POST
             HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:8080/library/uzytkownicy/2fa/" + user_email.getText()))
+                .uri(URI.create("https://localhost:8443/library/uzytkownicy/2fa/" + user_email.getText()))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .PUT(HttpRequest.BodyPublishers.noBody())
                 .build();

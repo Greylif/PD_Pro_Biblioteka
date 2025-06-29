@@ -53,7 +53,7 @@ public class Addpenalty {
             logger.info(form);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/library/kary"))
+                    .uri(URI.create("https://localhost:8443/library/kary"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .header("Authorization", "Bearer " + logAdmin.getAdminToken())
                     .POST(HttpRequest.BodyPublishers.ofString(form))

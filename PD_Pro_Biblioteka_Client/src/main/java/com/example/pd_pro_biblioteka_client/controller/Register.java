@@ -52,7 +52,7 @@ public class Register {
 
             // Tworzymy request POST
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/library/uzytkownicy"))
+                    .uri(URI.create("https://localhost:8443/library/uzytkownicy"))
                     .header("Content-Type", "application/x-www-form-urlencoded")
                     .POST(HttpRequest.BodyPublishers.ofString(form))
                     .build();

@@ -243,32 +243,32 @@ public class Admin {
             // Fetch wszystkie dane
             HttpResponse<String> ksiazkiResponse = client.send(
                     HttpRequest.newBuilder()
-                            .uri(URI.create("http://localhost:8080/library/ksiazki")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                            .uri(URI.create("https://localhost:8443/library/ksiazki")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KsiazkaDTO> ksiazkiDTOs = gson.fromJson(ksiazkiResponse.body(), new TypeToken<List<KsiazkaDTO>>(){}.getType());
 
 
             HttpResponse<String> autorzyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/autorzy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/autorzy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<AutorzyDTO> autorzyDTOs = gson.fromJson(autorzyResponse.body(), new TypeToken<List<AutorzyDTO>>(){}.getType());
 
             HttpResponse<String> wypoResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/wypozyczenia")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/wypozyczenia")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<WypozyczeniaDTO> wypoDTOs = gson.fromJson(wypoResponse.body(), new TypeToken<List<WypozyczeniaDTO>>(){}.getType());
 
             HttpResponse<String> karyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/kary")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/kary")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KaryDTO> karyDTOs = gson.fromJson(karyResponse.body(), new TypeToken<List<KaryDTO>>(){}.getType());
 
             HttpResponse<String> uzytkownicyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("http://localhost:8080/library/uzytkownicy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/uzytkownicy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<UzytkownikDTO> uzytkownicyDTOs = gson.fromJson(uzytkownicyResponse.body(), new TypeToken<List<UzytkownikDTO>>(){}.getType());
@@ -375,7 +375,7 @@ public class Admin {
 
     public void sendUpdate(Uzytkownik user) {
         try {
-            String url = String.format("http://localhost:8080/library/uzytkownicy/%d", user.getId());
+            String url = String.format("https://localhost:8443/library/uzytkownicy/%d", user.getId());
 
             StringBuilder bodyBuilder = new StringBuilder();
 
@@ -432,7 +432,7 @@ public class Admin {
 
     private void sendUpdateKary(Kary kary) {
         try {
-            String url = String.format("http://localhost:8080/library/kary/%d", kary.getId());
+            String url = String.format("https://localhost:8443/library/kary/%d", kary.getId());
 
             StringBuilder bodyBuilder = new StringBuilder();
 
@@ -606,7 +606,7 @@ public class Admin {
 
     private void sendAdminUpdate(String ID, String imie, String nazwisko, String login, String haslo, String locationId) {
         try {
-            String url = "http://localhost:8080/library/admini/" + ID;
+            String url = "https://localhost:8443/library/admini/" + ID;
 
             String body = String.format(
                     "imie=%s&nazwisko=%s&login=%s&haslo=%s&locationId=%s",
@@ -647,7 +647,7 @@ public class Admin {
 
             @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
-            String url = "http://localhost:8080/library/admini/" + logAdmin.getAdmIdStr();
+            String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
