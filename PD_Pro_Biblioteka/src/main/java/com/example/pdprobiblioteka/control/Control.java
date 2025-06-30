@@ -473,32 +473,6 @@ public class Control {
     return supabaseService.putResetTotpConfirm(code, email);
   }
 
-
-  /**
-   * Logowanie użytkownika.
-   *
-   * @param login1   login użytkownika
-   * @param password hasło
-   * @return JSON z danymi użytkownika
-   */
-  @GetMapping("/uzytkownicy/{login1}/{password}")
-  public String getUzytkownicyLogin(@PathVariable String login1, @PathVariable String password) {
-    return supabaseService.getUzytkownicyLogin(login1, password);
-  }
-
-
-  /**
-   * Logowanie administratora.
-   *
-   * @param login1   login administratora
-   * @param password hasło
-   * @return JSON z danymi administratora
-   */
-  @GetMapping("/admini/{login1}/{password}")
-  public String getAdminLogin(@PathVariable String login1, @PathVariable String password) {
-    return supabaseService.getAdminLogin(login1, password);
-  }
-
   /**
    * Zwraca listę administratorów.
    *

@@ -313,20 +313,6 @@ public class ControlTest {
     }
 
     @Test
-    @DisplayName("Pobieranie uzytkownika do logowania")
-    void getUzytkowniklogin() {
-      Mockito.when(supabaseClient.getUzytkownicyLogin(Mockito.anyString(), Mockito.anyString()))
-          .thenReturn("Uzytkownik");
-
-      try {
-        mockMvc.perform(get("/library/uzytkownicy/login/password"))
-            .andExpect(status().isOk());
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    @Test
     @DisplayName("Pobieranie listy wyporzyczen")
     void getWypozyczenia() {
       Mockito.when(supabaseClient.getWypozyczenia()).thenReturn("Wyporzyczenie");
@@ -352,18 +338,6 @@ public class ControlTest {
       }
     }
 
-    @Test
-    @DisplayName("Logowanie admina")
-    void getAdminLogin() {
-      Mockito.when(supabaseClient.getAdminLogin("login1", "password")).thenReturn("Admin Login");
-
-      try {
-        mockMvc.perform(get("/library/admini/login1/password"))
-            .andExpect(status().isOk());
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
 
   }
 

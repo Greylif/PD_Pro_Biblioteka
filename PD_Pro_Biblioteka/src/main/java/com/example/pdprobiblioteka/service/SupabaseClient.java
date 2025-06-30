@@ -373,29 +373,6 @@ public class SupabaseClient {
   }
 
   /**
-   * Logowanie użytkownika po nazwie i haśle.
-   *
-   * @param login1   nazwa użytkownika
-   * @param password hasło
-   * @return dane JSON użytkownika, jeśli dane logowania są poprawne
-   */
-  public String getUzytkownicyLogin(String login1, String password) {
-    return fetchDatalogin(UZYTKOWNIK, "*", login1, password);
-  }
-
-
-  /**
-   * Logowanie administratora po nazwie i haśle.
-   *
-   * @param login1   login administratora
-   * @param password hasło
-   * @return dane administratora, jeśli dane logowania są poprawne
-   */
-  public String getAdminLogin(String login1, String password) {
-    return fetchDatalogin(ADMIN, "*", login1, password);
-  }
-
-  /**
    * Sprawdzanie bezpieczenstwa przekazanej wartości w kontekście SQL injection wykorzystywana w
    * filtrowaniu książek.
    *
@@ -1018,46 +995,6 @@ public class SupabaseClient {
   }
 
   /**
-   * Pobiera dane użytkownika na podstawie loginu i hasła. Waliduje dane wejściowe pod kątem
-   * bezpieczeństwa.
-   *
-   * @param table        nazwa tabeli.
-   * @param columns      kolumny do pobrania.
-   * @param logindata    nazwa użytkownika.
-   * @param passworddata hasło.
-   * @return dane użytkownika w formacie JSON.
-   * @throws IllegalArgumentException  jeśli dane wejściowe są niebezpieczne.
-   * @throws InstanceNotFoundException jeśli użytkownik nie istnieje.
-   */
-  private String fetchDatalogin(String table, String columns, String logindata,
-      String passworddata) {
-    try {
-      if (!isSafe(logindata) || !isSafe(passworddata)) {
-        throw new IllegalArgumentException("Invalid login or password format.");
-      }
-      String login = webClient.get()
-          .uri(uriBuilder -> uriBuilder
-              .path("/" + table)
-              .queryParam(SELECT, columns)
-              .queryParam(NAZWA_UZYTKOWNIKA, "eq." + logindata)
-              .queryParam(HASLO, "eq." + passworddata)
-              .build())
-          .retrieve()
-          .bodyToMono(String.class)
-          .block();
-
-      if (login == null) {
-        throw new InstanceNotFoundException(table, ": brak uzytkownika ");
-      }
-      return login;
-    } catch (InstanceNotFoundException | IllegalArgumentException e) {
-      throw e;
-    } catch (Exception e) {
-      throw new SupabaseConnectionException("Failed to fetch user: ", e);
-    }
-  }
-
-  /**
    * Sprawdzanie, czy obiekt jest bezpieczny porównując go patternem.
    *
    * @param value sprawdzany obiekt
@@ -1166,6 +1103,9 @@ public class SupabaseClient {
    * @return obiekt Uzytkownik lub null, jeśli nie znaleziono.
    */
   public Uzytkownik getUserByUsername(String username) {
+    if (!isSafe(username)) {
+      throw new IllegalArgumentException("Invalid login");
+    }
     try {
       String response = webClient.get()
           .uri(uriBuilder -> uriBuilder
@@ -1216,6 +1156,9 @@ public class SupabaseClient {
    * @return obiekt Admin lub null, jeśli nie znaleziono.
    */
   public Admin getAdminByUsername(String username) {
+    if (!isSafe(username)) {
+      throw new IllegalArgumentException("Invalid login");
+    }
     try {
       String response = webClient.get()
           .uri(uriBuilder -> uriBuilder
@@ -1262,6 +1205,9 @@ public class SupabaseClient {
    * @param secret nowa wartość secretu
    */
   public void updateUserMfaSecret(int userId, String secret) {
+    if (!isSafe(secret)) {
+      throw new IllegalArgumentException("Invalid secret");
+    }
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
             .path(SLUZYTKOWNIK)
@@ -1296,6 +1242,9 @@ public class SupabaseClient {
    * @param secret nowa wartość secretu
    */
   public void updateAdminMfaSecret(int userId, String secret) {
+    if (!isSafe(secret)) {
+      throw new IllegalArgumentException("Invalid secret");
+    }
     webClient.patch()
         .uri(uriBuilder -> uriBuilder
             .path(SLADMIN)

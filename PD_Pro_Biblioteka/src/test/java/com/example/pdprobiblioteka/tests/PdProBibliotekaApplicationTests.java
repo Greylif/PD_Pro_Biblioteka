@@ -19,6 +19,7 @@ class PdProBibliotekaApplicationTests {
   @Test
   @DisplayName("maintest")
   void testMain() {
+    System.setProperty("server.ssl.enabled", "false");
     assertDoesNotThrow(() -> PdProBibliotekaApplication.main(new String[]{}));
   }
 

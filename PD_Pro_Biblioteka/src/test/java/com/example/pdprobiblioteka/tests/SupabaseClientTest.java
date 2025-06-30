@@ -21,7 +21,6 @@ import static org.mockito.Mockito.when;
 
 import com.example.pdprobiblioteka.config.SupabaseConfig;
 import com.example.pdprobiblioteka.exceptions.EmailSendException;
-import com.example.pdprobiblioteka.exceptions.InstanceNotFoundException;
 import com.example.pdprobiblioteka.exceptions.JsonFileException;
 import com.example.pdprobiblioteka.exceptions.SupabaseConnectionException;
 import com.example.pdprobiblioteka.model.Admin;
@@ -1780,135 +1779,11 @@ class SupabaseClientTest {
       });
     }
 
-    @Test
-    @DisplayName("getUzytkownicyLogin Test poprawnego dzialania")
-    void testgetUzytkownicyLogin() {
-      String mockResponse = "[{\"id\":1,\"Nazwa_Uzytkownika\":\"testuser\"}]";
-      String login = "testuser";
-      String password = "password123";
-
-      when(webClient.get()).thenReturn(requestHeadersUriSpec);
-
-      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
-        Function<UriBuilder, URI> uriFunction = invocation.getArgument(0);
-        uriFunction.apply(UriComponentsBuilder.fromUriString("http://localhost"));
-        return requestHeadersSpec;
-      });
-      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(mockResponse));
-
-      String result = supabaseClient.getUzytkownicyLogin(login, password);
-
-      assertEquals(mockResponse, result);
-    }
-
-    @Test
-    @DisplayName("getAdminLogin Test poprawnego dzialania")
-    void testgetAdminLogin() {
-      String mockResponse = "[{\"id\":1,\"Nazwa_Uzytkownika\":\"testuser\"}]";
-      String login = "testuser";
-      String password = "password123";
-
-      when(webClient.get()).thenReturn(requestHeadersUriSpec);
-
-      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
-        Function<UriBuilder, URI> uriFunction = invocation.getArgument(0);
-        uriFunction.apply(UriComponentsBuilder.fromUriString("http://localhost"));
-        return requestHeadersSpec;
-      });
-      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just(mockResponse));
-
-      String result = supabaseClient.getAdminLogin(login, password);
-
-      assertEquals(mockResponse, result);
-    }
-
-    @Test
-    @DisplayName("getUzytkownicyLogin Test InstanceNotFoundException")
-    void testgetUzytkownicyLoginThrowsInstanceNotFoundException() {
-
-      when(webClient.get()).thenReturn(requestHeadersUriSpec);
-      when(requestHeadersUriSpec.uri(any(Function.class))).thenAnswer(invocation -> {
-        Function<UriBuilder, URI> uriFunction = invocation.getArgument(0);
-        uriFunction.apply(UriComponentsBuilder.fromUriString("http://localhost"));
-        return requestHeadersSpec;
-      });
-
-      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.empty());
-
-      String login = "wronglogin";
-      String password = "wrongpass";
-
-      assertThrows(InstanceNotFoundException.class, () ->
-          supabaseClient.getUzytkownicyLogin(login, password));
-    }
-
-    @Test
-    @DisplayName("getUzytkownicyLogin Test SupabaseConnectionException")
-    void testgetUzytkownicyLoginThrowsSupabaseConnectionException() {
-      String login = "username";
-      String password = "password";
-
-      when(webClient.get()).thenReturn(requestHeadersUriSpec);
-      when(requestHeadersUriSpec.uri(any(Function.class))).thenThrow(
-          new RuntimeException("Connection error"));
-
-      SupabaseConnectionException ex = assertThrows(SupabaseConnectionException.class, () ->
-          supabaseClient.getUzytkownicyLogin(login, password));
-
-      assertTrue(ex.getMessage().contains("Failed to fetch user"));
-    }
   }
 
   @Nested
   @DisplayName("Testy powiazane z sql injection")
   class SqlinjectionTests {
-
-    @Test
-    @DisplayName("Poprawne logowanie")
-    void fetchDataloginvalidCredentials() {
-      when(webClient.get()).thenReturn(requestHeadersUriSpec);
-      when(requestHeadersUriSpec.uri(any(Function.class))).thenReturn(requestHeadersSpec);
-      when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
-      when(responseSpec.bodyToMono(String.class)).thenReturn(Mono.just("user"));
-
-      String result = supabaseClient.getUzytkownicyLogin("user", "pass");
-      assertEquals("user", result);
-    }
-
-    @Test
-    @DisplayName("SQL injection w login")
-    void fetchDatalogininvalidLogin() {
-      assertThrows(IllegalArgumentException.class, () -> {
-        supabaseClient.getUzytkownicyLogin("' OR 1=1 --", "pass");
-      });
-    }
-
-    @Test
-    @DisplayName("null login")
-    void fetchDatalogininvalidLoginnull() {
-      assertThrows(IllegalArgumentException.class, () -> {
-        supabaseClient.getUzytkownicyLogin(null, "pass");
-      });
-    }
-
-    @Test
-    @DisplayName("null haslo")
-    void fetchDatalogininvalidpassnull() {
-      assertThrows(IllegalArgumentException.class, () -> {
-        supabaseClient.getUzytkownicyLogin(null, "' OR 1=1 --");
-      });
-    }
-
-    @Test
-    @DisplayName("SQL injection w password")
-    void fetchDatalogininvalidpass() {
-      assertThrows(IllegalArgumentException.class, () -> {
-        supabaseClient.getUzytkownicyLogin("user", "' OR 1=1 --");
-      });
-    }
 
     @Test
     @DisplayName("SQL injection w body post/update")
