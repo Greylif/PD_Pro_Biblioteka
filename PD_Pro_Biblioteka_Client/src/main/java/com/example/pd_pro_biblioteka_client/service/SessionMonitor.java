@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 
 public class SessionMonitor {
     private final Stage stage;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    public final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final String NewToken;
     private static final Logger logger = Logger.getLogger(SessionMonitor.class.getName());
 
@@ -37,7 +37,7 @@ public class SessionMonitor {
         scheduler.scheduleAtFixedRate(this::checkToken, 1,70, TimeUnit.SECONDS);
     }
 
-    private void checkToken() {
+    public void checkToken() {
         HttpClient client = HttpClient.newHttpClient();
 
         try {
