@@ -3,6 +3,7 @@ package com.example.pd_pro_biblioteka_client.controller;
 
 import com.example.pd_pro_biblioteka_client.model.*;
 
+import com.example.pd_pro_biblioteka_client.service.SessionMonitor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
@@ -19,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.ErrorResponse;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -58,9 +60,21 @@ public class Client {
     @FXML
     private TableColumn<Filtr, String> f_id_place;
     @FXML
-    private ComboBox<String> f_combo;
+    private ComboBox<String> f_combo1;
     @FXML
-    private TextField f_search;
+    private TextField f_search1;
+    @FXML
+    private ComboBox<String> f_combo2;
+    @FXML
+    private TextField f_search2;
+    @FXML
+    private ComboBox<String> f_combo3;
+    @FXML
+    private TextField f_search3;
+    @FXML
+    private ComboBox<String> f_combo4;
+    @FXML
+    private TextField f_search4;
     @FXML
     private CheckBox showPassword;
     @FXML
@@ -146,6 +160,7 @@ public class Client {
     @FXML
     public void initialize() {
         fetchData();
+
         //tab 1 - ksiazki
         s_ID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
         s_ID_autor.setCellValueFactory(cellData -> cellData.getValue().idAutoraProperty().asString());
@@ -155,7 +170,8 @@ public class Client {
         s_borrow.setCellValueFactory(cellData -> cellData.getValue().WypozyczenieProperty());
         s_borrow.setCellFactory(CheckBoxTableCell.forTableColumn(s_borrow));
 
-        f_combo.getItems().addAll("gatunek", "tytul", "autor", "idPlacowki", "autorImie", "autorNazwisko", "idPlacowki", "dataWydania");
+        f_combo1.getItems().addAll("tytul", "autorImie", "idPlacowki");
+        f_combo2.getItems().addAll("gatunek", "autorNazwisko", "dataWydania");
 
 
         //tab 2 - filtry
@@ -494,11 +510,32 @@ public class Client {
 
     public void filtr_button() {
         try {
-            String klucz = URLEncoder.encode(f_combo.getValue(), StandardCharsets.UTF_8);
-            String wartosc = URLEncoder.encode(f_search.getText(), StandardCharsets.UTF_8);
-            String form = klucz + "=" + wartosc;
+            String param1 = "";
+            String param2 = "";
 
-            @SuppressWarnings("java:S2095")
+            if (f_combo1.getValue() != null && !f_combo1.getValue().isEmpty() &&
+                    f_search1.getText() != null && !f_search1.getText().isEmpty()) {
+                String klucz1 = URLEncoder.encode(f_combo1.getValue(), StandardCharsets.UTF_8);
+                String wartosc1 = URLEncoder.encode(f_search1.getText(), StandardCharsets.UTF_8);
+                param1 = klucz1 + "=" + wartosc1;
+            }
+
+            if (f_combo2.getValue() != null && !f_combo2.getValue().isEmpty() &&
+                    f_search2.getText() != null && !f_search2.getText().isEmpty()) {
+                String klucz2 = URLEncoder.encode(f_combo2.getValue(), StandardCharsets.UTF_8);
+                String wartosc2 = URLEncoder.encode(f_search2.getText(), StandardCharsets.UTF_8);
+                param2 = klucz2 + "=" + wartosc2;
+            }
+
+            String form = "";
+            if (!param1.isEmpty() && !param2.isEmpty()) {
+                form = param1 + "&" + param2;
+            } else if (!param1.isEmpty()) {
+                form = param1;
+            } else if (!param2.isEmpty()) {
+                form = param2;
+            }
+
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -511,19 +548,33 @@ public class Client {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             Gson gson = new Gson();
-            Type listType = new TypeToken<List<FiltrDTO>>(){}.getType();
-            List<FiltrDTO> dtoList = gson.fromJson(response.body(), listType);
 
-            List<Filtr> filtrList = dtoList.stream()
-                    .map(this::convertDtoToFiltr)
-                    .toList();
+            if (response.statusCode() == 200) {
+                try {
+                    Type listType = new TypeToken<List<FiltrDTO>>(){}.getType();
+                    List<FiltrDTO> dtoList = gson.fromJson(response.body(), listType);
 
-            Platform.runLater(() -> fitrTable.setItems(FXCollections.observableArrayList(filtrList)));
+                    List<Filtr> filtrList = dtoList.stream()
+                            .map(this::convertDtoToFiltr)
+                            .toList();
+
+                    Platform.runLater(() -> fitrTable.setItems(FXCollections.observableArrayList(filtrList)));
+                } catch (com.google.gson.JsonSyntaxException ex) {
+                    logger.log(Level.SEVERE, "Niepoprawny format odpowiedzi JSON: " + ex.getMessage());
+                }
+            } else {
+                try {
+                    logger.log(Level.WARNING, "Błąd z serwera ");
+                } catch (Exception ex) {
+                    logger.log(Level.SEVERE, "Nie udało się sparsować błędu serwera: " + ex.getMessage());
+                }
+            }
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
     }
+
 
     public void on2FA() {
         try {
@@ -540,6 +591,9 @@ public class Client {
         }
     }
 
+    private Stage getStage() {
+        return (Stage) serachTable.getScene().getWindow();
+    }
 
 
 }

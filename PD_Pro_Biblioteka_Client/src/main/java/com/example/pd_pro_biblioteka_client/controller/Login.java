@@ -2,6 +2,7 @@ package com.example.pd_pro_biblioteka_client.controller;
 
 import com.example.pd_pro_biblioteka_client.model.*;
 import com.example.pd_pro_biblioteka_client.service.JWTdecoder;
+import com.example.pd_pro_biblioteka_client.service.SessionMonitor;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -66,6 +67,8 @@ public class Login {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             int code = response.statusCode();
+            String body = response.body();
+            System.out.println(body);
 
             if(code == 200) {
                 JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
@@ -76,7 +79,7 @@ public class Login {
                 if(jsonObject.get("token") != null) {
                     JWTdecoder.decodeToLogUser(String.valueOf(jsonObject.get("token")));
 
-                     String url = "http://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
+                     String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
 
                      HttpRequest requestClient = HttpRequest.newBuilder()
                         .uri(URI.create(url))
@@ -90,7 +93,11 @@ public class Login {
                      String result = responseClient.body();
                      code = responseClient.statusCode();
 
+                     System.out.println(code);
+
                      if(code == 200) {
+                         System.out.println(code);
+
                          Type listType = new TypeToken<List<UzytkownikDTO>>() {}.getType();
 
                         List<UzytkownikDTO> usersDto = gson.fromJson(result, listType);
@@ -124,6 +131,9 @@ public class Login {
                          regStage.setTitle("Klient");
                          regStage.setScene(new Scene(regRoot));
                          regStage.show();
+
+                         SessionMonitor monitor = new SessionMonitor(logUser.getUserIdStr(), regStage);
+                         monitor.start();
                      }
                      }
 
@@ -184,6 +194,8 @@ public class Login {
 
             int code = response.statusCode();
 
+            System.out.println(code);
+
             if (code == 200) {
                 JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
                 logAdmin.setAdminToken(jsonObject.get("token").getAsString());
@@ -204,6 +216,7 @@ public class Login {
                     HttpResponse<String> responseClient = client.send(requestClient, HttpResponse.BodyHandlers.ofString());
                     String result = responseClient.body();
                     code = responseClient.statusCode();
+
 
                     if(code == 200) {
                         Type listType = new TypeToken<List<AdminDTO>>() {}.getType();
@@ -226,6 +239,7 @@ public class Login {
                             );
                             logAdmin.set(admin);}
 
+
                         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                         stage.close();
 
@@ -237,31 +251,22 @@ public class Login {
                         regStage.setTitle("Panel Admina");
                         regStage.setScene(new Scene(regRoot));
                         regStage.show();
+
+                        SessionMonitor monitor = new SessionMonitor(logAdmin.getAdmIdStr(), regStage);
+                        monitor.start();
                     }
 
 
                 } else {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
-                    Parent regRoot = fxmlLoader.load();
-                    Stage regStage = new Stage();
-                    regStage.initModality(Modality.APPLICATION_MODAL);
-                    regStage.setTitle("Błąd logowania");
-                    regStage.setScene(new Scene(regRoot));
-                    regStage.show();
+                    notworking();
                 }
 
             } else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
-                Parent regRoot = fxmlLoader.load();
-                Stage regStage = new Stage();
-                regStage.initModality(Modality.APPLICATION_MODAL);
-                regStage.setTitle("Błąd logowania");
-                regStage.setScene(new Scene(regRoot));
-                regStage.show();
+                notworking();
             }
 
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.log(Level.SEVERE, "Token check failed", e);
             Thread.currentThread().interrupt();
         }
     }

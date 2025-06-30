@@ -28,8 +28,12 @@
                 <VBox alignment="CENTER_LEFT" spacing="30">
                     <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Filtr:" />
                     <HBox spacing="10">
-                        <ComboBox fx:id="f_combo" prefWidth="200"/>
-                        <TextField fx:id="f_search" prefWidth="600" style="-fx-font-size: 13px;" />
+                        <ComboBox fx:id="f_combo1" prefWidth="200"/>
+                        <TextField fx:id="f_search1" prefWidth="600" style="-fx-font-size: 13px;" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <ComboBox fx:id="f_combo2" prefWidth="200"/>
+                        <TextField fx:id="f_search2" prefWidth="600" style="-fx-font-size: 13px;" />
                     </HBox>
                     <Button fx:id="borrow_button" onAction="#filtr_button" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Zatwierdź" />
                     <Region prefHeight="0" />

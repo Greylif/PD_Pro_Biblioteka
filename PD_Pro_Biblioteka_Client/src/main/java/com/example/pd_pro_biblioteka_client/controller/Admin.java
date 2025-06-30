@@ -1,6 +1,7 @@
 package com.example.pd_pro_biblioteka_client.controller;
 
 import com.example.pd_pro_biblioteka_client.model.*;
+import com.example.pd_pro_biblioteka_client.service.SessionMonitor;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
@@ -125,12 +126,14 @@ public class Admin {
     private TableColumn<Kary, String> p_date;
 
     private static final Logger logger = Logger.getLogger(Admin.class.getName());
+    private SessionMonitor sessionMonitor;
 
 
 
     @FXML
     public void initialize() {
         fetchAllData();
+
         //Tab 1 - książki
         s_id.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
         s_title.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
@@ -228,8 +231,6 @@ public class Admin {
         admin_password.setText(String.valueOf(adm.getHaslo().get()));
         admin_location_id.setText(String.valueOf(adm.getId_placowki().get()));
         admin_id.setText(String.valueOf(adm.getId().get()));
-
-
     }
 
 
@@ -568,6 +569,7 @@ public class Admin {
             logStage.setTitle("Logowanie");
             logStage.setScene(new Scene(logRoot));
             logStage.show();
+            sessionMonitor.stop();
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());
@@ -733,5 +735,9 @@ public class Admin {
         } catch (Exception e){
             logger.log(Level.SEVERE, e.getMessage());
         }
+    }
+
+    private Stage getStage() {
+        return (Stage) userTable.getScene().getWindow();
     }
 }
