@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="confirm" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.ConfirmationPopupController"
+            prefWidth="300" prefHeight="150">
+    <VBox spacing="10" alignment="CENTER" AnchorPane.topAnchor="10" AnchorPane.bottomAnchor="10"
+          AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+        <Label fx:id="labelHeader" text="Czy jesteś pewny?" />
+        <Label fx:id="labelContent" text="Tej operacji nie można cofnąć." />
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Anuluj" fx:id="cancelButton" onAction="#onCancel" />
+            <Button text="OK" fx:id="okButton" onAction="#onOK" />
+        </HBox>
+    </VBox>
+</AnchorPane>

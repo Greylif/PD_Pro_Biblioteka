@@ -39,16 +39,6 @@ import java.util.stream.Collectors;
 @Component
 public class Admin {
     @FXML
-    private Button add_penalty_button;
-    @FXML
-    private Button addPenaltyButton;
-    @FXML
-    private Button refr_button;
-    @FXML
-    private Button logg_button;
-    @FXML
-    private Button save_button;
-    @FXML
     private CheckBox showPassword;
     @FXML
     private TextField textField;
@@ -533,11 +523,6 @@ public class Admin {
         );
     }
 
-    void setPenaltyTable(TableView<Kary> table) {
-        this.penaltyTable = table;
-    }
-
-
     @FXML
     public void borrow(ActionEvent actionEvent) {
         try {
@@ -638,53 +623,6 @@ public class Admin {
         }
     }
 
-    public void delete_acc(ActionEvent actionEvent) throws IOException, InterruptedException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Potwierdzenie");
-        alert.setHeaderText("Czy jesteś pewny?");
-        alert.setContentText("Tej operacji nie można cofnąć.");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-
-            @SuppressWarnings("java:S2095")
-            HttpClient client = HttpClient.newHttpClient();
-            String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
-                    .DELETE()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if(response.statusCode() == 200){
-                logAdmin.clearAdmin();
-                logger.info("Użytkownik zatwierdził.");
-
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                stage.close();
-
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-                Parent logRoot = fxmlLoader.load();
-
-                Stage logStage = new Stage();
-                logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                logStage.setTitle("Logowanie");
-                logStage.setScene(new Scene(logRoot));
-                logStage.show();
-            }
-
-
-        } else {
-            // Anulowano
-            logger.info("Użytkownik anulował.");
-        }
-    }
-
-
     public void refresh() {
         fetchAllData();
     }
@@ -737,7 +675,4 @@ public class Admin {
         }
     }
 
-    private Stage getStage() {
-        return (Stage) userTable.getScene().getWindow();
-    }
 }

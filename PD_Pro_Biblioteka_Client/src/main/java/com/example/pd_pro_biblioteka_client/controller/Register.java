@@ -62,7 +62,10 @@ public class Register {
 
 
             if(response.statusCode() == 200) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/donePopup.fxml"));
+                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                stage.close();
+
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
                 Parent popupRoot = fxmlLoader.load();
 
                 //jeśli rejestracja jest poprawna
@@ -70,10 +73,7 @@ public class Register {
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
                 popupStage.setTitle("Rejestracja");
                 popupStage.setScene(new Scene(popupRoot));
-                popupStage.showAndWait();
-
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                stage.close();}
+                popupStage.showAndWait();}
             else {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
                 Parent popupRoot = fxmlLoader.load();

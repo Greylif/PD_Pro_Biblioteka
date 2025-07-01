@@ -143,6 +143,8 @@ public class Client {
     @FXML
     private TableColumn<Ksiazka, String> s_autor;
     @FXML
+    private TableColumn<Ksiazka, String> s_genre;
+    @FXML
     private TableColumn<Ksiazka, Boolean> s_borrow;
     @FXML
     private TableColumn<Ksiazka, String> s_ID;
@@ -150,8 +152,6 @@ public class Client {
     private TableColumn<Ksiazka, String> s_ID_autor;
     @FXML
     private TableView<Ksiazka> serachTable;
-
-    static public Button borrow_button;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
@@ -167,6 +167,7 @@ public class Client {
         s_ID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
         s_ID_autor.setCellValueFactory(cellData -> cellData.getValue().idAutoraProperty().asString());
         s_title.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
+        s_genre.setCellValueFactory(cellData -> cellData.getValue().getGatunek());
         s_autor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
         s_borrow.setEditable(false);
         s_borrow.setCellValueFactory(cellData -> cellData.getValue().WypozyczenieProperty());
@@ -274,48 +275,51 @@ public class Client {
     }
 
     public void delete_acc(ActionEvent actionEvent) throws IOException, InterruptedException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Potwierdzenie");
-        alert.setHeaderText("Czy jesteś pewny?");
-        alert.setContentText("Tej operacji nie można cofnąć.");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/confirmationPopup.fxml"));
+        Parent popupRoot = loader.load();
 
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle("Potwierdzenie");
+        popupStage.setScene(new Scene(popupRoot));
+        popupStage.showAndWait();
 
-            @SuppressWarnings("java:S2095")
-            HttpClient client = HttpClient.newHttpClient();
-            String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logUser.getUserToken())
-                    .DELETE()
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if(response.statusCode() == 200){
-                logUser.clearUser();
-                logger.info("Użytkownik zatwierdził.");
-
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                stage.close();
-
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-                Parent logRoot = fxmlLoader.load();
-
-                Stage logStage = new Stage();
-                logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                logStage.setScene(new Scene(logRoot));
-                logStage.show();
-            }
-
-
-        } else {
+        ConfirmationPopupController controller = loader.getController();
+        if (!controller.isConfirmed()) {
             logger.info("nie usunelo");
+            return;
+        }
+
+        @SuppressWarnings("java:S2095")
+        HttpClient client = HttpClient.newHttpClient();
+        String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Authorization", "Bearer " + logUser.getUserToken())
+                .DELETE()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 200) {
+            logUser.clearUser();
+            logger.info("Użytkownik zatwierdził.");
+
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+            Parent logRoot = fxmlLoader.load();
+
+            Stage logStage = new Stage();
+            logStage.initModality(Modality.APPLICATION_MODAL);
+            logStage.setScene(new Scene(logRoot));
+            logStage.show();
         }
     }
+
 
     @FXML
     private void togglePasswordVisibility() {
@@ -593,10 +597,4 @@ public class Client {
             logger.log(Level.SEVERE, e.getMessage());
         }
     }
-
-    private Stage getStage() {
-        return (Stage) serachTable.getScene().getWindow();
-    }
-
-
 }

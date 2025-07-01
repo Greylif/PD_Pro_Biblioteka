@@ -45,6 +45,6 @@
 
 
 
-    <Button fx:id="add_button" onAction="#add_act" style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj" />
+    <Button fx:id="bk_add_button" onAction="#add_act" style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj" />
 
 </VBox>

@@ -88,8 +88,14 @@ public class SetupTotp {
             Image qrImage = new Image(totpSetupResponse.getQrCodeUrl()); // true = background loading
             qrCodeImage.setImage(qrImage);
             qrCodeSecret.setText(totpSetupResponse.getSecret());
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
+            Parent logRoot = fxmlLoader.load();
+            Stage logStage = new Stage();
+            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            logStage.setScene(new Scene(logRoot));
+            logStage.show();
         }
-
 
         }catch (Exception e){
             logger.log(Level.SEVERE, e.getMessage());

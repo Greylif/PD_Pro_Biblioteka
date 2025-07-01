@@ -11,11 +11,12 @@
 
         <Tab style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Książki">
             <HBox alignment="TOP_CENTER" spacing="30">
-                <TableView fx:id="serachTable" editable="true" prefHeight="1000.0" prefWidth="900.0" style="-fx-background-color: #726C6C; -fx-text-fill: #F5F5F5; -fx-table-cell-border-color: #2C2C2C">
+                <TableView fx:id="serachTable" editable="true" prefHeight="1300.0" prefWidth="1200.0" style="-fx-background-color: #726C6C; -fx-text-fill: #F5F5F5; -fx-table-cell-border-color: #2C2C2C">
                     <columns>
                         <TableColumn fx:id="s_ID" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID" />
                         <TableColumn fx:id="s_title" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Tytuł" />
                         <TableColumn fx:id="s_autor" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Autor" />
+                        <TableColumn fx:id="s_genre" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Gatunek" />
                         <TableColumn fx:id="s_ID_autor" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID autora" />
                         <TableColumn fx:id="s_borrow" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="Wypożyczone" />
                     </columns>
@@ -23,7 +24,7 @@
             </HBox>
         </Tab>
 
-        <Tab style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Filtry">
+        <Tab fx:id="filtr" style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Filtry">
             <VBox alignment="CENTER_LEFT" spacing="30">
                 <VBox alignment="CENTER_LEFT" spacing="30">
                     <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Filtr:" />
@@ -35,7 +36,7 @@
                         <ComboBox fx:id="f_combo2" prefWidth="200"/>
                         <TextField fx:id="f_search2" prefWidth="600" style="-fx-font-size: 13px;" />
                     </HBox>
-                    <Button fx:id="borrow_button" onAction="#filtr_button" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Zatwierdź" />
+                    <Button fx:id="filtr_button" onAction="#filtr_button" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Zatwierdź" />
                     <Region prefHeight="0" />
                 </VBox>
                 <HBox>
@@ -84,7 +85,7 @@
             </HBox>
         </Tab>
 
-        <Tab style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Ustawienia konta">
+        <Tab fx:id="settings" style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Ustawienia konta">
             <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 20;">
                 <Region prefHeight="0" />
                 <HBox spacing="50">
