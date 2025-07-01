@@ -155,6 +155,8 @@ public class Client {
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
+    private SessionMonitor sessionMonitor;
+
 
 
     @FXML
@@ -224,6 +226,7 @@ public class Client {
             logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
             logStage.setScene(new Scene(logRoot));
             logStage.show();
+            sessionMonitor.stop();
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());

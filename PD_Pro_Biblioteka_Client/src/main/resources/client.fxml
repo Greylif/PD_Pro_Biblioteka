@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<AnchorPane prefHeight="1000.0" prefWidth="1000.0" style="-fx-background-color: #726C6C;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pd_pro_biblioteka_client.controller.Client">
+<AnchorPane fx:id="client" prefHeight="1000.0" prefWidth="1000.0" style="-fx-background-color: #726C6C;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pd_pro_biblioteka_client.controller.Client">
 
     <!-- TabPane zajmuje całą powierzchnię -->
     <TabPane fx:id="tabPane" style="-fx-background-color: #726C6C;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

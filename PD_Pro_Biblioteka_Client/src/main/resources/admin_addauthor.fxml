@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="TOP_CENTER" prefHeight="451.0" prefWidth="600.0" style="-fx-background-color: #726C6C; -fx-padding: 20;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.example.pd_pro_biblioteka_client.controller.adminAddAuthor">
+<VBox fx:id="admin_addauthor" alignment="TOP_CENTER" prefHeight="451.0" prefWidth="600.0" style="-fx-background-color: #726C6C; -fx-padding: 20;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.example.pd_pro_biblioteka_client.controller.adminAddAuthor">
 
     <Region prefHeight="20" />
 

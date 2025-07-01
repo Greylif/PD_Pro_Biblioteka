@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<VBox xmlns="http://javafx.com/javafx"
+<VBox fx:id="undonePopup" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="com.example.pd_pro_biblioteka_client.controller.undonePopup"
       alignment="CENTER" spacing="20"

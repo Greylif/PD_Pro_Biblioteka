@@ -4,7 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #726C6C; -fx-padding: 20;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pd_pro_biblioteka_client.controller.SetupTotp">
+<VBox fx:id="setup_totp" prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: #726C6C; -fx-padding: 20;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pd_pro_biblioteka_client.controller.SetupTotp">
     <Region prefHeight="20" />
 
     <Label style="-fx-font-size: 32px; -fx-text-fill: #FFFFFF" text="Konfiguracja 2FA (TOTP)" />
