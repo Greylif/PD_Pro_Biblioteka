@@ -34,7 +34,7 @@ public class Addpenalty {
     private DatePicker pen_date;
     private static final Logger logger = Logger.getLogger(Addpenalty.class.getName());
 
-    public void button_act(ActionEvent actionEvent) {
+    public void buttonact(ActionEvent actionEvent) {
         try {
             @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();

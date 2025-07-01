@@ -70,11 +70,11 @@ public class ControllerTest {
         }
 
         @Test
-        void testButton_act_successResponse() throws Exception {
+        void testbuttonact_successResponse() throws Exception {
             // MOCK HttpClient globalnie (trudne bez refaktoryzacji, więc skupiamy się na wywołaniu, nie treści)
 
             // Po prostu sprawdzamy, że metoda nie rzuca wyjątków
-            assertDoesNotThrow(() -> controller.button_act(mockEvent));
+            assertDoesNotThrow(() -> controller.buttonact(mockEvent));
         }
 
         // ----------------- POMOCNICZE ----------------------

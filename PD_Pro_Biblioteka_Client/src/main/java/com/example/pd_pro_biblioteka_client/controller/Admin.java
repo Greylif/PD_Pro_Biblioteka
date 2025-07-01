@@ -128,7 +128,11 @@ public class Admin {
     private static final Logger logger = Logger.getLogger(Admin.class.getName());
     private SessionMonitor sessionMonitor;
 
-
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final String CONTENTTYPE = "Content-Type";
+    private static final String APPURL = "application/x-www-form-urlencoded";
+    private static final String LOGOWANIE = "Logowanie";
 
     @FXML
     public void initialize() {
@@ -244,32 +248,32 @@ public class Admin {
             // Fetch wszystkie dane
             HttpResponse<String> ksiazkiResponse = client.send(
                     HttpRequest.newBuilder()
-                            .uri(URI.create("https://localhost:8443/library/ksiazki")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                            .uri(URI.create("https://localhost:8443/library/ksiazki")).header(AUTHORIZATION, BEARER + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KsiazkaDTO> ksiazkiDTOs = gson.fromJson(ksiazkiResponse.body(), new TypeToken<List<KsiazkaDTO>>(){}.getType());
 
 
             HttpResponse<String> autorzyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/autorzy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/autorzy")).header(AUTHORIZATION, BEARER + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<AutorzyDTO> autorzyDTOs = gson.fromJson(autorzyResponse.body(), new TypeToken<List<AutorzyDTO>>(){}.getType());
 
             HttpResponse<String> wypoResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/wypozyczenia")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/wypozyczenia")).header(AUTHORIZATION, BEARER + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<WypozyczeniaDTO> wypoDTOs = gson.fromJson(wypoResponse.body(), new TypeToken<List<WypozyczeniaDTO>>(){}.getType());
 
             HttpResponse<String> karyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/kary")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/kary")).header(AUTHORIZATION, BEARER + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KaryDTO> karyDTOs = gson.fromJson(karyResponse.body(), new TypeToken<List<KaryDTO>>(){}.getType());
 
             HttpResponse<String> uzytkownicyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/uzytkownicy")).header("Authorization", "Bearer " + logAdmin.getAdminToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/uzytkownicy")).header(AUTHORIZATION, BEARER + logAdmin.getAdminToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<UzytkownikDTO> uzytkownicyDTOs = gson.fromJson(uzytkownicyResponse.body(), new TypeToken<List<UzytkownikDTO>>(){}.getType());
@@ -376,7 +380,8 @@ public class Admin {
 
     public void sendUpdate(Uzytkownik user) {
         try {
-            String url = String.format("https://localhost:8443/library/uzytkownicy/%d", user.getId());
+            String url = String.format("https://localhost:8443/library/uzytkownicy/%d", user.idProperty().get());
+
 
             StringBuilder bodyBuilder = new StringBuilder();
 
@@ -418,7 +423,7 @@ public class Admin {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
+                    .header(CONTENTTYPE, APPURL)
                     .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
                     .build();
 
@@ -433,7 +438,8 @@ public class Admin {
 
     private void sendUpdateKary(Kary kary) {
         try {
-            String url = String.format("https://localhost:8443/library/kary/%d", kary.getId());
+            String url = String.format("https://localhost:8443/library/kary/%d", kary.idProperty().get());
+
 
             StringBuilder bodyBuilder = new StringBuilder();
 
@@ -467,8 +473,8 @@ public class Admin {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+                    .header(CONTENTTYPE, APPURL)
+                    .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
                     .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
                     .build();
 
@@ -566,7 +572,7 @@ public class Admin {
 
             Stage logStage = new Stage();
             logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-            logStage.setTitle("Logowanie");
+            logStage.setTitle(LOGOWANIE);
             logStage.setScene(new Scene(logRoot));
             logStage.show();
             sessionMonitor.stop();
@@ -621,8 +627,8 @@ public class Admin {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+                    .header(CONTENTTYPE, APPURL)
+                    .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
                     .PUT(HttpRequest.BodyPublishers.ofString(body))
                     .build();
 
@@ -630,7 +636,10 @@ public class Admin {
             HttpClient client = HttpClient.newHttpClient();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            logger.info("Odpowiedź serwera: " + response.body());
+            if (logger.isLoggable(Level.INFO)) {
+                logger.info("Odpowiedź serwera: " + response.body());
+            }
+
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());
@@ -653,8 +662,8 @@ public class Admin {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+                    .header(CONTENTTYPE, APPURL)
+                    .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
                     .DELETE()
                     .build();
 
@@ -672,7 +681,7 @@ public class Admin {
 
                 Stage logStage = new Stage();
                 logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                logStage.setTitle("Logowanie");
+                logStage.setTitle(LOGOWANIE);
                 logStage.setScene(new Scene(logRoot));
                 logStage.show();
             }
@@ -729,7 +738,7 @@ public class Admin {
 
             Stage logStage = new Stage();
             logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-            logStage.setTitle("Logowanie");
+            logStage.setTitle(LOGOWANIE);
             logStage.setScene(new Scene(logRoot));
             logStage.show();
         } catch (Exception e){
@@ -737,7 +746,4 @@ public class Admin {
         }
     }
 
-    private Stage getStage() {
-        return (Stage) userTable.getScene().getWindow();
-    }
 }

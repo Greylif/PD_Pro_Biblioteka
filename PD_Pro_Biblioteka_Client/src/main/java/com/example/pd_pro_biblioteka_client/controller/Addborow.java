@@ -35,10 +35,10 @@ public class Addborow {
     @FXML
     private DatePicker borrowReturnDate;
     @FXML
-    private Button b_add;
+    private Button badd;
 
     @FXML
-    public void button_act(ActionEvent actionEvent) {
+    public void buttonact(ActionEvent actionEvent) {
         try {
             @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
