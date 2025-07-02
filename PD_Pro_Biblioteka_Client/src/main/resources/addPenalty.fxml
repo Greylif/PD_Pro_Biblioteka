@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="addPenalty" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pd_pro_biblioteka_client.controller.Addpenalty"
+<VBox fx:id="addPenalty" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.pdprobibliotekaclient.controller.Addpenalty"
       alignment="TOP_CENTER" style="-fx-background-color: #726C6C; -fx-padding: 20;" prefHeight="400.0" prefWidth="600.0">
 
     <Region prefHeight="20"/>
@@ -27,14 +27,14 @@
 
     <VBox alignment="CENTER_LEFT" spacing="5">
         <Label text="Termin zapłaty"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <DatePicker fx:id="pen_date" prefWidth="600" style="-fx-font-size: 16px;"/>
+        <DatePicker fx:id="pendate" prefWidth="600" style="-fx-font-size: 16px;"/>
     </VBox>
 
     <Region prefHeight="25"/>
 
     <VBox alignment="CENTER_LEFT" spacing="5">
         <Label text="Tytuł kary"  style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
-        <TextField fx:id="pen_desc" prefWidth="600" style="-fx-font-size: 16px;"/>
+        <TextField fx:id="pendesc" prefWidth="600" style="-fx-font-size: 16px;"/>
     </VBox>
 
 

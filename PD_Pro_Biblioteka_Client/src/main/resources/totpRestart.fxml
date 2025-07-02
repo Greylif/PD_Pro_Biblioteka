@@ -9,7 +9,7 @@
 <VBox fx:id="totpRestart"
       xmlns:fx="http://javafx.com/fxml/1"
       xmlns="http://javafx.com/javafx/17.0.12"
-      fx:controller="com.example.pd_pro_biblioteka_client.controller.TotpRestart"
+      fx:controller="com.example.pdprobibliotekaclient.controller.TotpRestart"
       alignment="CENTER"
       spacing="20"
       prefWidth="400.0"

@@ -7,9 +7,9 @@
 <?import javafx.scene.layout.*?>
 
 
-<VBox fx:id="donePopup" xmlns="http://javafx.com/javafx"
+<VBox fx:id="DonePopup" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.pd_pro_biblioteka_client.controller.donePopup"
+      fx:controller="com.example.pdprobibliotekaclient.controller.DonePopup"
       alignment="CENTER" spacing="20"
       style="-fx-padding: 20; -fx-background-color: #726C6C;">
 

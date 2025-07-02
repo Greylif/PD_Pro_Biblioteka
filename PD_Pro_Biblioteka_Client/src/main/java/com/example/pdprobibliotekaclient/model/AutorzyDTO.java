@@ -1,0 +1,10 @@
+package com.example.pdprobibliotekaclient.model;
+
+public class AutorzyDTO {
+
+  public int id;
+  public String Imie;
+  public String Nazwisko;
+  public int Rok_Urodzenia;
+
+}
