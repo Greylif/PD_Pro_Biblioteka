@@ -40,7 +40,7 @@
 
     <Region prefHeight="25"/>
 
-    <Button fx:id="p_add" text="Dodaj" onAction="#button_act"
+    <Button fx:id="p_add" text="Dodaj" onAction="#buttonact"
             style="-fx-font-size: 14px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-padding: 10px 20px; -fx-arc-width: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5"/>
 
 </VBox>

@@ -2,31 +2,40 @@ package com.example.pd_pro_biblioteka_client.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javafx.beans.property.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Placowka {
-    @NotNull(message = "Musi posiadac ID")
-    private IntegerProperty id = new SimpleIntegerProperty();
 
-    @NotBlank(message = "Adres nie moze byc pusty")
-    private StringProperty Adres = new SimpleStringProperty();
+  @NotNull(message = "Musi posiadac ID")
+  private IntegerProperty id = new SimpleIntegerProperty();
 
-    public Placowka(int pID, String adr) {
-        this.id.set(pID);
-        this.Adres.set(adr);
-    }
+  @NotBlank(message = "Adres nie moze byc pusty")
+  private StringProperty Adres = new SimpleStringProperty();
 
-    public IntegerProperty idProperty() {return id;}
-    public StringProperty adresProperty() {return Adres;}
+  public Placowka(int pID, String adr) {
+    this.id.set(pID);
+    this.Adres.set(adr);
+  }
 
-    @Override
-    public String toString() {
-        return "Placowka{id=" + id + ", Adres='" + Adres + "'}";
-    }
+  public IntegerProperty idProperty() {
+    return id;
+  }
+
+  public StringProperty adresProperty() {
+    return Adres;
+  }
+
+  @Override
+  public String toString() {
+    return "Placowka{id=" + id + ", Adres='" + Adres + "'}";
+  }
 }

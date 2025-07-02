@@ -11,27 +11,27 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 public class MainApp extends Application {
 
-    protected ConfigurableApplicationContext springContext;
+  protected ConfigurableApplicationContext springContext;
 
-    @Override
-    public void init() throws Exception {
-        springContext = new SpringApplicationBuilder(PdProBibliotekaClientApplication.class).run();
-    }
+  @Override
+  public void init() throws Exception {
+    springContext = new SpringApplicationBuilder(PdProBibliotekaClientApplication.class).run();
+  }
 
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-        fxmlLoader.setControllerFactory(springContext::getBean);
+  @Override
+  public void start(Stage primaryStage) throws Exception {
+    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
+    fxmlLoader.setControllerFactory(springContext::getBean);
 
-        primaryStage.setTitle("Logowanie");
-        primaryStage.setScene(new Scene(fxmlLoader.load(), 600, 600));
-        primaryStage.initStyle(StageStyle.DECORATED);
-        primaryStage.show();
-    }
+    primaryStage.setTitle("Logowanie");
+    primaryStage.setScene(new Scene(fxmlLoader.load(), 600, 600));
+    primaryStage.initStyle(StageStyle.DECORATED);
+    primaryStage.show();
+  }
 
-    @Override
-    public void stop() throws Exception {
-        springContext.close();
-        Platform.exit();
-    }
+  @Override
+  public void stop() throws Exception {
+    springContext.close();
+    Platform.exit();
+  }
 }

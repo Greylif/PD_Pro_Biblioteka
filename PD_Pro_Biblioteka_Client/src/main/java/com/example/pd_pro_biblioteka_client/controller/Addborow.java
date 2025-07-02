@@ -1,6 +1,16 @@
 package com.example.pd_pro_biblioteka_client.controller;
 
 import com.example.pd_pro_biblioteka_client.model.logAdmin;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,87 +24,77 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 @Component
 public class Addborow {
-    private static final Logger logger = Logger.getLogger(Addborow.class.getName());
-    @FXML
-    private TextField borrowUserID;
-    @FXML
-    private TextField borrowBookID;
-    @FXML
-    private DatePicker borrowReturnDate;
-    @FXML
-    private Button b_add;
 
-    @FXML
-    public void button_act(ActionEvent actionEvent) {
-        try {
-            @SuppressWarnings("java:S2095")
-            HttpClient client = HttpClient.newHttpClient();
+  private static final Logger logger = Logger.getLogger(Addborow.class.getName());
+  @FXML
+  private TextField borrowUserID;
+  @FXML
+  private TextField borrowBookID;
+  @FXML
+  private DatePicker borrowReturnDate;
+  @FXML
+  private Button badd;
 
-            LocalDate selectedDate = borrowReturnDate.getValue();
-            String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            String formattedToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+  @FXML
+  public void buttonact(ActionEvent actionEvent) {
+    try {
+      @SuppressWarnings("java:S2095")
+      HttpClient client = HttpClient.newHttpClient();
 
-            // Tworzymy dane formularza
-            String form = "dataWypozyczenia=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8) +
-                    "&terminOddania=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8) +
-                    "&idKsiazki=" + URLEncoder.encode(borrowBookID.getText(), StandardCharsets.UTF_8)+
-                    "&idUzytkownika=" + URLEncoder.encode(borrowUserID.getText(), StandardCharsets.UTF_8);
+      LocalDate selectedDate = borrowReturnDate.getValue();
+      String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+      String formattedToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://localhost:8443/library/wypozyczenia"))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logAdmin.getAdminToken())
-                    .POST(HttpRequest.BodyPublishers.ofString(form))
-                    .build();
+      // Tworzymy dane formularza
+      String form =
+          "dataWypozyczenia=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8)
+              + "&terminOddania=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8)
+              + "&idKsiazki=" + URLEncoder.encode(borrowBookID.getText(), StandardCharsets.UTF_8)
+              + "&idUzytkownika=" + URLEncoder.encode(borrowUserID.getText(), StandardCharsets.UTF_8);
 
-            // Wysyłamy request
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+      HttpRequest request = HttpRequest.newBuilder()
+          .uri(URI.create("https://localhost:8443/library/wypozyczenia"))
+          .header("Content-Type", "application/x-www-form-urlencoded")
+          .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+          .POST(HttpRequest.BodyPublishers.ofString(form))
+          .build();
 
+      // Wysyłamy request
+      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.statusCode() == 200) {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/donePopup.fxml"));
-                Parent popupRoot = fxmlLoader.load();
+      if (response.statusCode() == 200) {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/donePopup.fxml"));
+        Parent popupRoot = fxmlLoader.load();
 
-                //jeśli rejestracja jest poprawna
-                Stage popupStage = new Stage();
-                popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setScene(new Scene(popupRoot));
-                popupStage.showAndWait();
+        //jeśli rejestracja jest poprawna
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.setScene(new Scene(popupRoot));
+        popupStage.showAndWait();
 
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                stage.close();}
-            else {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
-                Parent popupRoot = fxmlLoader.load();
-
-                //jeśli rejestracja jest poprawna
-                Stage popupStage = new Stage();
-                popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setScene(new Scene(popupRoot));
-                popupStage.showAndWait();
-
-                Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                stage.close();
-            }
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
-            Thread.currentThread().interrupt();
-        }
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.close();
+      } else {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
+        Parent popupRoot = fxmlLoader.load();
+
+        //jeśli rejestracja jest poprawna
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.setScene(new Scene(popupRoot));
+        popupStage.showAndWait();
+
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.close();
+      }
+
+    } catch (Exception e) {
+      logger.log(Level.SEVERE, e.getMessage());
+      Thread.currentThread().interrupt();
     }
+    Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+    stage.close();
+  }
 }
