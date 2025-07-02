@@ -1,10 +1,5 @@
 package com.example.pd_pro_biblioteka_client.model;
 
-import jakarta.validation.constraints.NotNull;
-import javafx.beans.property.*;
-
-import java.time.LocalDateTime;
-
 public class KaryDTO {
     public int id;
     public double Kwota;

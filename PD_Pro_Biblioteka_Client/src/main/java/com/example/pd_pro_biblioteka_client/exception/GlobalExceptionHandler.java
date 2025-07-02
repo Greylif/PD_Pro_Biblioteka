@@ -37,12 +37,6 @@ public class GlobalExceptionHandler {
         return "redirect:/account";
     }
 
-    @ExceptionHandler(InsufficientFundsException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleInsufficientFundsException(InsufficientFundsException ex, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute(ERRORMESSAGE, ex.getMessage());
-        return "redirect:/account";
-    }
 
     @ExceptionHandler(ClientException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -155,6 +155,11 @@ public class Client {
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
+    private static final String AUTHORIZATION = "Authorization";
+    private static final String BEARER = "Bearer ";
+    private static final String CONTENTTYPE = "Content-Type";
+    private static final String APPURL = "application/x-www-form-urlencoded";
+
     private SessionMonitor sessionMonitor;
 
 
@@ -258,14 +263,14 @@ public class Client {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logUser.getUserToken())
+                    .header(CONTENTTYPE, APPURL)
+                    .header(AUTHORIZATION, BEARER + logUser.getUserToken())
                     .PUT(HttpRequest.BodyPublishers.ofString(body))
                     .build();
 
             @SuppressWarnings("java:S2095")
             HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            client.send(request, HttpResponse.BodyHandlers.ofString());
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage());
@@ -288,8 +293,8 @@ public class Client {
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logUser.getUserToken())
+                    .header(CONTENTTYPE, APPURL)
+                    .header(AUTHORIZATION, BEARER + logUser.getUserToken())
                     .DELETE()
                     .build();
 
@@ -343,25 +348,25 @@ public class Client {
         try {
             HttpResponse<String> ksiazkiResponse = client.send(
                     HttpRequest.newBuilder()
-                            .uri(URI.create("https://localhost:8443/library/ksiazki")).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                            .uri(URI.create("https://localhost:8443/library/ksiazki")).header(AUTHORIZATION, BEARER + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KsiazkaDTO> ksiazkiDTOs = gson.fromJson(ksiazkiResponse.body(), new TypeToken<List<KsiazkaDTO>>(){}.getType());
 
             HttpResponse<String> autorzyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/autorzy")).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/autorzy")).header(AUTHORIZATION, BEARER + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<AutorzyDTO> autorzyDTOs = gson.fromJson(autorzyResponse.body(), new TypeToken<List<AutorzyDTO>>(){}.getType());
 
             HttpResponse<String> wypoResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/wypozyczenia/" + Integer.parseInt(logUser.userIdStr))).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/wypozyczenia/" + Integer.parseInt(logUser.userIdStr))).header(AUTHORIZATION, BEARER + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<WypozyczeniaDTO> wypoDTOs = gson.fromJson(wypoResponse.body(), new TypeToken<List<WypozyczeniaDTO>>(){}.getType());
 
             HttpResponse<String> karyResponse = client.send(
-                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/kary/" + Integer.parseInt(logUser.userIdStr))).header("Authorization", "Bearer " + logUser.getUserToken()).GET().build(),
+                    HttpRequest.newBuilder().uri(URI.create("https://localhost:8443/library/kary/" + Integer.parseInt(logUser.userIdStr))).header(AUTHORIZATION, BEARER + logUser.getUserToken()).GET().build(),
                     HttpResponse.BodyHandlers.ofString()
             );
             List<KaryDTO> karyDTOs = gson.fromJson(karyResponse.body(), new TypeToken<List<KaryDTO>>(){}.getType());
@@ -445,8 +450,11 @@ public class Client {
             Platform.runLater(() -> serachTable.setItems(FXCollections.observableArrayList(ksiazkaList)));
             Platform.runLater(() -> borrowTable.setItems(FXCollections.observableArrayList(wypozyczeniaList)));
 
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logger.log(Level.SEVERE, "Thread was interrupted", e);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
 
     }
@@ -517,14 +525,14 @@ public class Client {
             String param2 = "";
 
             if (f_combo1.getValue() != null && !f_combo1.getValue().isEmpty() &&
-                    f_search1.getText() != null && !f_search1.getText().isEmpty()) {
+                f_search1.getText() != null && !f_search1.getText().isEmpty()) {
                 String klucz1 = URLEncoder.encode(f_combo1.getValue(), StandardCharsets.UTF_8);
                 String wartosc1 = URLEncoder.encode(f_search1.getText(), StandardCharsets.UTF_8);
                 param1 = klucz1 + "=" + wartosc1;
             }
 
             if (f_combo2.getValue() != null && !f_combo2.getValue().isEmpty() &&
-                    f_search2.getText() != null && !f_search2.getText().isEmpty()) {
+                f_search2.getText() != null && !f_search2.getText().isEmpty()) {
                 String klucz2 = URLEncoder.encode(f_combo2.getValue(), StandardCharsets.UTF_8);
                 String wartosc2 = URLEncoder.encode(f_search2.getText(), StandardCharsets.UTF_8);
                 param2 = klucz2 + "=" + wartosc2;
@@ -542,39 +550,51 @@ public class Client {
             HttpClient client = HttpClient.newHttpClient();
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://localhost:8443/library/ksiazki/filtr?" + form))
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "Bearer " + logUser.getUserToken())
-                    .GET()
-                    .build();
+                .uri(URI.create("https://localhost:8443/library/ksiazki/filtr?" + form))
+                .header(CONTENTTYPE, APPURL)
+                .header(AUTHORIZATION, BEARER + logUser.getUserToken())
+                .GET()
+                .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             Gson gson = new Gson();
 
             if (response.statusCode() == 200) {
-                try {
-                    Type listType = new TypeToken<List<FiltrDTO>>(){}.getType();
-                    List<FiltrDTO> dtoList = gson.fromJson(response.body(), listType);
-
-                    List<Filtr> filtrList = dtoList.stream()
-                            .map(this::convertDtoToFiltr)
-                            .toList();
-
-                    Platform.runLater(() -> fitrTable.setItems(FXCollections.observableArrayList(filtrList)));
-                } catch (com.google.gson.JsonSyntaxException ex) {
-                    logger.log(Level.SEVERE, "Niepoprawny format odpowiedzi JSON: " + ex.getMessage());
-                }
+                handleJsonResponse(response.body(), gson);
             } else {
-                try {
-                    logger.log(Level.WARNING, "Błąd z serwera ");
-                } catch (Exception ex) {
-                    logger.log(Level.SEVERE, "Nie udało się sparsować błędu serwera: " + ex.getMessage());
-                }
+                handleServerError();
             }
 
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            logger.log(Level.SEVERE, "Thread was interrupted", e);
         } catch (Exception e) {
             logger.log(Level.SEVERE, e.getMessage(), e);
+        }
+    }
+
+
+    private void handleJsonResponse(String responseBody, Gson gson) {
+        try {
+            Type listType = new TypeToken<List<FiltrDTO>>(){}.getType();
+            List<FiltrDTO> dtoList = gson.fromJson(responseBody, listType);
+
+            List<Filtr> filtrList = dtoList.stream()
+                .map(this::convertDtoToFiltr)
+                .toList();
+
+            Platform.runLater(() -> fitrTable.setItems(FXCollections.observableArrayList(filtrList)));
+        } catch (com.google.gson.JsonSyntaxException ex) {
+            logger.log(Level.SEVERE, () -> "Niepoprawny format odpowiedzi JSON: " + ex.getMessage());
+        }
+    }
+
+    private void handleServerError() {
+        try {
+            logger.log(Level.WARNING, "Błąd z serwera ");
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, () -> "Nie udało się sparsować błędu serwera: " + ex.getMessage());
         }
     }
 
@@ -585,7 +605,7 @@ public class Client {
             Parent logRoot = fxmlLoader.load();
 
             Stage logStage = new Stage();
-            logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+            logStage.initModality(Modality.APPLICATION_MODAL);
             logStage.setTitle("Logowanie");
             logStage.setScene(new Scene(logRoot));
             logStage.show();
@@ -594,9 +614,6 @@ public class Client {
         }
     }
 
-    private Stage getStage() {
-        return (Stage) serachTable.getScene().getWindow();
-    }
 
 
 }

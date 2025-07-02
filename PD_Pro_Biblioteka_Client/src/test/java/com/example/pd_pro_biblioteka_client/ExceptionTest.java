@@ -55,17 +55,6 @@ class ExceptionTest {
     }
 
     @Test
-    @DisplayName("Obsługa InsufficientFundsException")
-    void testHandleInsufficientFundsException() {
-        RedirectAttributes redirectAttributes = mock(RedirectAttributes.class);
-
-        String result = handler.handleInsufficientFundsException(new InsufficientFundsException("No money"), redirectAttributes);
-
-        verify(redirectAttributes).addFlashAttribute("errorMessage", "No money");
-        assertEquals("redirect:/account", result);
-    }
-
-    @Test
     @DisplayName("Obsługa ClientException")
     void testHandleClientException() {
         Model model = mock(Model.class);

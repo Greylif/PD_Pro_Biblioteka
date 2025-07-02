@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import javafx.beans.property.*;
 
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor

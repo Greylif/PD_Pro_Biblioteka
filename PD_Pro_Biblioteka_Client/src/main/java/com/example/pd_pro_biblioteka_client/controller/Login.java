@@ -36,6 +36,8 @@ public class Login {
     @FXML private TextField twoFA;
     private static final Logger logger = Logger.getLogger(Login.class.getName());
 
+    private static final String TOKEN = "token";
+
 
 
     public void login_act(javafx.event.ActionEvent actionEvent) {
@@ -48,9 +50,8 @@ public class Login {
             Integer twoFAcode = null;
 
             if (!twoFA.getText().isEmpty()) {
-                try {
-                    twoFAcode = Integer.parseInt(twoFA.getText());
-                } catch (NumberFormatException e) {
+                twoFAcode = parseTwoFACode(twoFA.getText());
+                if (twoFAcode == null) {
                     return;
                 }
             }
@@ -67,17 +68,16 @@ public class Login {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             int code = response.statusCode();
-            String body = response.body();
-            System.out.println(body);
+            response.body();
 
             if(code == 200) {
                 JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
 
-                logUser.setUserToken(jsonObject.get("token").getAsString());
+                logUser.setUserToken(jsonObject.get(TOKEN).getAsString());
 
 
-                if(jsonObject.get("token") != null) {
-                    JWTdecoder.decodeToLogUser(String.valueOf(jsonObject.get("token")));
+                if(jsonObject.get(TOKEN) != null) {
+                    JWTdecoder.decodeToLogUser(String.valueOf(jsonObject.get(TOKEN)));
 
                      String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
 
@@ -93,10 +93,8 @@ public class Login {
                      String result = responseClient.body();
                      code = responseClient.statusCode();
 
-                     System.out.println(code);
 
                      if(code == 200) {
-                         System.out.println(code);
 
                          Type listType = new TypeToken<List<UzytkownikDTO>>() {}.getType();
 
@@ -153,6 +151,15 @@ public class Login {
         }
     }
 
+    private Integer parseTwoFACode(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+
     public void notworking() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/undonePopup.fxml"));
         Parent regRoot = fxmlLoader.load();
@@ -174,9 +181,8 @@ public class Login {
             Integer twoFAcode = null;
 
             if (!twoFA.getText().isEmpty()) {
-                try {
-                    twoFAcode = Integer.parseInt(twoFA.getText());
-                } catch (NumberFormatException e) {
+                twoFAcode = parseTwoFACode(twoFA.getText());
+                if (twoFAcode == null) {
                     return;
                 }
             }
@@ -194,14 +200,12 @@ public class Login {
 
             int code = response.statusCode();
 
-            System.out.println(code);
-
             if (code == 200) {
                 JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
-                logAdmin.setAdminToken(jsonObject.get("token").getAsString());
+                logAdmin.setAdminToken(jsonObject.get(TOKEN).getAsString());
 
-                if (jsonObject.get("token") != null) {
-                    JWTdecoder.decodeToLogAdm(String.valueOf(jsonObject.get("token")));
+                if (jsonObject.get(TOKEN) != null) {
+                    JWTdecoder.decodeToLogAdm(String.valueOf(jsonObject.get(TOKEN)));
 
                     String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
 

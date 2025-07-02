@@ -35,6 +35,9 @@ public class SetupTotp {
     private Label infoLabel;
     private static final Logger logger = Logger.getLogger(SetupTotp.class.getName());
 
+    private static final String USERNAME = "username";
+    private static final String BEARER = "Bearer ";
+
 
     @FXML
     public void initialize() {
@@ -56,16 +59,16 @@ public class SetupTotp {
             String URL = null;
 
             if(logUser.getUserIdStr() != null && logUser.getUserToken() != null){
-                loginData.put("username", u.getNazwaUzytkownika());
+                loginData.put(USERNAME, u.getNazwaUzytkownika());
                 loginData.put("password", u.getHaslo());
-                header = "Bearer " + logUser.getUserToken();
+                header = BEARER + logUser.getUserToken();
                 URL = "https://localhost:8443/api/auth/setup-totp";
             }
             else {
                 if (logAdmin.getAdmIdStr() != null && logAdmin.getAdminToken() != null) {
                     loginData.put("password", adm.getHaslo().get());
-                    loginData.put("username", adm.getNazwa_Uzytkownika().get());
-                    header = "Bearer " + logAdmin.getAdminToken();
+                    loginData.put(USERNAME, adm.getNazwa_Uzytkownika().get());
+                    header = BEARER + logAdmin.getAdminToken();
                     URL = "https://localhost:8443/api/auth/setup-totp/admin";
                 }
             }
@@ -112,16 +115,16 @@ public class SetupTotp {
 
 
             if(logUser.getUserIdStr() != null && logUser.getUserToken() != null){
-                loginData.put("username", u.getNazwaUzytkownika());
+                loginData.put(USERNAME, u.getNazwaUzytkownika());
                 loginData.put("code", Integer.parseInt(totpCodeField.getText()));
-                header = "Bearer " + logUser.getUserToken();
+                header = BEARER + logUser.getUserToken();
                 URL = "https://localhost:8443/api/auth/confirm-totp";
             }
             else {
                 if (logAdmin.getAdmIdStr() != null && logAdmin.getAdminToken() != null) {
-                    loginData.put("username", adm.getNazwa_Uzytkownika().get());
+                    loginData.put(USERNAME, adm.getNazwa_Uzytkownika().get());
                     loginData.put("code", Integer.parseInt(totpCodeField.getText()));
-                    header = "Bearer " + logAdmin.getAdminToken();
+                    header = BEARER + logAdmin.getAdminToken();
                     URL = "https://localhost:8443/api/auth/confirm-totp/admin";
                 }
             }

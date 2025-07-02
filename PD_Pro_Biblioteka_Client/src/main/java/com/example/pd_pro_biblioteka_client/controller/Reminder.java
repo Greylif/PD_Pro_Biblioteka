@@ -26,6 +26,8 @@ public class Reminder {
     @FXML private TextField user_email;
     private static final Logger logger = Logger.getLogger(Reminder.class.getName());
 
+    private static final String PRZYPHASLO = "Przypomnij hasło";
+
 
     @FXML
     public void reminder_act(javafx.event.ActionEvent actionEvent) {
@@ -50,7 +52,7 @@ public class Reminder {
                 //jeśli rejestracja jest nie poprawna
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setTitle("Przypomnij hasło");
+                popupStage.setTitle(PRZYPHASLO);
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.showAndWait();
 
@@ -64,7 +66,7 @@ public class Reminder {
                 //jeśli rejestracja jest poprawna
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setTitle("Przypomnij hasło");
+                popupStage.setTitle(PRZYPHASLO);
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.showAndWait();
 
@@ -100,7 +102,7 @@ public class Reminder {
                 //jeśli rejestracja jest nie poprawna
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setTitle("Przypomnij hasło");
+                popupStage.setTitle(PRZYPHASLO);
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.showAndWait();
 
@@ -114,7 +116,7 @@ public class Reminder {
                 //jeśli rejestracja jest poprawna
                 Stage popupStage = new Stage();
                 popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
-                popupStage.setTitle("Przypomnij hasło");
+                popupStage.setTitle(PRZYPHASLO);
                 popupStage.setScene(new Scene(popupRoot));
                 popupStage.showAndWait();
 

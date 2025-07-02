@@ -4,8 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import javafx.beans.property.*;
 
-import java.time.LocalDateTime;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
