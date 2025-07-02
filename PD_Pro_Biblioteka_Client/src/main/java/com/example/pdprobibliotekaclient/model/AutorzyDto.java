@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.model;
 
-public class AutorzyDTO {
+public class AutorzyDto {
 
   public int id;
   public String Imie;

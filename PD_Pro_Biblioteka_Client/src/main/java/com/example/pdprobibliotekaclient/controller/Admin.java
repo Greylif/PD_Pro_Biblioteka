@@ -1,15 +1,15 @@
 package com.example.pdprobibliotekaclient.controller;
 
 import com.example.pdprobibliotekaclient.model.AdminModel;
-import com.example.pdprobibliotekaclient.model.AutorzyDTO;
+import com.example.pdprobibliotekaclient.model.AutorzyDto;
 import com.example.pdprobibliotekaclient.model.Kary;
-import com.example.pdprobibliotekaclient.model.KaryDTO;
+import com.example.pdprobibliotekaclient.model.KaryDto;
 import com.example.pdprobibliotekaclient.model.Ksiazka;
-import com.example.pdprobibliotekaclient.model.KsiazkaDTO;
+import com.example.pdprobibliotekaclient.model.KsiazkaDto;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
-import com.example.pdprobibliotekaclient.model.UzytkownikDTO;
+import com.example.pdprobibliotekaclient.model.UzytkownikDto;
 import com.example.pdprobibliotekaclient.model.Wypozyczenia;
-import com.example.pdprobibliotekaclient.model.WypozyczeniaDTO;
+import com.example.pdprobibliotekaclient.model.WypozyczeniaDto;
 import com.example.pdprobibliotekaclient.model.logAdmin;
 import com.example.pdprobibliotekaclient.service.SessionMonitor;
 import com.google.gson.Gson;
@@ -260,20 +260,31 @@ public class Admin {
     Gson gson = new Gson();
 
     try {
-      List<KsiazkaDTO> ksiazkiDTOs = fetchData(client, gson, "ksiazki", new TypeToken<List<KsiazkaDTO>>() {});
-      List<AutorzyDTO> autorzyDTOs = fetchData(client, gson, "autorzy", new TypeToken<List<AutorzyDTO>>() {});
-      List<WypozyczeniaDTO> wypoDTOs = fetchData(client, gson, "wypozyczenia", new TypeToken<List<WypozyczeniaDTO>>() {});
-      List<KaryDTO> karyDTOs = fetchData(client, gson, "kary", new TypeToken<List<KaryDTO>>() {});
-      List<UzytkownikDTO> uzytkownicyDTOs = fetchData(client, gson, "uzytkownicy", new TypeToken<List<UzytkownikDTO>>() {});
+      List<KsiazkaDto> ksiazkiDtos = fetchData(client, gson, "ksiazki",
+          new TypeToken<List<KsiazkaDto>>() {
+          });
+      List<AutorzyDto> autorzyDtos = fetchData(client, gson, "autorzy",
+          new TypeToken<List<AutorzyDto>>() {
+          });
+      List<WypozyczeniaDto> wypoDtos = fetchData(client, gson, "wypozyczenia",
+          new TypeToken<List<WypozyczeniaDto>>() {
+          });
+      List<KaryDto> karyDtos = fetchData(client, gson, "kary",
+          new TypeToken<List<KaryDto>>() {
+          });
+      List<UzytkownikDto> uzytkownicyDtos = fetchData(client, gson, "uzytkownicy",
+          new TypeToken<List<UzytkownikDto>>() {
+          });
 
-      Map<Integer, KsiazkaDTO> ksiazkaMap = getDtoMap(ksiazkiDTOs, k -> k.id);
-      Map<Integer, AutorzyDTO> autorMap = getDtoMap(autorzyDTOs, a -> a.id);
-      Map<Integer, UzytkownikDTO> uzytkownikMap = getDtoMap(uzytkownicyDTOs, u -> u.id);
+      Map<Integer, KsiazkaDto> ksiazkaMap = getDtoMap(ksiazkiDtos, k -> k.id);
+      Map<Integer, AutorzyDto> autorMap = getDtoMap(autorzyDtos, a -> a.id);
+      Map<Integer, UzytkownikDto> uzytkownikMap = getDtoMap(uzytkownicyDtos, u -> u.id);
 
-      List<Wypozyczenia> wypozyczeniaList = convertWypozyczenia(wypoDTOs, ksiazkaMap, autorMap, uzytkownikMap);
-      List<Kary> karyList = convertKary(karyDTOs, wypoDTOs, ksiazkaMap, autorMap);
-      List<Ksiazka> ksiazkaList = convertKsiazki(ksiazkiDTOs, autorMap);
-      List<Uzytkownik> uzytkownikList = convertUzytkownicy(uzytkownicyDTOs);
+      List<Wypozyczenia> wypozyczeniaList = convertWypozyczenia(wypoDtos,
+          ksiazkaMap, autorMap, uzytkownikMap);
+      List<Kary> karyList = convertKary(karyDtos, wypoDtos, ksiazkaMap, autorMap);
+      List<Ksiazka> ksiazkaList = convertKsiazki(ksiazkiDtos, autorMap);
+      List<Uzytkownik> uzytkownikList = convertUzytkownicy(uzytkownicyDtos);
 
       updateTables(karyList, ksiazkaList, uzytkownikList, wypozyczeniaList);
 
@@ -283,7 +294,8 @@ public class Admin {
     }
   }
 
-  private <T> List<T> fetchData(HttpClient client, Gson gson, String endpoint, TypeToken<List<T>> token) throws IOException, InterruptedException {
+  private <T> List<T> fetchData(HttpClient client, Gson gson, String endpoint,
+      TypeToken<List<T>> token) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create("https://localhost:8443/library/" + endpoint))
         .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
@@ -297,18 +309,18 @@ public class Admin {
     return list.stream().collect(Collectors.toMap(keyMapper, Function.identity()));
   }
 
-  private List<Wypozyczenia> convertWypozyczenia(List<WypozyczeniaDTO> dtos,
-      Map<Integer, KsiazkaDTO> ksiazkaMap,
-      Map<Integer, AutorzyDTO> autorMap,
-      Map<Integer, UzytkownikDTO> uzytkownikMap) {
+  private List<Wypozyczenia> convertWypozyczenia(List<WypozyczeniaDto> dtos,
+      Map<Integer, KsiazkaDto> ksiazkaMap,
+      Map<Integer, AutorzyDto> autorMap,
+      Map<Integer, UzytkownikDto> uzytkownikMap) {
     List<Wypozyczenia> list = new ArrayList<>();
-    for (WypozyczeniaDTO dto : dtos) {
+    for (WypozyczeniaDto dto : dtos) {
       Wypozyczenia wyp = convertDtoToWypozyczenia(dto);
 
       Optional.ofNullable(uzytkownikMap.get(dto.id_uzytkownika))
           .ifPresent(user -> wyp.setUserData(user.Imie + " " + user.Nazwisko));
 
-      KsiazkaDTO ksiazka = ksiazkaMap.get(dto.id_ksiazki);
+      KsiazkaDto ksiazka = ksiazkaMap.get(dto.id_ksiazki);
       if (ksiazka != null) {
         wyp.setBookTitle(ksiazka.Tytul);
         Optional.ofNullable(autorMap.get(ksiazka.id_autora))
@@ -320,19 +332,19 @@ public class Admin {
     return list;
   }
 
-  private List<Kary> convertKary(List<KaryDTO> dtos,
-      List<WypozyczeniaDTO> wypoDTOs,
-      Map<Integer, KsiazkaDTO> ksiazkaMap,
-      Map<Integer, AutorzyDTO> autorMap) {
+  private List<Kary> convertKary(List<KaryDto> dtos,
+      List<WypozyczeniaDto> wypoDtos,
+      Map<Integer, KsiazkaDto> ksiazkaMap,
+      Map<Integer, AutorzyDto> autorMap) {
     List<Kary> list = new ArrayList<>();
-    for (KaryDTO dto : dtos) {
+    for (KaryDto dto : dtos) {
       Kary kara = convertDtoToKary(dto);
 
-      wypoDTOs.stream()
+      wypoDtos.stream()
           .filter(w -> w.id_uzytkownika == dto.id_uzytkownika)
           .findFirst()
           .ifPresent(wyp -> {
-            KsiazkaDTO ksiazka = ksiazkaMap.get(wyp.id_ksiazki);
+            KsiazkaDto ksiazka = ksiazkaMap.get(wyp.id_ksiazki);
             if (ksiazka != null) {
               kara.setBookTitle(ksiazka.Tytul);
               Optional.ofNullable(autorMap.get(ksiazka.id_autora))
@@ -345,9 +357,9 @@ public class Admin {
     return list;
   }
 
-  private List<Ksiazka> convertKsiazki(List<KsiazkaDTO> dtos, Map<Integer, AutorzyDTO> autorMap) {
+  private List<Ksiazka> convertKsiazki(List<KsiazkaDto> dtos, Map<Integer, AutorzyDto> autorMap) {
     List<Ksiazka> list = new ArrayList<>();
-    for (KsiazkaDTO dto : dtos) {
+    for (KsiazkaDto dto : dtos) {
       Ksiazka ksiazka = convertDtoToKsiazka(dto);
       Optional.ofNullable(autorMap.get(dto.id_autora))
           .ifPresent(autor -> ksiazka.setAutorName(autor.Imie + " " + autor.Nazwisko));
@@ -356,7 +368,7 @@ public class Admin {
     return list;
   }
 
-  private List<Uzytkownik> convertUzytkownicy(List<UzytkownikDTO> dtos) {
+  private List<Uzytkownik> convertUzytkownicy(List<UzytkownikDto> dtos) {
     return dtos.stream().map(this::convertDtoToUzytkownik).toList();
   }
 
@@ -373,8 +385,6 @@ public class Admin {
 
   public void sendUpdate(Uzytkownik user) {
     try {
-      String url = String.format("https://localhost:8443/library/uzytkownicy/%d",
-          user.idProperty().get());
 
       StringBuilder bodyBuilder = new StringBuilder();
 
@@ -428,6 +438,9 @@ public class Admin {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
 
+      String url = String.format("https://localhost:8443/library/uzytkownicy/%d",
+          user.idProperty().get());
+
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
@@ -446,7 +459,6 @@ public class Admin {
 
   private void sendUpdateKary(Kary kary) {
     try {
-      String url = String.format("https://localhost:8443/library/kary/%d", kary.idProperty().get());
 
       StringBuilder bodyBuilder = new StringBuilder();
 
@@ -491,6 +503,8 @@ public class Admin {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
 
+      String url = String.format("https://localhost:8443/library/kary/%d", kary.idProperty().get());
+
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
@@ -508,7 +522,7 @@ public class Admin {
     }
   }
 
-  private Uzytkownik convertDtoToUzytkownik(UzytkownikDTO dto) {
+  private Uzytkownik convertDtoToUzytkownik(UzytkownikDto dto) {
     return new Uzytkownik(
         dto.id,
         dto.Imie,
@@ -523,7 +537,7 @@ public class Admin {
     );
   }
 
-  private Kary convertDtoToKary(KaryDTO dtoK) {
+  private Kary convertDtoToKary(KaryDto dtoK) {
     return new Kary(
         dtoK.id,
         dtoK.Kwota,
@@ -535,7 +549,7 @@ public class Admin {
     );
   }
 
-  private Ksiazka convertDtoToKsiazka(KsiazkaDTO dto) {
+  private Ksiazka convertDtoToKsiazka(KsiazkaDto dto) {
     return new Ksiazka(
         dto.id,
         dto.Tytul,
@@ -549,7 +563,7 @@ public class Admin {
     );
   }
 
-  private Wypozyczenia convertDtoToWypozyczenia(WypozyczeniaDTO dto) {
+  private Wypozyczenia convertDtoToWypozyczenia(WypozyczeniaDto dto) {
     return new Wypozyczenia(
         dto.id,
         dto.Data_Wypozyczenia,
@@ -753,7 +767,7 @@ public class Admin {
   }
 
 
-  public void on2FA() {
+  public void on2fa() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/setup_totp.fxml"));
       Parent logRoot = fxmlLoader.load();

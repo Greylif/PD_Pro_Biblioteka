@@ -1,7 +1,7 @@
 package com.example.pdprobibliotekaclient.model;
 
 
-public class WypozyczeniaDTO {
+public class WypozyczeniaDto {
 
   public int id;
   public String Data_Wypozyczenia;

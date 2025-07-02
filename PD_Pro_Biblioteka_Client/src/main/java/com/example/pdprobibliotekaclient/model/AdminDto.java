@@ -1,7 +1,7 @@
 package com.example.pdprobibliotekaclient.model;
 
 
-public class AdminDTO {
+public class AdminDto {
 
   public int id;
   public String Imie;

@@ -49,8 +49,8 @@ public class ControllerTest {
             popupRoot = lookup("#addBorrow").queryAs(Parent.class);
             assertThat(popupRoot).isVisible();
 
-            clickOn("#borrowUserID").write("15");
-            clickOn("#borrowBookID").write("10000");
+            clickOn("#borrowUserid").write("15");
+            clickOn("#borrowBookid").write("10000");
             clickOn("#borrowReturnDate").write("2.01.2037");
 
             clickOn("#badd");
@@ -91,7 +91,7 @@ public class ControllerTest {
             popupRoot = lookup("#addPenalty").queryAs(Parent.class);
             assertThat(popupRoot).isVisible();
 
-            clickOn("#userID").write("15");
+            clickOn("#userid").write("15");
             clickOn("#userPen").write("10000");
             clickOn("#pendate").write("2.01.2037");
             clickOn("#pendesc").write("ROBOT - KARA");

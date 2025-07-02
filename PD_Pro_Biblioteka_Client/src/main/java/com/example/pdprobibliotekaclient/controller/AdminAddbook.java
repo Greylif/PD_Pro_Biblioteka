@@ -60,11 +60,11 @@ public class AdminAddbook {
       HttpClient client = HttpClient.newHttpClient();
 
       // Tworzymy dane formularza
-      String form = "tytul=" + URLEncoder.encode(atitle.getText(), StandardCharsets.UTF_8) +
-          "&gatunek=" + URLEncoder.encode(agenre.getText(), StandardCharsets.UTF_8) +
-          "&dataWydania=" + URLEncoder.encode(arelaseDate.getText(), StandardCharsets.UTF_8) +
-          "&idAutora=" + URLEncoder.encode(aidauthor.getText(), StandardCharsets.UTF_8) +
-          "&idPlacowki=" + URLEncoder.encode(aidplac.getText(), StandardCharsets.UTF_8);
+      String form = "tytul=" + URLEncoder.encode(atitle.getText(), StandardCharsets.UTF_8)
+          + "&gatunek=" + URLEncoder.encode(agenre.getText(), StandardCharsets.UTF_8)
+          + "&dataWydania=" + URLEncoder.encode(arelaseDate.getText(), StandardCharsets.UTF_8)
+          + "&idAutora=" + URLEncoder.encode(aidauthor.getText(), StandardCharsets.UTF_8)
+          + "&idPlacowki=" + URLEncoder.encode(aidplac.getText(), StandardCharsets.UTF_8);
 
       // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()

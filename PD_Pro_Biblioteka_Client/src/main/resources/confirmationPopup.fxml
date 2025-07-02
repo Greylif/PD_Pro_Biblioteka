@@ -14,7 +14,7 @@
         <Label fx:id="labelContent" text="Tej operacji nie można cofnąć." />
         <HBox spacing="20" alignment="CENTER">
             <Button text="Anuluj" fx:id="cancelButton" onAction="#onCancel" />
-            <Button text="OK" fx:id="okButton" onAction="#onOK" />
+            <Button text="OK" fx:id="okButton" onAction="#onOk" />
         </HBox>
     </VBox>
 </AnchorPane>

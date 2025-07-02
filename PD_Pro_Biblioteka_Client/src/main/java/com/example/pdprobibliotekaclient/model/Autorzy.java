@@ -28,11 +28,11 @@ public class Autorzy {
   private IntegerProperty Rok_Urodzenia = new SimpleIntegerProperty();
 
 
-  public Autorzy(int id, String imie, String nazwisko, int rok_Urodzenia) {
+  public Autorzy(int id, String imie, String nazwisko, int rokUrodzenia) {
     this.id.set(id);
     this.Imie.set(imie);
     this.Nazwisko.set(nazwisko);
-    this.Rok_Urodzenia.set(rok_Urodzenia);
+    this.Rok_Urodzenia.set(rokUrodzenia);
   }
 
   public IntegerProperty idProperty() {

@@ -1,13 +1,13 @@
 package com.example.pdprobibliotekaclient.controller;
 
-import com.example.pdprobibliotekaclient.model.AdminDTO;
+import com.example.pdprobibliotekaclient.model.AdminDto;
 import com.example.pdprobibliotekaclient.model.AdminModel;
 import com.example.pdprobibliotekaclient.model.LoginRequest;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
-import com.example.pdprobibliotekaclient.model.UzytkownikDTO;
+import com.example.pdprobibliotekaclient.model.UzytkownikDto;
 import com.example.pdprobibliotekaclient.model.logAdmin;
 import com.example.pdprobibliotekaclient.model.logUser;
-import com.example.pdprobibliotekaclient.service.JWTdecoder;
+import com.example.pdprobibliotekaclient.service.Jwtdecoder;
 import com.example.pdprobibliotekaclient.service.SessionMonitor;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -81,7 +81,7 @@ public class Login {
         logUser.setUserToken(jsonObject.get(TOKEN).getAsString());
 
         if (jsonObject.get(TOKEN) != null) {
-          JWTdecoder.decodeToLogUser(String.valueOf(jsonObject.get(TOKEN)));
+          Jwtdecoder.decodeToLogUser(String.valueOf(jsonObject.get(TOKEN)));
 
           String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
 
@@ -98,13 +98,13 @@ public class Login {
 
           if (code == 200) {
 
-            Type listType = new TypeToken<List<UzytkownikDTO>>() {
+            Type listType = new TypeToken<List<UzytkownikDto>>() {
             }.getType();
 
-            List<UzytkownikDTO> usersDto = gson.fromJson(result, listType);
+            List<UzytkownikDto> usersDto = gson.fromJson(result, listType);
 
             if (usersDto != null && !usersDto.isEmpty()) {
-              UzytkownikDTO dto = usersDto.getFirst();
+              UzytkownikDto dto = usersDto.getFirst();
 
               // Konwersja DTO -> Uzytkownik
               Uzytkownik user = new Uzytkownik(
@@ -153,7 +153,6 @@ public class Login {
       Thread.currentThread().interrupt();
     }
   }
-
 
 
   private Integer parseTwoFACode(String input) {
@@ -210,7 +209,7 @@ public class Login {
         logAdmin.setAdminToken(jsonObject.get(TOKEN).getAsString());
 
         if (jsonObject.get(TOKEN) != null) {
-          JWTdecoder.decodeToLogAdm(String.valueOf(jsonObject.get(TOKEN)));
+          Jwtdecoder.decodeToLogAdm(String.valueOf(jsonObject.get(TOKEN)));
 
           String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
 
@@ -226,13 +225,13 @@ public class Login {
           code = responseClient.statusCode();
 
           if (code == 200) {
-            Type listType = new TypeToken<List<AdminDTO>>() {
+            Type listType = new TypeToken<List<AdminDto>>() {
             }.getType();
 
-            List<AdminDTO> adminDTOS = gson.fromJson(result, listType);
+            List<AdminDto> adminDTOS = gson.fromJson(result, listType);
 
             if (adminDTOS != null && !adminDTOS.isEmpty()) {
-              AdminDTO dto = adminDTOS.getFirst();
+              AdminDto dto = adminDTOS.getFirst();
 
               // Konwersja DTO -> Uzytkownik
               AdminModel admin = new AdminModel(

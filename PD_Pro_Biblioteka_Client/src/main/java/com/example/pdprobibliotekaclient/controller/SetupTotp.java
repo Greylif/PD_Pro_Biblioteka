@@ -1,7 +1,7 @@
 package com.example.pdprobibliotekaclient.controller;
 
 import com.example.pdprobibliotekaclient.model.AdminModel;
-import com.example.pdprobibliotekaclient.model.TOTPSetupResponse;
+import com.example.pdprobibliotekaclient.model.TotpSetupResponse;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
 import com.example.pdprobibliotekaclient.model.logAdmin;
 import com.example.pdprobibliotekaclient.model.logUser;
@@ -87,8 +87,8 @@ public class SetupTotp {
 
       int code = response.statusCode();
       if (code == 200) {
-        TOTPSetupResponse totpSetupResponse = gson.fromJson(response.body(),
-            TOTPSetupResponse.class);
+        TotpSetupResponse totpSetupResponse = gson.fromJson(response.body(),
+            TotpSetupResponse.class);
         Image qrImage = new Image(totpSetupResponse.getQrCodeUrl()); // true = background loading
         qrCodeImage.setImage(qrImage);
         qrCodeSecret.setText(totpSetupResponse.getSecret());

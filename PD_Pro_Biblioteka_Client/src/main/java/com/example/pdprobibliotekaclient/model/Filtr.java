@@ -168,16 +168,16 @@ public class Filtr {
 
   @Override
   public String toString() {
-    return "Filtr{" +
-        "id=" + id +
-        ", tytul='" + tytul + '\'' +
-        ", id_autora=" + idAutora +
-        ", gatunek='" + gatunek + '\'' +
-        ", data_Wydania=" + dataWydania +
-        ", czy_wypozyczono=" + czyWypozyczono +
-        ", rezerwacja=" + rezerwacja +
-        ", id_placowki=" + idPlacowki +
-        ", dodano='" + dodano + '\'' +
-        '}';
+    return "Filtr{"
+        + "id=" + id
+        + ", tytul='" + tytul + '\''
+        + ", id_autora=" + idAutora
+        + ", gatunek='" + gatunek + '\''
+        + ", data_Wydania=" + dataWydania
+        + ", czy_wypozyczono=" + czyWypozyczono
+        + ", rezerwacja=" + rezerwacja
+        + ", id_placowki=" + idPlacowki
+        + ", dodano='" + dodano + '\''
+        + '}';
   }
 }

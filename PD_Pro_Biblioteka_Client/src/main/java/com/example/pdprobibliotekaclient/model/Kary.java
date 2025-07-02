@@ -40,13 +40,13 @@ public class Kary {
 
 
   public Kary(int id, double kwota, String dataWydaniaKary, String terminZaplaty,
-      Boolean czyZaplacono, int id_uzytkownika, String opis) {
+      Boolean czyZaplacono, int iduzytkownika, String opis) {
     this.id.set(id);
     this.Kwota.set(kwota);
     this.Data_Wydania_Kary.set(dataWydaniaKary);
     this.Termin_Zaplaty.set(terminZaplaty);
     this.Czy_Zaplacono.set(czyZaplacono);
-    this.id_uzytkownika.set(id_uzytkownika);
+    this.id_uzytkownika.set(iduzytkownika);
     this.Opis.set(opis);
   }
 

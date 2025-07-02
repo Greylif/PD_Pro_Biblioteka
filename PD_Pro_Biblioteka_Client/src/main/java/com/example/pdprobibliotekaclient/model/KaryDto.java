@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.model;
 
-public class KaryDTO {
+public class KaryDto {
 
   public int id;
   public double Kwota;

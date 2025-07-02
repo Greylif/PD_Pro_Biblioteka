@@ -28,7 +28,7 @@ public class Addpenalty {
   @FXML
   private TextField pendesc;
   @FXML
-  private TextField userID;
+  private TextField userid;
   @FXML
   private TextField userPen;
   @FXML
@@ -47,7 +47,7 @@ public class Addpenalty {
       String form = "kwota=" + URLEncoder.encode(userPen.getText(), StandardCharsets.UTF_8)
           + "&dataWydaniaKary=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8)
           + "&terminZaplaty=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8)
-          + "&idUzytkownika=" + URLEncoder.encode(userID.getText(), StandardCharsets.UTF_8)
+          + "&idUzytkownika=" + URLEncoder.encode(userid.getText(), StandardCharsets.UTF_8)
           + "&opis=" + URLEncoder.encode(pendesc.getText(), StandardCharsets.UTF_8);
 
       logger.info(form);

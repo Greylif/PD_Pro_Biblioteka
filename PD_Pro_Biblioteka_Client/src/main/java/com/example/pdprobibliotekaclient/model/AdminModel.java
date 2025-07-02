@@ -40,15 +40,15 @@ public class AdminModel {
 
 
   public AdminModel(int id, String imie, String nazwisko, String nazwaUzytkownika, String haslo,
-      int idPlacowki, Boolean mfa_Enabled, String Mfa_Secret) {
+      int idPlacowki, Boolean mfaenabled, String mfaSecret) {
     this.id.set(id);
     this.Imie.set(imie);
     this.Nazwisko.set(nazwisko);
     this.Nazwa_Uzytkownika.set(nazwaUzytkownika);
     this.Haslo.set(haslo);
     this.id_placowki.set(idPlacowki);
-    this.Mfa_Enabled.set(mfa_Enabled);
-    this.Mfa_Secret.set(Mfa_Secret);
+    this.Mfa_Enabled.set(mfaenabled);
+    this.Mfa_Secret.set(mfaSecret);
   }
 
   public IntegerProperty idProperty() {

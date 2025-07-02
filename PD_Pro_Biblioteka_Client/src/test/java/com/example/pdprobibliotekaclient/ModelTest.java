@@ -442,7 +442,7 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationAdminDTO() {
-        AdminDTO original = new AdminDTO();
+        AdminDto original = new AdminDto();
         original.id = 2;
         original.Imie = "Anna";
         original.Nazwisko = "Nowak";
@@ -453,7 +453,7 @@ class ModelTest {
         original.Mfa_Secret = "xyzSecret";
 
         String json = gson.toJson(original);
-        AdminDTO deserialized = gson.fromJson(json, AdminDTO.class);
+        AdminDto deserialized = gson.fromJson(json, AdminDto.class);
 
         assertEquals(original.id, deserialized.id);
         assertEquals(original.Imie, deserialized.Imie);
@@ -467,14 +467,14 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationAuthorDTO() {
-        AutorzyDTO original = new AutorzyDTO();
+        AutorzyDto original = new AutorzyDto();
         original.id = 10;
         original.Imie = "Juliusz";
         original.Nazwisko = "Słowacki";
         original.Rok_Urodzenia = 1809;
 
         String json = gson.toJson(original);
-        AutorzyDTO deserialized = gson.fromJson(json, AutorzyDTO.class);
+        AutorzyDto deserialized = gson.fromJson(json, AutorzyDto.class);
 
         assertEquals(original.id, deserialized.id);
         assertEquals(original.Imie, deserialized.Imie);
@@ -484,7 +484,7 @@ class ModelTest {
 
     @Test
     void testFieldAssignmentFiltrDTO() {
-        FiltrDTO dto = new FiltrDTO();
+        FiltrDto dto = new FiltrDto();
         dto.id = 101;
         dto.Tytul = "Krzyżacy";
         dto.Gatunek = "Historyczna";
@@ -512,7 +512,7 @@ class ModelTest {
 
     @Test
     void testJsonSerializationFiltrDTO() {
-        FiltrDTO dto = new FiltrDTO();
+        FiltrDto dto = new FiltrDto();
         dto.id = 1;
         dto.Tytul = "Lalka";
         dto.Gatunek = "Powieść";
@@ -526,7 +526,7 @@ class ModelTest {
         dto.Nazwisko = "Prus";
 
         String json = gson.toJson(dto);
-        FiltrDTO fromJson = gson.fromJson(json, FiltrDTO.class);
+        FiltrDto fromJson = gson.fromJson(json, FiltrDto.class);
 
         assertEquals(dto.Tytul, fromJson.Tytul);
         assertEquals(dto.Nazwisko, fromJson.Nazwisko);
@@ -535,7 +535,7 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationKaryDTO() {
-        KaryDTO kara = new KaryDTO();
+        KaryDto kara = new KaryDto();
         kara.id = 1;
         kara.Kwota = 123.45;
         kara.Data_Wydania_Kary = "2025-06-16";
@@ -546,7 +546,7 @@ class ModelTest {
 
         String json = gson.toJson(kara);
 
-        KaryDTO kara2 = gson.fromJson(json, KaryDTO.class);
+        KaryDto kara2 = gson.fromJson(json, KaryDto.class);
 
         assertEquals(kara.id, kara2.id);
         assertEquals(kara.Kwota, kara2.Kwota, 0.001);
@@ -559,7 +559,7 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationKsiazkaDTO() {
-        KsiazkaDTO ksiazka = new KsiazkaDTO();
+        KsiazkaDto ksiazka = new KsiazkaDto();
         ksiazka.id = 1;
         ksiazka.Tytul = "Pan Tadeusz";
         ksiazka.Gatunek = "Epos";
@@ -572,7 +572,7 @@ class ModelTest {
 
         String json = gson.toJson(ksiazka);
 
-        KsiazkaDTO ksiazka2 = gson.fromJson(json, KsiazkaDTO.class);
+        KsiazkaDto ksiazka2 = gson.fromJson(json, KsiazkaDto.class);
 
         assertEquals(ksiazka.id, ksiazka2.id);
         assertEquals(ksiazka.Tytul, ksiazka2.Tytul);
@@ -587,13 +587,13 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationPlacowkaDTO() {
-        PlacowkaDTO placowka = new PlacowkaDTO();
+        PlacowkaDto placowka = new PlacowkaDto();
         placowka.id = 5;
         placowka.Adres = "ul. Kwiatowa 10, Warszawa";
 
         String json = gson.toJson(placowka);
 
-        PlacowkaDTO placowka2 = gson.fromJson(json, PlacowkaDTO.class);
+        PlacowkaDto placowka2 = gson.fromJson(json, PlacowkaDto.class);
 
         assertEquals(placowka.id, placowka2.id);
         assertEquals(placowka.Adres, placowka2.Adres);
@@ -601,7 +601,7 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationUzytkownikDTO() {
-        UzytkownikDTO user = new UzytkownikDTO();
+        UzytkownikDto user = new UzytkownikDto();
         user.id = 1;
         user.Imie = "Jan";
         user.Nazwisko = "Kowalski";
@@ -615,7 +615,7 @@ class ModelTest {
 
         String json = gson.toJson(user);
 
-        UzytkownikDTO user2 = gson.fromJson(json, UzytkownikDTO.class);
+        UzytkownikDto user2 = gson.fromJson(json, UzytkownikDto.class);
 
         assertEquals(user.id, user2.id);
         assertEquals(user.Imie, user2.Imie);
@@ -631,7 +631,7 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserialization() {
-        WypozyczeniaDTO wypozyczenie = new WypozyczeniaDTO();
+        WypozyczeniaDto wypozyczenie = new WypozyczeniaDto();
         wypozyczenie.id = 123;
         wypozyczenie.Data_Wypozyczenia = "2025-06-16";
         wypozyczenie.Data_Oddania = "2025-07-01";
@@ -641,7 +641,7 @@ class ModelTest {
 
         String json = gson.toJson(wypozyczenie);
 
-        WypozyczeniaDTO wypozyczenie2 = gson.fromJson(json, WypozyczeniaDTO.class);
+        WypozyczeniaDto wypozyczenie2 = gson.fromJson(json, WypozyczeniaDto.class);
 
         assertEquals(wypozyczenie.id, wypozyczenie2.id);
         assertEquals(wypozyczenie.Data_Wypozyczenia, wypozyczenie2.Data_Wypozyczenia);
@@ -653,13 +653,13 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationTOTPSetup() {
-        TOTPSetupResponse response = new TOTPSetupResponse();
+        TotpSetupResponse response = new TotpSetupResponse();
         try {
-            java.lang.reflect.Field qrCodeField = TOTPSetupResponse.class.getDeclaredField("qrCodeUrl");
+            java.lang.reflect.Field qrCodeField = TotpSetupResponse.class.getDeclaredField("qrCodeUrl");
             qrCodeField.setAccessible(true);
             qrCodeField.set(response, "https://example.com/qrcode");
 
-            java.lang.reflect.Field secretField = TOTPSetupResponse.class.getDeclaredField("secret");
+            java.lang.reflect.Field secretField = TotpSetupResponse.class.getDeclaredField("secret");
             secretField.setAccessible(true);
             secretField.set(response, "SECRET123");
         } catch (Exception e) {
@@ -668,7 +668,7 @@ class ModelTest {
 
         String json = gson.toJson(response);
 
-        TOTPSetupResponse responseFromJson = gson.fromJson(json, TOTPSetupResponse.class);
+        TotpSetupResponse responseFromJson = gson.fromJson(json, TotpSetupResponse.class);
 
         assertEquals("https://example.com/qrcode", responseFromJson.getQrCodeUrl());
         assertEquals("SECRET123", responseFromJson.getSecret());
@@ -676,12 +676,12 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationTOTPRequest() {
-        TOTPRequest request = new TOTPRequest("user123", 123456);
+        TotpRequest request = new TotpRequest("user123", 123456);
 
         String json = gson.toJson(request);
         System.out.println("Serialized JSON: " + json);
 
-        TOTPRequest requestFromJson = gson.fromJson(json, TOTPRequest.class);
+        TotpRequest requestFromJson = gson.fromJson(json, TotpRequest.class);
 
         assertEquals("user123", requestFromJson.getUsername());
         assertEquals(123456, requestFromJson.getTotp());

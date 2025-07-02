@@ -6,11 +6,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
 
-public class JWTdecoder {
+public class Jwtdecoder {
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
-  private JWTdecoder() {
+  private Jwtdecoder() {
     throw new UnsupportedOperationException("Utility class");
   }
 

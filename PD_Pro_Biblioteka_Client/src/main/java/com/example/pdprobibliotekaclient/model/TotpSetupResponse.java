@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.model;
 
-public class TOTPSetupResponse {
+public class TotpSetupResponse {
 
   private String qrCodeUrl;
   private String secret;

@@ -29,9 +29,9 @@ public class Addborow {
 
   private static final Logger logger = Logger.getLogger(Addborow.class.getName());
   @FXML
-  private TextField borrowUserID;
+  private TextField borrowUserid;
   @FXML
-  private TextField borrowBookID;
+  private TextField borrowBookid;
   @FXML
   private DatePicker borrowReturnDate;
   @FXML
@@ -51,8 +51,9 @@ public class Addborow {
       String form =
           "dataWypozyczenia=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8)
               + "&terminOddania=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8)
-              + "&idKsiazki=" + URLEncoder.encode(borrowBookID.getText(), StandardCharsets.UTF_8)
-              + "&idUzytkownika=" + URLEncoder.encode(borrowUserID.getText(), StandardCharsets.UTF_8);
+              + "&idKsiazki=" + URLEncoder.encode(borrowBookid.getText(), StandardCharsets.UTF_8)
+              + "&idUzytkownika=" + URLEncoder.encode(borrowUserid.getText(),
+              StandardCharsets.UTF_8);
 
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/wypozyczenia"))
