@@ -8,7 +8,6 @@ import com.example.pdprobiblioteka.exceptions.AccountValidationException;
 import com.example.pdprobiblioteka.exceptions.EmailSendException;
 import com.example.pdprobiblioteka.exceptions.ErrorResponse;
 import com.example.pdprobiblioteka.exceptions.GlobalExceptionHandler;
-import com.example.pdprobiblioteka.exceptions.InstanceNotFoundException;
 import com.example.pdprobiblioteka.exceptions.JsonFileException;
 import com.example.pdprobiblioteka.exceptions.SupabaseConnectionException;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,19 +24,6 @@ class ExceptionsTest {
   @BeforeEach
   void setUp() {
     handler = new GlobalExceptionHandler();
-  }
-
-
-  @Test
-  @DisplayName("Test dzialania InstanceNotFoundException")
-  void testInstanceNotFoundException() {
-    InstanceNotFoundException ex = new InstanceNotFoundException("Account 123 not found");
-
-    ResponseEntity<ErrorResponse> response = handler.handleInstanceNotFoundException(ex);
-
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    assertEquals("Account Not Found", response.getBody().getError());
-    assertEquals("Account 123 not found", response.getBody().getMessage());
   }
 
   @Test

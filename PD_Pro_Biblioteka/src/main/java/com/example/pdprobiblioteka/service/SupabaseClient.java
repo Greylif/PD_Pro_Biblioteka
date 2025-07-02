@@ -1,7 +1,6 @@
 package com.example.pdprobiblioteka.service;
 
 import com.example.pdprobiblioteka.exceptions.EmailSendException;
-import com.example.pdprobiblioteka.exceptions.InstanceNotFoundException;
 import com.example.pdprobiblioteka.exceptions.JsonFileException;
 import com.example.pdprobiblioteka.exceptions.SupabaseConnectionException;
 import com.example.pdprobiblioteka.model.Admin;

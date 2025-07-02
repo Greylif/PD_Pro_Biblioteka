@@ -15,21 +15,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class GlobalExceptionHandler {
 
   /**
-   * Obsługuje wyjątek InstanceNotFoundException (404 - nie znaleziono zasobu).
-   */
-  @ExceptionHandler(InstanceNotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  public ResponseEntity<ErrorResponse> handleInstanceNotFoundException(
-      InstanceNotFoundException ex) {
-    ErrorResponse errorResponse = new ErrorResponse(
-        HttpStatus.NOT_FOUND.value(),
-        "Account Not Found",
-        ex.getMessage()
-    );
-    return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
-  }
-
-  /**
    * Obsługuje wyjątek AccountValidationException (400 - błąd walidacji).
    */
   @ExceptionHandler(AccountValidationException.class)
