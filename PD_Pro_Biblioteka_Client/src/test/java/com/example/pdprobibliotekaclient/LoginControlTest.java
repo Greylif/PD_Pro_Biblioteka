@@ -1,7 +1,5 @@
 package com.example.pdprobibliotekaclient;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

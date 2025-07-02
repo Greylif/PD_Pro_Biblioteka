@@ -57,7 +57,8 @@ public class Login {
           LogUser.setUserToken(loginResponse.get(TOKEN).getAsString());
           Jwtdecoder.decodeToLogUser(loginResponse.get(TOKEN).getAsString());
 
-          List<UzytkownikDto> usersDto = fetchUserDetails(LogUser.getUserIdStr(), LogUser.getUserToken());
+          List<UzytkownikDto> usersDto = fetchUserDetails(LogUser.getUserIdStr(),
+              LogUser.getUserToken());
           if (usersDto != null && !usersDto.isEmpty()) {
             setupLoggedInUser(usersDto.getFirst(), password);
             openClientView(actionEvent);
@@ -106,7 +107,8 @@ public class Login {
           LogAdmin.setAdminToken(loginResponse.get(TOKEN).getAsString());
           Jwtdecoder.decodeToLogAdm(loginResponse.get(TOKEN).getAsString());
 
-          List<AdminDto> adminDtoS = fetchAdminDetails(LogAdmin.getAdmIdStr(), LogAdmin.getAdminToken());
+          List<AdminDto> adminDtoS = fetchAdminDetails(LogAdmin.getAdmIdStr(),
+              LogAdmin.getAdminToken());
           if (adminDtoS != null && !adminDtoS.isEmpty()) {
             setupLoggedInAdmin(adminDtoS.getFirst(), password);
             openAdminView(actionEvent);
@@ -123,7 +125,8 @@ public class Login {
     }
   }
 
-  private JsonObject sendLoginRequest(String username, String password, Integer twoFacode, boolean isAdmin) throws IOException, InterruptedException {
+  private JsonObject sendLoginRequest(String username, String password,
+      Integer twoFacode, boolean isAdmin) throws IOException, InterruptedException {
     Gson gson = new Gson();
     @SuppressWarnings("java:S2095")
     HttpClient client = HttpClient.newHttpClient();
@@ -143,17 +146,21 @@ public class Login {
     return response.statusCode() == 200 ? gson.fromJson(response.body(), JsonObject.class) : null;
   }
 
-  private List<UzytkownikDto> fetchUserDetails(String userId, String token) throws IOException, InterruptedException {
+  private List<UzytkownikDto> fetchUserDetails(String userId, String token)
+      throws IOException, InterruptedException {
     String url = "https://localhost:8443/library/uzytkownicy/" + userId;
     return fetchDtoList(url, token, new TypeToken<List<UzytkownikDto>>() {}.getType());
   }
 
-  private List<AdminDto> fetchAdminDetails(String adminId, String token) throws IOException, InterruptedException {
+  private List<AdminDto> fetchAdminDetails(String adminId, String token)
+      throws IOException, InterruptedException {
     String url = "https://localhost:8443/library/admini/" + adminId;
-    return fetchDtoList(url, token, new TypeToken<List<AdminDto>>() {}.getType());
+    return fetchDtoList(url, token,
+        new TypeToken<List<AdminDto>>() {}.getType());
   }
 
-  private <T> List<T> fetchDtoList(String url, String token, Type type) throws IOException, InterruptedException {
+  private <T> List<T> fetchDtoList(String url, String token,
+      Type type) throws IOException, InterruptedException {
     @SuppressWarnings("java:S2095")
     HttpClient client = HttpClient.newHttpClient();
     HttpRequest request = HttpRequest.newBuilder()
@@ -167,13 +174,15 @@ public class Login {
   }
 
   private void setupLoggedInUser(UzytkownikDto dto, String password) {
-    Uzytkownik user = new Uzytkownik(dto.id, dto.Imie, dto.Nazwisko, dto.Nazwa_Uzytkownika, password,
+    Uzytkownik user = new Uzytkownik(dto.id, dto.Imie,
+        dto.Nazwisko, dto.Nazwa_Uzytkownika, password,
         dto.Email, dto.Data_Urodzenia, dto.Zablokowany, dto.Mfa_Enabled, dto.Mfa_Secret);
     LogUser.set(user);
   }
 
   private void setupLoggedInAdmin(AdminDto dto, String password) {
-    AdminModel admin = new AdminModel(dto.id, dto.Imie, dto.Nazwisko, dto.Nazwa_Uzytkownika, password,
+    AdminModel admin = new AdminModel(dto.id, dto.Imie,
+        dto.Nazwisko, dto.Nazwa_Uzytkownika, password,
         dto.id_placowki, dto.Mfa_Enabled, dto.Mfa_Secret);
     LogAdmin.set(admin);
   }
