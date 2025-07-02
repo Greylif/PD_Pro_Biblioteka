@@ -599,7 +599,10 @@ public class Admin {
       logStage.setTitle(LOGOWANIE);
       logStage.setScene(new Scene(logRoot));
       logStage.show();
-      sessionMonitor.stop();
+
+      if (sessionMonitor != null) {
+        sessionMonitor.stop();
+      }
 
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.getMessage());

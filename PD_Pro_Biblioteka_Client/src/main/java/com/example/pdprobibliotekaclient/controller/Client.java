@@ -234,10 +234,13 @@ public class Client {
       Parent logRoot = fxmlLoader.load();
 
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL);
+      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
       logStage.setScene(new Scene(logRoot));
       logStage.show();
-      sessionMonitor.stop();
+
+      if (sessionMonitor != null) {
+        sessionMonitor.stop();
+      }
 
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.getMessage());

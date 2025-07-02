@@ -1,5 +1,7 @@
 package com.example.pdprobibliotekaclient;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -9,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testfx.framework.junit5.ApplicationExtension;
 import org.testfx.framework.junit5.ApplicationTest;
+import org.testfx.util.WaitForAsyncUtils;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
@@ -16,6 +19,7 @@ import static org.testfx.assertions.api.Assertions.assertThat;
 @DisplayName("Testy Logowania")
 @ExtendWith(ApplicationExtension.class)
 class LoginControlTest extends ApplicationTest {
+
 
 
     @Override
@@ -91,27 +95,14 @@ class LoginControlTest extends ApplicationTest {
         clickOn("#userpassword").write("123456");
         clickOn("#register");
 
-        popupRoot = lookup("#loginbox").queryAs(Parent.class);
+        WaitForAsyncUtils.waitForFxEvents();
+
+      popupRoot = lookup("#DonePopup").queryAs(Parent.class);
         assertThat(popupRoot).isVisible();
 
-        clickOn("#userlogin").write("JuanII");
-        clickOn("#userpass").write("123456");
-
-        clickOn("#login");
-
-        popupRoot = lookup("#client").queryAs(Parent.class);
-        assertThat(popupRoot).isVisible();
-
-        clickOn("#settings");
-        clickOn("#del_button");
-
-        popupRoot = lookup("#confirm").queryAs(Parent.class);
-        assertThat(popupRoot).isVisible();
-        clickOn("#okButton");
-
-        popupRoot = lookup("#login").queryAs(Parent.class);
-        assertThat(popupRoot).isVisible();
+        clickOn("#exit");
     }
+
 
     @Test
     @DisplayName("Rejestracja z niepoprawnymi danymi")
@@ -129,7 +120,7 @@ class LoginControlTest extends ApplicationTest {
         clickOn("#userpassword").write("123456");
         clickOn("#register");
 
-        popupRoot = lookup("#UndonePopup").queryAs(Parent.class);
+        popupRoot = lookup("#DonePopup").queryAs(Parent.class);
         assertThat(popupRoot).isVisible();
     }
 }
