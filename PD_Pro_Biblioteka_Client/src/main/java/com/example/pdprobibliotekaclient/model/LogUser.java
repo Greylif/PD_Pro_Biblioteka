@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-public class logUser {
+public class LogUser {
 
   @Getter
   public static String userIdStr;
@@ -32,7 +32,7 @@ public class logUser {
   private long exp;
 
   @JsonCreator
-  public logUser(
+  public LogUser(
       @JsonProperty("sub") String sub,
       @JsonProperty("role") String role,
       @JsonProperty("userId") String userId,

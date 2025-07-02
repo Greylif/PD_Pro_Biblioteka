@@ -48,7 +48,6 @@ public class Register {
       LocalDate selectedDate = userdate.getValue();
       String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-      // Tworzymy dane formularza
       String form = "imie=" + URLEncoder.encode(username.getText(), StandardCharsets.UTF_8)
           + "&nazwisko=" + URLEncoder.encode(usersurname.getText(), StandardCharsets.UTF_8)
           + "&dataUrodzenia=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8)
@@ -56,23 +55,20 @@ public class Register {
           + "&haslo=" + URLEncoder.encode(userpassword.getText(), StandardCharsets.UTF_8)
           + "&email=" + URLEncoder.encode(useremail.getText(), StandardCharsets.UTF_8);
 
-      // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/uzytkownicy"))
           .header("Content-Type", "application/x-www-form-urlencoded")
           .POST(HttpRequest.BodyPublishers.ofString(form))
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Rejestracja");
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
@@ -83,9 +79,8 @@ public class Register {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UndonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Rejestracja");
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();

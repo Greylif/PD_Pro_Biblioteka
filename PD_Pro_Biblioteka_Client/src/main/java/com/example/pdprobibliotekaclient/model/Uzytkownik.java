@@ -46,19 +46,19 @@ public class Uzytkownik {
   private BooleanProperty Mfa_Enabled = new SimpleBooleanProperty();
   private StringProperty Mfa_Secret = new SimpleStringProperty();
 
-  public Uzytkownik(int id, String imie, String nazwisko, String nazwa_uzytkownika, String haslo,
-      String email, String dataUrodzenia, boolean zablokowany, boolean Mfa_Enabled,
-      String Mfa_Secret) {
+  public Uzytkownik(int id, String imie, String nazwisko, String nazwauzytkownika, String haslo,
+      String email, String dataUrodzenia, boolean zablokowany, boolean mfaEnabled,
+      String mfaSecret) {
     this.id.set(id);
     this.Imie.set(imie);
     this.Nazwisko.set(nazwisko);
-    this.Nazwa_Uzytkownika.set(nazwa_uzytkownika);
+    this.Nazwa_Uzytkownika.set(nazwauzytkownika);
     this.Haslo.set(haslo);
     this.Email.set(email);
     this.Data_urodzenia.set(dataUrodzenia);
     this.Zablokowany.set(zablokowany);
-    this.Mfa_Enabled.set(Mfa_Enabled);
-    this.Mfa_Secret.set(Mfa_Secret);
+    this.Mfa_Enabled.set(mfaEnabled);
+    this.Mfa_Secret.set(mfaSecret);
   }
 
   public BooleanProperty ZablokowanyProperty() {

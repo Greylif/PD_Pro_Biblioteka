@@ -2,11 +2,11 @@ package com.example.pdprobibliotekaclient.controller;
 
 import com.example.pdprobibliotekaclient.model.AdminDto;
 import com.example.pdprobibliotekaclient.model.AdminModel;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import com.example.pdprobibliotekaclient.model.LoginRequest;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
 import com.example.pdprobibliotekaclient.model.UzytkownikDto;
-import com.example.pdprobibliotekaclient.model.logAdmin;
-import com.example.pdprobibliotekaclient.model.logUser;
 import com.example.pdprobibliotekaclient.service.Jwtdecoder;
 import com.example.pdprobibliotekaclient.service.SessionMonitor;
 import com.google.gson.Gson;
@@ -43,7 +43,7 @@ public class Login {
   @FXML
   private TextField userlogin;
   @FXML
-  private TextField twoFA;
+  private TextField twofa;
 
   public void loginact(javafx.event.ActionEvent actionEvent) {
     try {
@@ -52,16 +52,16 @@ public class Login {
       HttpClient client = HttpClient.newHttpClient();
       String username = userlogin.getText();
       String password = userpass.getText();
-      Integer twoFAcode = null;
+      Integer twoFacode = null;
 
-      if (!twoFA.getText().isEmpty()) {
-        twoFAcode = parseTwoFACode(twoFA.getText());
-        if (twoFAcode == null) {
+      if (!twofa.getText().isEmpty()) {
+        twoFacode = parseTwoFaCode(twofa.getText());
+        if (twoFacode == null) {
           return;
         }
       }
 
-      LoginRequest loginData = new LoginRequest(username, password, twoFAcode);
+      LoginRequest loginData = new LoginRequest(username, password, twoFacode);
       String requestBody = gson.toJson(loginData);
 
       HttpRequest request = HttpRequest.newBuilder()
@@ -78,16 +78,16 @@ public class Login {
       if (code == 200) {
         JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
 
-        logUser.setUserToken(jsonObject.get(TOKEN).getAsString());
+        LogUser.setUserToken(jsonObject.get(TOKEN).getAsString());
 
         if (jsonObject.get(TOKEN) != null) {
           Jwtdecoder.decodeToLogUser(String.valueOf(jsonObject.get(TOKEN)));
 
-          String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
+          String url = "https://localhost:8443/library/uzytkownicy/" + LogUser.getUserIdStr();
 
           HttpRequest requestClient = HttpRequest.newBuilder()
               .uri(URI.create(url))
-              .header("Authorization", "Bearer " + logUser.getUserToken())
+              .header("Authorization", "Bearer " + LogUser.getUserToken())
               .GET()
               .build();
 
@@ -106,7 +106,6 @@ public class Login {
             if (usersDto != null && !usersDto.isEmpty()) {
               UzytkownikDto dto = usersDto.getFirst();
 
-              // Konwersja DTO -> Uzytkownik
               Uzytkownik user = new Uzytkownik(
                   dto.id,
                   dto.Imie,
@@ -119,7 +118,7 @@ public class Login {
                   dto.Mfa_Enabled,
                   dto.Mfa_Secret
               );
-              logUser.set(user);
+              LogUser.set(user);
 
               Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
               stage.close();
@@ -129,7 +128,7 @@ public class Login {
 
               Stage regStage = new Stage();
               regStage.initModality(
-                  Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+                  Modality.APPLICATION_MODAL);
               regStage.setTitle("Klient");
               regStage.setScene(new Scene(regRoot));
               regStage.show();
@@ -155,7 +154,7 @@ public class Login {
   }
 
 
-  private Integer parseTwoFACode(String input) {
+  private Integer parseTwoFaCode(String input) {
     try {
       return Integer.parseInt(input);
     } catch (NumberFormatException e) {
@@ -168,7 +167,7 @@ public class Login {
     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UndonePopup.fxml"));
     Parent regRoot = fxmlLoader.load();
     Stage regStage = new Stage();
-    regStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+    regStage.initModality(Modality.APPLICATION_MODAL);
     regStage.setScene(new Scene(regRoot));
     regStage.show();
   }
@@ -182,16 +181,16 @@ public class Login {
 
       String username = userlogin.getText();
       String password = userpass.getText();
-      Integer twoFAcode = null;
+      Integer twoFacode = null;
 
-      if (!twoFA.getText().isEmpty()) {
-        twoFAcode = parseTwoFACode(twoFA.getText());
-        if (twoFAcode == null) {
+      if (!twofa.getText().isEmpty()) {
+        twoFacode = parseTwoFaCode(twofa.getText());
+        if (twoFacode == null) {
           return;
         }
       }
 
-      LoginRequest loginData = new LoginRequest(username, password, twoFAcode);
+      LoginRequest loginData = new LoginRequest(username, password, twoFacode);
       String requestBody = gson.toJson(loginData);
 
       HttpRequest request = HttpRequest.newBuilder()
@@ -206,16 +205,16 @@ public class Login {
 
       if (code == 200) {
         JsonObject jsonObject = gson.fromJson(response.body(), JsonObject.class);
-        logAdmin.setAdminToken(jsonObject.get(TOKEN).getAsString());
+        LogAdmin.setAdminToken(jsonObject.get(TOKEN).getAsString());
 
         if (jsonObject.get(TOKEN) != null) {
           Jwtdecoder.decodeToLogAdm(String.valueOf(jsonObject.get(TOKEN)));
 
-          String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
+          String url = "https://localhost:8443/library/admini/" + LogAdmin.getAdmIdStr();
 
           HttpRequest requestClient = HttpRequest.newBuilder()
               .uri(URI.create(url))
-              .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+              .header("Authorization", "Bearer " + LogAdmin.getAdminToken())
               .GET()
               .build();
 
@@ -228,12 +227,11 @@ public class Login {
             Type listType = new TypeToken<List<AdminDto>>() {
             }.getType();
 
-            List<AdminDto> adminDTOS = gson.fromJson(result, listType);
+            List<AdminDto> adminDtoS = gson.fromJson(result, listType);
 
-            if (adminDTOS != null && !adminDTOS.isEmpty()) {
-              AdminDto dto = adminDTOS.getFirst();
+            if (adminDtoS != null && !adminDtoS.isEmpty()) {
+              AdminDto dto = adminDtoS.getFirst();
 
-              // Konwersja DTO -> Uzytkownik
               AdminModel admin = new AdminModel(
                   dto.id,
                   dto.Imie,
@@ -244,7 +242,7 @@ public class Login {
                   dto.Mfa_Enabled,
                   dto.Mfa_Secret
               );
-              logAdmin.set(admin);
+              LogAdmin.set(admin);
             }
 
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -289,7 +287,7 @@ public class Login {
       Parent regRoot = fxmlLoader.load();
 
       Stage regStage = new Stage();
-      regStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      regStage.initModality(Modality.APPLICATION_MODAL);
       regStage.setTitle("Rejestracja");
       regStage.setScene(new Scene(regRoot));
       regStage.show();
@@ -309,7 +307,7 @@ public class Login {
       Parent remRoot = fxmlLoader.load();
 
       Stage remStage = new Stage();
-      remStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      remStage.initModality(Modality.APPLICATION_MODAL);
       remStage.setTitle("Przypomnij hasło");
       remStage.setScene(new Scene(remRoot));
       remStage.show();

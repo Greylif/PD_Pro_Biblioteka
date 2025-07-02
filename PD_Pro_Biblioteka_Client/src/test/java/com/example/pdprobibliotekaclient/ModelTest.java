@@ -535,68 +535,68 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserializationKaryDTO() {
-        KaryDto kara = new KaryDto();
-        kara.id = 1;
-        kara.Kwota = 123.45;
-        kara.Data_Wydania_Kary = "2025-06-16";
-        kara.Termin_Zaplaty = "2025-07-16";
-        kara.Czy_Zaplacono = "true";
-        kara.id_uzytkownika = 99;
-        kara.opis = "Testowa kara";
+        KaryDto kara2 = new KaryDto();
+        kara2.id = 1;
+        kara2.Kwota = 123.45;
+        kara2.Data_Wydania_Kary = "2025-06-16";
+        kara2.Termin_Zaplaty = "2025-07-16";
+        kara2.Czy_Zaplacono = "true";
+        kara2.id_uzytkownika = 99;
+        kara2.opis = "Testowa kara";
 
-        String json = gson.toJson(kara);
+        String json = gson.toJson(kara2);
 
-        KaryDto kara2 = gson.fromJson(json, KaryDto.class);
+        KaryDto kara3 = gson.fromJson(json, KaryDto.class);
 
-        assertEquals(kara.id, kara2.id);
-        assertEquals(kara.Kwota, kara2.Kwota, 0.001);
-        assertEquals(kara.Data_Wydania_Kary, kara2.Data_Wydania_Kary);
-        assertEquals(kara.Termin_Zaplaty, kara2.Termin_Zaplaty);
-        assertEquals(kara.Czy_Zaplacono, kara2.Czy_Zaplacono);
-        assertEquals(kara.id_uzytkownika, kara2.id_uzytkownika);
-        assertEquals(kara.opis, kara2.opis);
+        assertEquals(kara2.id, kara3.id);
+        assertEquals(kara2.Kwota, kara3.Kwota, 0.001);
+        assertEquals(kara2.Data_Wydania_Kary, kara3.Data_Wydania_Kary);
+        assertEquals(kara2.Termin_Zaplaty, kara3.Termin_Zaplaty);
+        assertEquals(kara2.Czy_Zaplacono, kara3.Czy_Zaplacono);
+        assertEquals(kara2.id_uzytkownika, kara3.id_uzytkownika);
+        assertEquals(kara2.opis, kara3.opis);
     }
 
     @Test
     void testSerializationAndDeserializationKsiazkaDTO() {
-        KsiazkaDto ksiazka = new KsiazkaDto();
-        ksiazka.id = 1;
-        ksiazka.Tytul = "Pan Tadeusz";
-        ksiazka.Gatunek = "Epos";
-        ksiazka.Dodano = "2025-06-16";
-        ksiazka.id_autora = 10;
-        ksiazka.id_placowki = 3;
-        ksiazka.Rezerwacja = false;
-        ksiazka.czy_wypozyczono = true;
-        ksiazka.Data_Wydania = 1834;
+        KsiazkaDto ksiazka2 = new KsiazkaDto();
+        ksiazka2.id = 1;
+        ksiazka2.Tytul = "Pan Tadeusz";
+        ksiazka2.Gatunek = "Epos";
+        ksiazka2.Dodano = "2025-06-16";
+        ksiazka2.id_autora = 10;
+        ksiazka2.id_placowki = 3;
+        ksiazka2.Rezerwacja = false;
+        ksiazka2.czy_wypozyczono = true;
+        ksiazka2.Data_Wydania = 1834;
 
-        String json = gson.toJson(ksiazka);
+        String json = gson.toJson(ksiazka2);
 
-        KsiazkaDto ksiazka2 = gson.fromJson(json, KsiazkaDto.class);
+        KsiazkaDto ksiazka3 = gson.fromJson(json, KsiazkaDto.class);
 
-        assertEquals(ksiazka.id, ksiazka2.id);
-        assertEquals(ksiazka.Tytul, ksiazka2.Tytul);
-        assertEquals(ksiazka.Gatunek, ksiazka2.Gatunek);
-        assertEquals(ksiazka.Dodano, ksiazka2.Dodano);
-        assertEquals(ksiazka.id_autora, ksiazka2.id_autora);
-        assertEquals(ksiazka.id_placowki, ksiazka2.id_placowki);
-        assertEquals(ksiazka.Rezerwacja, ksiazka2.Rezerwacja);
-        assertEquals(ksiazka.czy_wypozyczono, ksiazka2.czy_wypozyczono);
-        assertEquals(ksiazka.Data_Wydania, ksiazka2.Data_Wydania);
+        assertEquals(ksiazka2.id, ksiazka3.id);
+        assertEquals(ksiazka2.Tytul, ksiazka3.Tytul);
+        assertEquals(ksiazka2.Gatunek, ksiazka3.Gatunek);
+        assertEquals(ksiazka2.Dodano, ksiazka3.Dodano);
+        assertEquals(ksiazka2.id_autora, ksiazka3.id_autora);
+        assertEquals(ksiazka2.id_placowki, ksiazka3.id_placowki);
+        assertEquals(ksiazka2.Rezerwacja, ksiazka3.Rezerwacja);
+        assertEquals(ksiazka2.czy_wypozyczono, ksiazka3.czy_wypozyczono);
+        assertEquals(ksiazka2.Data_Wydania, ksiazka3.Data_Wydania);
     }
 
     @Test
     void testSerializationAndDeserializationPlacowkaDTO() {
-        PlacowkaDto placowka = new PlacowkaDto();
-        placowka.id = 5;
-        placowka.Adres = "ul. Kwiatowa 10, Warszawa";
+        PlacowkaDto placowka2 = new PlacowkaDto();
+        placowka2.id = 5;
+        placowka2.Adres = "ul. Kwiatowa 10, Warszawa";
 
-        String json = gson.toJson(placowka);
+        String json = gson.toJson(placowka2);
 
-        PlacowkaDto placowka2 = gson.fromJson(json, PlacowkaDto.class);
+        PlacowkaDto placowka3 = gson.fromJson(json, PlacowkaDto.class);
 
-        assertEquals(placowka.id, placowka2.id);
-        assertEquals(placowka.Adres, placowka2.Adres);
+        assertEquals(placowka2.id, placowka3.id);
+        assertEquals(placowka2.Adres, placowka3.Adres);
     }
 
     @Test
@@ -631,24 +631,24 @@ class ModelTest {
 
     @Test
     void testSerializationAndDeserialization() {
-        WypozyczeniaDto wypozyczenie = new WypozyczeniaDto();
-        wypozyczenie.id = 123;
-        wypozyczenie.Data_Wypozyczenia = "2025-06-16";
-        wypozyczenie.Data_Oddania = "2025-07-01";
-        wypozyczenie.Termin_Oddania = "2025-07-10";
-        wypozyczenie.id_ksiazki = 456;
-        wypozyczenie.id_uzytkownika = 789;
+        WypozyczeniaDto wypozyczenie2 = new WypozyczeniaDto();
+        wypozyczenie2.id = 123;
+        wypozyczenie2.Data_Wypozyczenia = "2025-06-16";
+        wypozyczenie2.Data_Oddania = "2025-07-01";
+        wypozyczenie2.Termin_Oddania = "2025-07-10";
+        wypozyczenie2.id_ksiazki = 456;
+        wypozyczenie2.id_uzytkownika = 789;
 
-        String json = gson.toJson(wypozyczenie);
+        String json = gson.toJson(wypozyczenie2);
 
-        WypozyczeniaDto wypozyczenie2 = gson.fromJson(json, WypozyczeniaDto.class);
+        WypozyczeniaDto wypozyczenie3 = gson.fromJson(json, WypozyczeniaDto.class);
 
-        assertEquals(wypozyczenie.id, wypozyczenie2.id);
-        assertEquals(wypozyczenie.Data_Wypozyczenia, wypozyczenie2.Data_Wypozyczenia);
-        assertEquals(wypozyczenie.Data_Oddania, wypozyczenie2.Data_Oddania);
-        assertEquals(wypozyczenie.Termin_Oddania, wypozyczenie2.Termin_Oddania);
-        assertEquals(wypozyczenie.id_ksiazki, wypozyczenie2.id_ksiazki);
-        assertEquals(wypozyczenie.id_uzytkownika, wypozyczenie2.id_uzytkownika);
+        assertEquals(wypozyczenie2.id, wypozyczenie3.id);
+        assertEquals(wypozyczenie2.Data_Wypozyczenia, wypozyczenie3.Data_Wypozyczenia);
+        assertEquals(wypozyczenie2.Data_Oddania, wypozyczenie3.Data_Oddania);
+        assertEquals(wypozyczenie2.Termin_Oddania, wypozyczenie3.Termin_Oddania);
+        assertEquals(wypozyczenie2.id_ksiazki, wypozyczenie3.id_ksiazki);
+        assertEquals(wypozyczenie2.id_uzytkownika, wypozyczenie3.id_uzytkownika);
     }
 
     @Test
@@ -688,67 +688,67 @@ class ModelTest {
     }
 
     /**
-     * Testy dla klasy modelu logUser
+     * Testy dla klasy modelu LogUser
      */
-    private logUser userInstance;
+    private LogUser userInstance;
 
     @BeforeEach
     void setUplogUser() {
-        userInstance = new logUser("sub123", "ROLE_USER", "userId456", "false", 123456789L, 987654321L);
-        logUser.setUserToken(null);
-        logUser.setUserEmail(null);
-        logUser.clearUser();
-        logUser.clear();
+        userInstance = new LogUser("sub123", "ROLE_USER", "userId456", "false", 123456789L, 987654321L);
+        LogUser.setUserToken(null);
+        LogUser.setUserEmail(null);
+        LogUser.clearUser();
+        LogUser.clear();
     }
 
     @Test
     void testConstructorAndGetterslogUser() {
-        logUser.setUserIdStr("userId456");
+        LogUser.setUserIdStr("userId456");
         assertEquals("sub123", userInstance.getSub());
         assertEquals("ROLE_USER", userInstance.getRole());
         assertEquals("userId456", userInstance.getUserId());
         assertEquals("false", userInstance.getIsAdmin());
         assertEquals(123456789L, userInstance.getIat());
         assertEquals(987654321L, userInstance.getExp());
-        assertEquals("userId456", logUser.userIdStr);  // static field set in constructor
+        assertEquals("userId456", LogUser.userIdStr);
     }
 
     @Test
     void testSetUserTokenAndGetUserToken() {
-        logUser.setUserToken("token123");
-        assertEquals("token123", logUser.getUserToken());
+        LogUser.setUserToken("token123");
+        assertEquals("token123", LogUser.getUserToken());
     }
 
     @Test
     void testSetUserEmailAndGetUserEmail() {
-        logUser.setUserEmail("test@example.com");
-        assertEquals("test@example.com", logUser.getUserEmail());
+        LogUser.setUserEmail("test@example.com");
+        assertEquals("test@example.com", LogUser.getUserEmail());
     }
 
     @Test
     void testClearUserClearsStaticFields() {
-        logUser.setUserToken("token123");
-        logUser.userIdStr = "someId";
+        LogUser.setUserToken("token123");
+        LogUser.userIdStr = "someId";
 
-        logUser.clearUser();
+        LogUser.clearUser();
 
-        assertNull(logUser.getUserToken());
-        assertNull(logUser.userIdStr);
+        assertNull(LogUser.getUserToken());
+        assertNull(LogUser.userIdStr);
     }
 
     @Test
     void testSetAndGetUserInstance() {
         Uzytkownik mockUser = new Uzytkownik();
-        logUser.set(mockUser);
-        assertEquals(mockUser, logUser.get());
+        LogUser.set(mockUser);
+        assertEquals(mockUser, LogUser.get());
     }
 
     @Test
     void testClearInstance() {
         Uzytkownik mockUser = new Uzytkownik();
-        logUser.set(mockUser);
-        logUser.clear();
-        assertNull(logUser.get());
+        LogUser.set(mockUser);
+        LogUser.clear();
+        assertNull(LogUser.get());
     }
 
     /**

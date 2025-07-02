@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.controller;
 
-import com.example.pdprobibliotekaclient.model.logUser;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -27,25 +27,22 @@ public class TotpRestart {
     try {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
-      // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(
               "https://localhost:8443/library/uzytkownicy/2fa/confirm/" + codeField.getText() + "/"
-                  + logUser.getUserEmail()))
+                  + LogUser.getUserEmail()))
           .header("Content-Type", "application/x-www-form-urlencoded")
           .PUT(HttpRequest.BodyPublishers.noBody())
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest nie poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 
@@ -55,18 +52,16 @@ public class TotpRestart {
         fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
         popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest nie poprawna
         popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
       } else {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UndonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 

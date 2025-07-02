@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.controller;
 
-import com.example.pdprobibliotekaclient.model.logAdmin;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -39,7 +39,6 @@ public class AdminAddbook {
 
   @FXML
   public void initialize() {
-    // Dodanie filtra do pola tekstowego
     UnaryOperator<TextFormatter.Change> filter = change -> {
       String newText = change.getControlNewText();
       if (newText.matches("\\d{0,4}")) {
@@ -59,31 +58,27 @@ public class AdminAddbook {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
 
-      // Tworzymy dane formularza
       String form = "tytul=" + URLEncoder.encode(atitle.getText(), StandardCharsets.UTF_8)
           + "&gatunek=" + URLEncoder.encode(agenre.getText(), StandardCharsets.UTF_8)
           + "&dataWydania=" + URLEncoder.encode(arelaseDate.getText(), StandardCharsets.UTF_8)
           + "&idAutora=" + URLEncoder.encode(aidauthor.getText(), StandardCharsets.UTF_8)
           + "&idPlacowki=" + URLEncoder.encode(aidplac.getText(), StandardCharsets.UTF_8);
 
-      // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/ksiazki?"))
           .header("Content-Type", "application/x-www-form-urlencoded")
-          .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+          .header("Authorization", "Bearer " + LogAdmin.getAdminToken())
           .POST(HttpRequest.BodyPublishers.ofString(form))
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 
@@ -93,9 +88,8 @@ public class AdminAddbook {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/indonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 

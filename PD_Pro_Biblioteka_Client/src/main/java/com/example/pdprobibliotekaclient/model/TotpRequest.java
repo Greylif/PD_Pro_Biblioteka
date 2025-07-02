@@ -6,12 +6,11 @@ import lombok.Data;
 public class TotpRequest {
 
   private String username;
-  private Integer totp; // może być null
+  private Integer totp;
 
-  // Konstruktor
-  public TotpRequest(String username, Integer twoFA) {
+  public TotpRequest(String username, Integer twofa) {
     this.username = username;
-    this.totp = twoFA;
+    this.totp = twofa;
   }
 
 }

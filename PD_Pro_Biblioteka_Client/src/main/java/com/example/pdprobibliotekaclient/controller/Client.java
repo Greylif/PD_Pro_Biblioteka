@@ -8,10 +8,10 @@ import com.example.pdprobibliotekaclient.model.Kary;
 import com.example.pdprobibliotekaclient.model.KaryDto;
 import com.example.pdprobibliotekaclient.model.Ksiazka;
 import com.example.pdprobibliotekaclient.model.KsiazkaDto;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
 import com.example.pdprobibliotekaclient.model.Wypozyczenia;
 import com.example.pdprobibliotekaclient.model.WypozyczeniaDto;
-import com.example.pdprobibliotekaclient.model.logUser;
 import com.example.pdprobibliotekaclient.service.SessionMonitor;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -179,7 +179,6 @@ public class Client {
   public void initialize() {
     fetchData();
 
-    //tab 1 - ksiazki
     sId.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     sIdautor.setCellValueFactory(cellData -> cellData.getValue().idAutoraProperty().asString());
     stitle.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
@@ -191,7 +190,6 @@ public class Client {
     fcombo1.getItems().addAll("tytul", "autorImie", "idPlacowki");
     fcombo2.getItems().addAll("gatunek", "autorNazwisko", "dataWydania");
 
-    //tab 2 - filtry
     fidbook.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     ftitle.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
     fidautor.setCellValueFactory(cellData -> cellData.getValue().idAutoraProperty().asString());
@@ -200,14 +198,12 @@ public class Client {
     fyear.setCellValueFactory(cellData -> cellData.getValue().dataWydaniaProperty().asString());
     fidplace.setCellValueFactory(cellData -> cellData.getValue().idPlacowkiProperty().asString());
 
-    //tab 3 - wypozyczenia
     bid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     btitle.setCellValueFactory(cellData -> cellData.getValue().bookTitleProperty());
     bautor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
     borrowdate.setCellValueFactory(cellData -> cellData.getValue().data_WypozyczeniaProperty());
     returndate.setCellValueFactory(cellData -> cellData.getValue().termin_OddaniaProperty());
 
-    //tab 4 - kary
     pid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     puserid.setCellValueFactory(
         cellData -> cellData.getValue().id_uzytkownikaProperty().asString());
@@ -217,8 +213,7 @@ public class Client {
     pvalue.setCellValueFactory(cellData -> cellData.getValue().KwotaProperty().asString());
     pstatus.setCellValueFactory(cellData -> cellData.getValue().getCzy_Zaplacono().asString());
 
-    //tab 5 - dane użytkownika
-    Uzytkownik u = logUser.get();
+    Uzytkownik u = LogUser.get();
     userId.setText(String.valueOf(u.getId()));
     username.setText(u.getImie());
     usersurname.setText(u.getNazwisko());
@@ -231,7 +226,7 @@ public class Client {
 
   public void logout(ActionEvent actionEvent) {
     try {
-      logUser.clearUser();
+      LogUser.clearUser();
       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
       stage.close();
 
@@ -239,7 +234,7 @@ public class Client {
       Parent logRoot = fxmlLoader.load();
 
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setScene(new Scene(logRoot));
       logStage.show();
       sessionMonitor.stop();
@@ -275,7 +270,7 @@ public class Client {
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + logUser.getUserToken())
+          .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
           .PUT(BodyPublishers.ofString(body))
           .build();
 
@@ -300,19 +295,19 @@ public class Client {
 
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
-      String url = "https://localhost:8443/library/uzytkownicy/" + logUser.getUserIdStr();
+      String url = "https://localhost:8443/library/uzytkownicy/" + LogUser.getUserIdStr();
 
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + logUser.getUserToken())
+          .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
           .DELETE()
           .build();
 
       HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
-        logUser.clearUser();
+        LogUser.clearUser();
         logger.info("Użytkownik zatwierdził.");
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -322,7 +317,7 @@ public class Client {
         Parent logRoot = fxmlLoader.load();
 
         Stage logStage = new Stage();
-        logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        logStage.initModality(Modality.APPLICATION_MODAL);
         logStage.setScene(new Scene(logRoot));
         logStage.show();
       }
@@ -351,7 +346,7 @@ public class Client {
   }
 
   private void fetchData() {
-    Uzytkownik u = logUser.get();
+    Uzytkownik u = LogUser.get();
     @SuppressWarnings("java:S2095")
     HttpClient client = HttpClient.newHttpClient();
     Gson gson = new Gson();
@@ -364,11 +359,11 @@ public class Client {
           new TypeToken<List<AutorzyDto>>() {
           }.getType());
       List<WypozyczeniaDto> wypoDtos = fetchDtoList(client, gson, "wypozyczenia/"
-              + Integer.parseInt(logUser.userIdStr),
+              + Integer.parseInt(LogUser.userIdStr),
           new TypeToken<List<WypozyczeniaDto>>() {
           }.getType());
       List<KaryDto> karyDtos = fetchDtoList(client, gson, "kary/"
-          + Integer.parseInt(logUser.userIdStr), new TypeToken<List<KaryDto>>() {
+          + Integer.parseInt(LogUser.userIdStr), new TypeToken<List<KaryDto>>() {
           }.getType());
 
       Map<Integer, KsiazkaDto> ksiazkaMap = ksiazkiDtos.stream()
@@ -400,7 +395,7 @@ public class Client {
       String endpoint, Type type) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create("https://localhost:8443/library/" + endpoint))
-        .header(AUTHORIZATION, BEARER + logUser.getUserToken())
+        .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
         .GET()
         .build();
     HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -557,7 +552,7 @@ public class Client {
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/ksiazki/filtr?" + form))
           .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + logUser.getUserToken())
+          .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
           .GET()
           .build();
 

@@ -69,7 +69,6 @@ class LoginControlTest extends ApplicationTest {
         clickOn("#userlogin").write("admin10");
         clickOn("#userpass").write("adminpass10");
 
-        // Kliknij przycisk login (zakładam, że masz w fxml button z fx:id="loginButton" albo użyj kliknięcia po tekście)
         clickOn("#login_a");
 
         Parent popupRoot = lookup("#admin").queryAs(Parent.class);
@@ -113,10 +112,6 @@ class LoginControlTest extends ApplicationTest {
         popupRoot = lookup("#login").queryAs(Parent.class);
         assertThat(popupRoot).isVisible();
     }
-
-
-
-
 
     @Test
     @DisplayName("Rejestracja z niepoprawnymi danymi")

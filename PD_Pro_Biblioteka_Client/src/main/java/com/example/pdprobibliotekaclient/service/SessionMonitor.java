@@ -1,8 +1,8 @@
 package com.example.pdprobibliotekaclient.service;
 
 
-import com.example.pdprobibliotekaclient.model.logAdmin;
-import com.example.pdprobibliotekaclient.model.logUser;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -61,7 +61,7 @@ public class SessionMonitor {
       HttpResponse<String> response = client.send(
           HttpRequest.newBuilder()
               .uri(URI.create("https://localhost:8443/library/ksiazki"))
-              .header("Authorization", "Bearer " + logUser.getUserToken())
+              .header("Authorization", "Bearer " + LogUser.getUserToken())
               .GET()
               .build(),
           HttpResponse.BodyHandlers.ofString()
@@ -70,7 +70,7 @@ public class SessionMonitor {
       HttpResponse<String> responseAdm = client.send(
           HttpRequest.newBuilder()
               .uri(URI.create("https://localhost:8443/library/ksiazki"))
-              .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+              .header("Authorization", "Bearer " + LogAdmin.getAdminToken())
               .GET()
               .build(),
           HttpResponse.BodyHandlers.ofString()
@@ -86,7 +86,7 @@ public class SessionMonitor {
           logger.log(Level.INFO, "Admin: 200");
         } else {
           Platform.runLater(() -> {
-            stop(); // zatrzymaj monitor
+            stop();
             forceLogout(stage);
             logger.log(Level.INFO, "Wylogowano z powodu tokena");
           });
@@ -99,8 +99,8 @@ public class SessionMonitor {
   }
 
   public void stop() {
-    logAdmin.clearAdmin();
-    logUser.clearUser();
+    LogAdmin.clearAdmin();
+    LogUser.clearUser();
     scheduler.shutdownNow();
   }
 }

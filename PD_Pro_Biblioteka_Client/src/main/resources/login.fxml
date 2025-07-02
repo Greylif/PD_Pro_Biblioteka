@@ -25,7 +25,7 @@
     <HBox alignment="CENTER_LEFT">
         <Label text="2FA (Jeśli nie zostało aktywowane - pozostawić puste)" style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5"/>
     </HBox>
-    <TextField fx:id="twoFA" prefHeight="20" style="-fx-font-size: 18px;"/>
+    <TextField fx:id="twofa" prefHeight="20" style="-fx-font-size: 18px;"/>
 
     <Region prefHeight="30"/>
 

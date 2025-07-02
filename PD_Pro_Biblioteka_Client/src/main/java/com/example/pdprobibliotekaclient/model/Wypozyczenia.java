@@ -36,14 +36,14 @@ public class Wypozyczenia {
   private StringProperty userData = new SimpleStringProperty();
   private StringProperty bookTitle = new SimpleStringProperty();
 
-  public Wypozyczenia(int id, String Wyp, String Odd, String Ter, int id_ksiazki,
-      int id_uzytkownika) {
+  public Wypozyczenia(int id, String wyp, String odd, String ter, int idksiazki,
+      int iduzytkownika) {
     this.id.set(id);
-    this.Data_Wypozyczenia.set(Wyp);
-    this.Data_Oddania.set(Odd);
-    this.Termin_Oddania.set(Ter);
-    this.id_ksiazki.set(id_ksiazki);
-    this.id_uzytkownika.set(id_uzytkownika);
+    this.Data_Wypozyczenia.set(wyp);
+    this.Data_Oddania.set(odd);
+    this.Termin_Oddania.set(ter);
+    this.id_ksiazki.set(idksiazki);
+    this.id_uzytkownika.set(iduzytkownika);
   }
 
   public IntegerProperty idProperty() {

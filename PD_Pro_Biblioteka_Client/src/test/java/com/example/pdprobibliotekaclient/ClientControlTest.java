@@ -30,7 +30,6 @@ public class ClientControlTest {
 
     @Test
     public void testLogout() throws IOException {
-        // Mocks
         ActionEventMock actionEventMock = new ActionEventMock();
         FXMLLoader loader = mock(FXMLLoader.class);
         Parent mockRoot = mock(Parent.class);
@@ -49,7 +48,6 @@ public class ClientControlTest {
 
 
 
-    // Helper class to mock ActionEvent and GUI hierarchy
     static class ActionEventMock {
         javafx.event.ActionEvent event;
         Node node;

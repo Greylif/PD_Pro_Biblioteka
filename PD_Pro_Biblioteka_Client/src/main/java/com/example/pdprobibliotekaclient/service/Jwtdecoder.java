@@ -1,7 +1,7 @@
 package com.example.pdprobibliotekaclient.service;
 
-import com.example.pdprobibliotekaclient.model.logAdmin;
-import com.example.pdprobibliotekaclient.model.logUser;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Base64;
@@ -14,22 +14,22 @@ public class Jwtdecoder {
     throw new UnsupportedOperationException("Utility class");
   }
 
-  public static logUser decodeToLogUser(String jwt) throws JsonProcessingException {
+  public static LogUser decodeToLogUser(String jwt) throws JsonProcessingException {
     String[] parts = jwt.split("\\.");
     if (parts.length < 2) {
       throw new IllegalArgumentException("Invalid JWT format.");
     }
     String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]));
-    return objectMapper.readValue(payloadJson, logUser.class);
+    return objectMapper.readValue(payloadJson, LogUser.class);
   }
 
-  public static logAdmin decodeToLogAdm(String jwt) throws JsonProcessingException {
+  public static LogAdmin decodeToLogAdm(String jwt) throws JsonProcessingException {
     String[] parts = jwt.split("\\.");
     if (parts.length < 2) {
       throw new IllegalArgumentException("Invalid JWT format.");
     }
     String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]));
-    return objectMapper.readValue(payloadJson, logAdmin.class);
+    return objectMapper.readValue(payloadJson, LogAdmin.class);
   }
 
 }

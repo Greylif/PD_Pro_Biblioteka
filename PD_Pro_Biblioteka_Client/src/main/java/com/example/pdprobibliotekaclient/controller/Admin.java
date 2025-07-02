@@ -6,11 +6,11 @@ import com.example.pdprobibliotekaclient.model.Kary;
 import com.example.pdprobibliotekaclient.model.KaryDto;
 import com.example.pdprobibliotekaclient.model.Ksiazka;
 import com.example.pdprobibliotekaclient.model.KsiazkaDto;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
 import com.example.pdprobibliotekaclient.model.UzytkownikDto;
 import com.example.pdprobibliotekaclient.model.Wypozyczenia;
 import com.example.pdprobibliotekaclient.model.WypozyczeniaDto;
-import com.example.pdprobibliotekaclient.model.logAdmin;
 import com.example.pdprobibliotekaclient.service.SessionMonitor;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -154,7 +154,6 @@ public class Admin {
   public void initialize() {
     fetchAllData();
 
-    //Tab 1 - książki
     sid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     stitle.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
     sautor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
@@ -162,7 +161,6 @@ public class Admin {
     syear.setCellValueFactory(cellData -> cellData.getValue().dataWydaniaProperty().asString());
     sstatus.setCellValueFactory(cellData -> cellData.getValue().WypozyczenieProperty().asString());
 
-    //tab 2 - wypożyczenia
     bid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     bperson.setCellValueFactory(cellData -> cellData.getValue().userDataProperty());
     btitle.setCellValueFactory(cellData -> cellData.getValue().bookTitleProperty());
@@ -170,7 +168,6 @@ public class Admin {
     borrowdate.setCellValueFactory(cellData -> cellData.getValue().data_WypozyczeniaProperty());
     returndate.setCellValueFactory(cellData -> cellData.getValue().data_OddaniaProperty());
 
-    //tab 3 - kary
     penaltyTable.setEditable(true);
     pid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
     pvalue.setCellValueFactory(cellData -> cellData.getValue().KwotaProperty().asObject());
@@ -189,7 +186,6 @@ public class Admin {
       sendUpdateKary(kary);
     });
 
-    //tab 4 - uzytkownicy
     uid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     ulogin.setCellValueFactory(cellData -> cellData.getValue().nazwaProperty());
     upassword.setCellValueFactory(cellData -> cellData.getValue().hasloProperty());
@@ -243,8 +239,7 @@ public class Admin {
       sendUpdate(user);
     });
 
-    //tab 5 - dane admina
-    AdminModel adm = logAdmin.get();
+    AdminModel adm = LogAdmin.get();
     adminname.setText(String.valueOf(adm.getImie().get()));
     adminsurname.setText(String.valueOf(adm.getNazwisko().get()));
     adminlogin.setText(String.valueOf(adm.getNazwa_Uzytkownika().get()));
@@ -298,7 +293,7 @@ public class Admin {
       TypeToken<List<T>> token) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create("https://localhost:8443/library/" + endpoint))
-        .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
+        .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
         .GET().build();
 
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -388,7 +383,6 @@ public class Admin {
 
       StringBuilder bodyBuilder = new StringBuilder();
 
-      // Dodawaj tylko te pola, które nie są nullem
       if (user.getImie() != null) {
         bodyBuilder.append("imie=")
             .append(URLEncoder.encode(user.getImie(), StandardCharsets.UTF_8)).append("&");
@@ -420,17 +414,14 @@ public class Admin {
             .append(URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8)).append("&");
       }
 
-      // boolean zawsze wysyłamy (zależnie od Twoich potrzeb)
       bodyBuilder.append("zablokowany=").append(user.isZablokowany()).append("&");
       bodyBuilder.append("mfaEnabled=").append(user.isMfaEnabled()).append("&");
 
-      // MFA secret – wysyłamy tylko jeśli nie jest nullem
       if (user.getMfaSecret() != null) {
         bodyBuilder.append("mfaSecret=")
             .append(URLEncoder.encode(user.getMfaSecret(), StandardCharsets.UTF_8)).append("&");
       }
 
-      // Usuń ostatni "&" jeśli istnieje
       if (bodyBuilder.length() > 0 && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
         bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
       }
@@ -462,7 +453,6 @@ public class Admin {
 
       StringBuilder bodyBuilder = new StringBuilder();
 
-      // Dodawaj tylko te pola, które nie są nullem
       if (kary.getKwota() != null) {
         bodyBuilder.append("kwota=").append(
                 URLEncoder.encode(String.valueOf(kary.getKwota().get()), StandardCharsets.UTF_8))
@@ -495,7 +485,6 @@ public class Admin {
             .append("&");
       }
 
-      // Usuń ostatni "&" jeśli istnieje
       if (!bodyBuilder.isEmpty() && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
         bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
       }
@@ -508,7 +497,7 @@ public class Admin {
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
+          .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
           .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
           .build();
 
@@ -586,7 +575,7 @@ public class Admin {
       Parent logRoot = fxmlLoader.load();
 
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setScene(new Scene(logRoot));
       logStage.show();
 
@@ -598,7 +587,7 @@ public class Admin {
 
   public void logout(ActionEvent actionEvent) {
     try {
-      logAdmin.clearAdmin();
+      LogAdmin.clearAdmin();
       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
       stage.close();
 
@@ -606,7 +595,7 @@ public class Admin {
       Parent logRoot = fxmlLoader.load();
 
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setTitle(LOGOWANIE);
       logStage.setScene(new Scene(logRoot));
       logStage.show();
@@ -623,7 +612,7 @@ public class Admin {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addbook_modal.fxml"));
       Parent logRoot = fxmlLoader.load();
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setTitle("Dodawanie książki");
       logStage.setScene(new Scene(logRoot));
       logStage.show();
@@ -634,15 +623,13 @@ public class Admin {
   }
 
   public void save() {
-    // Odczytaj dane z pól
     String id = adminid.getText();
     String imie = adminname.getText();
     String nazwisko = adminsurname.getText();
     String login = adminlogin.getText();
     String haslo = adminpassword.getText();
-    String locationId = adminlocationid.getText(); // Możesz sparsować na int jeśli trzeba
+    String locationId = adminlocationid.getText();
 
-    // Wywołaj metodę wysyłającą PUT na serwer
     sendAdminUpdate(id, imie, nazwisko, login, haslo, locationId);
 
   }
@@ -664,7 +651,7 @@ public class Admin {
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
+          .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
           .PUT(HttpRequest.BodyPublishers.ofString(body))
           .build();
 
@@ -694,19 +681,19 @@ public class Admin {
 
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
-      String url = "https://localhost:8443/library/admini/" + logAdmin.getAdmIdStr();
+      String url = "https://localhost:8443/library/admini/" + LogAdmin.getAdmIdStr();
 
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(url))
           .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + logAdmin.getAdminToken())
+          .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
           .DELETE()
           .build();
 
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
-        logAdmin.clearAdmin();
+        LogAdmin.clearAdmin();
         logger.info("Użytkownik zatwierdził.");
 
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -716,7 +703,7 @@ public class Admin {
         Parent logRoot = fxmlLoader.load();
 
         Stage logStage = new Stage();
-        logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        logStage.initModality(Modality.APPLICATION_MODAL);
         logStage.setTitle(LOGOWANIE);
         logStage.setScene(new Scene(logRoot));
         logStage.show();
@@ -724,7 +711,6 @@ public class Admin {
 
 
     } else {
-      // Anulowano
       logger.info("Użytkownik anulował.");
     }
   }
@@ -756,7 +742,7 @@ public class Admin {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addPenalty.fxml"));
       Parent logRoot = fxmlLoader.load();
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setTitle("Dodawanie kary");
       logStage.setScene(new Scene(logRoot));
       logStage.show();
@@ -773,7 +759,7 @@ public class Admin {
       Parent logRoot = fxmlLoader.load();
 
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setTitle(LOGOWANIE);
       logStage.setScene(new Scene(logRoot));
       logStage.show();

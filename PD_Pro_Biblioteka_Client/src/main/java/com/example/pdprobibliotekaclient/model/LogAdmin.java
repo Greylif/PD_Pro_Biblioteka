@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-public class logAdmin {
+public class LogAdmin {
 
   @Getter
   public static String admIdStr;
@@ -31,7 +31,7 @@ public class logAdmin {
   private long exp;
 
   @JsonCreator
-  public logAdmin(
+  public LogAdmin(
       @JsonProperty("sub") String sub,
       @JsonProperty("role") String role,
       @JsonProperty("userId") String userId,

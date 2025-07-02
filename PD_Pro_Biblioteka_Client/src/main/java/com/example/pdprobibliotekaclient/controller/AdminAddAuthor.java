@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.controller;
 
-import com.example.pdprobibliotekaclient.model.logAdmin;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -50,29 +50,25 @@ public class AdminAddAuthor {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
 
-      // Tworzymy dane formularza
       String form = "imie=" + URLEncoder.encode(auname.getText(), StandardCharsets.UTF_8)
           + "&nazwisko=" + URLEncoder.encode(ausurname.getText(), StandardCharsets.UTF_8)
           + "&rokUrodzenia=" + URLEncoder.encode(auyear.getText(), StandardCharsets.UTF_8);
 
-      // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/autorzy?"))
           .header("Content-Type", "application/x-www-form-urlencoded")
-          .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+          .header("Authorization", "Bearer " + LogAdmin.getAdminToken())
           .POST(HttpRequest.BodyPublishers.ofString(form))
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 
@@ -82,9 +78,8 @@ public class AdminAddAuthor {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UndonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja nie jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 

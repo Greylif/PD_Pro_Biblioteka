@@ -1,10 +1,10 @@
 package com.example.pdprobibliotekaclient.controller;
 
 import com.example.pdprobibliotekaclient.model.AdminModel;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import com.example.pdprobibliotekaclient.model.TotpSetupResponse;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
-import com.example.pdprobibliotekaclient.model.logAdmin;
-import com.example.pdprobibliotekaclient.model.logUser;
 import com.google.gson.Gson;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -49,8 +49,8 @@ public class SetupTotp {
 
   private void totpConfig() {
     try {
-      Uzytkownik u = logUser.get();
-      AdminModel adm = logAdmin.get();
+      Uzytkownik u = LogUser.get();
+      AdminModel adm = LogAdmin.get();
       Gson gson = new Gson();
 
       @SuppressWarnings("java:S2095")
@@ -59,16 +59,16 @@ public class SetupTotp {
       String header = null;
       String url = null;
 
-      if (logUser.getUserIdStr() != null && logUser.getUserToken() != null) {
+      if (LogUser.getUserIdStr() != null && LogUser.getUserToken() != null) {
         loginData.put(USERNAME, u.getNazwaUzytkownika());
         loginData.put("password", u.getHaslo());
-        header = BEARER + logUser.getUserToken();
+        header = BEARER + LogUser.getUserToken();
         url = "https://localhost:8443/api/auth/setup-totp";
       } else {
-        if (logAdmin.getAdmIdStr() != null && logAdmin.getAdminToken() != null) {
+        if (LogAdmin.getAdmIdStr() != null && LogAdmin.getAdminToken() != null) {
           loginData.put("password", adm.getHaslo().get());
           loginData.put(USERNAME, adm.getNazwa_Uzytkownika().get());
-          header = BEARER + logAdmin.getAdminToken();
+          header = BEARER + LogAdmin.getAdminToken();
           url = "https://localhost:8443/api/auth/setup-totp/admin";
         }
       }
@@ -89,7 +89,7 @@ public class SetupTotp {
       if (code == 200) {
         TotpSetupResponse totpSetupResponse = gson.fromJson(response.body(),
             TotpSetupResponse.class);
-        Image qrImage = new Image(totpSetupResponse.getQrCodeUrl()); // true = background loading
+        Image qrImage = new Image(totpSetupResponse.getQrCodeUrl());
         qrCodeImage.setImage(qrImage);
         qrCodeSecret.setText(totpSetupResponse.getSecret());
       }
@@ -104,8 +104,8 @@ public class SetupTotp {
   @FXML
   public void onConfirmClicked(ActionEvent actionEvent) {
     try {
-      Uzytkownik u = logUser.get();
-      AdminModel adm = logAdmin.get();
+      Uzytkownik u = LogUser.get();
+      AdminModel adm = LogAdmin.get();
       Gson gson = new Gson();
 
       @SuppressWarnings("java:S2095")
@@ -114,16 +114,16 @@ public class SetupTotp {
       String header = null;
       String url = null;
 
-      if (logUser.getUserIdStr() != null && logUser.getUserToken() != null) {
+      if (LogUser.getUserIdStr() != null && LogUser.getUserToken() != null) {
         loginData.put(USERNAME, u.getNazwaUzytkownika());
         loginData.put("code", Integer.parseInt(totpCodeField.getText()));
-        header = BEARER + logUser.getUserToken();
+        header = BEARER + LogUser.getUserToken();
         url = "https://localhost:8443/api/auth/confirm-totp";
       } else {
-        if (logAdmin.getAdmIdStr() != null && logAdmin.getAdminToken() != null) {
+        if (LogAdmin.getAdmIdStr() != null && LogAdmin.getAdminToken() != null) {
           loginData.put(USERNAME, adm.getNazwa_Uzytkownika().get());
           loginData.put("code", Integer.parseInt(totpCodeField.getText()));
-          header = BEARER + logAdmin.getAdminToken();
+          header = BEARER + LogAdmin.getAdminToken();
           url = "https://localhost:8443/api/auth/confirm-totp/admin";
         }
       }
@@ -148,7 +148,7 @@ public class SetupTotp {
         Parent logRoot = fxmlLoader.load();
 
         Stage logStage = new Stage();
-        logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        logStage.initModality(Modality.APPLICATION_MODAL);
         logStage.setScene(new Scene(logRoot));
         logStage.show();
       } else {
@@ -156,7 +156,7 @@ public class SetupTotp {
         Parent logRoot = fxmlLoader.load();
 
         Stage logStage = new Stage();
-        logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        logStage.initModality(Modality.APPLICATION_MODAL);
         logStage.setScene(new Scene(logRoot));
         logStage.show();
       }

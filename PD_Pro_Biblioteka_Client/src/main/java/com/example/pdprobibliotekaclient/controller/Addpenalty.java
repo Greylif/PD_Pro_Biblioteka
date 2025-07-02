@@ -1,6 +1,6 @@
 package com.example.pdprobibliotekaclient.controller;
 
-import com.example.pdprobibliotekaclient.model.logAdmin;
+import com.example.pdprobibliotekaclient.model.LogAdmin;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -43,7 +43,6 @@ public class Addpenalty {
       String formattedDate = selectedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
       String formattedToday = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
-      // Tworzymy dane formularza
       String form = "kwota=" + URLEncoder.encode(userPen.getText(), StandardCharsets.UTF_8)
           + "&dataWydaniaKary=" + URLEncoder.encode(formattedToday, StandardCharsets.UTF_8)
           + "&terminZaplaty=" + URLEncoder.encode(formattedDate, StandardCharsets.UTF_8)
@@ -55,20 +54,18 @@ public class Addpenalty {
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/kary"))
           .header("Content-Type", "application/x-www-form-urlencoded")
-          .header("Authorization", "Bearer " + logAdmin.getAdminToken())
+          .header("Authorization", "Bearer " + LogAdmin.getAdminToken())
           .POST(HttpRequest.BodyPublishers.ofString(form))
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 
@@ -78,9 +75,8 @@ public class Addpenalty {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UndonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
 

@@ -21,7 +21,7 @@ public class Addbookmodal {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/admin_addauthor.fxml"));
       Parent logRoot = fxmlLoader.load();
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setTitle("Dodawanie książki");
       logStage.setScene(new Scene(logRoot));
       logStage.show();
@@ -37,7 +37,7 @@ public class Addbookmodal {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/admin_addbook.fxml"));
       Parent logRoot = fxmlLoader.load();
       Stage logStage = new Stage();
-      logStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+      logStage.initModality(Modality.APPLICATION_MODAL);
       logStage.setTitle("Dodawanie książki");
       logStage.setScene(new Scene(logRoot));
       logStage.show();

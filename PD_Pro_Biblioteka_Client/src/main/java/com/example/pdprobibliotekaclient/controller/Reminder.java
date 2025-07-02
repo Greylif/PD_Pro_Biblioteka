@@ -1,7 +1,7 @@
 package com.example.pdprobibliotekaclient.controller;
 
 
-import com.example.pdprobibliotekaclient.model.logUser;
+import com.example.pdprobibliotekaclient.model.LogUser;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -33,7 +33,6 @@ public class Reminder {
     try {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
-      // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(
               "https://localhost:8443/library/uzytkownicy/passwordreset/" + useremail.getText()))
@@ -41,16 +40,14 @@ public class Reminder {
           .PUT(HttpRequest.BodyPublishers.noBody())
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest nie poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(PRZYPHASLO);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
@@ -61,9 +58,8 @@ public class Reminder {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/UndonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(PRZYPHASLO);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
@@ -77,29 +73,26 @@ public class Reminder {
     }
   }
 
-  public void reminderactTOTP(ActionEvent actionEvent) {
+  public void reminderactTotp(ActionEvent actionEvent) {
     try {
-      logUser.setUserEmail(useremail.getText());
+      LogUser.setUserEmail(useremail.getText());
 
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
-      // Tworzymy request POST
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create("https://localhost:8443/library/uzytkownicy/2fa/" + useremail.getText()))
           .header("Content-Type", "application/x-www-form-urlencoded")
           .PUT(HttpRequest.BodyPublishers.noBody())
           .build();
 
-      // Wysyłamy request
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
       if (response.statusCode() == 200) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/TotpRestart.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest nie poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(PRZYPHASLO);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();
@@ -110,9 +103,8 @@ public class Reminder {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/unndonePopup.fxml"));
         Parent popupRoot = fxmlLoader.load();
 
-        //jeśli rejestracja jest poprawna
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Blokuje interakcję z głównym oknem
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle(PRZYPHASLO);
         popupStage.setScene(new Scene(popupRoot));
         popupStage.showAndWait();

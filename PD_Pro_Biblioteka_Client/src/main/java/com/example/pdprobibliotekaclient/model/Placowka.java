@@ -21,8 +21,8 @@ public class Placowka {
   @NotBlank(message = "Adres nie moze byc pusty")
   private StringProperty Adres = new SimpleStringProperty();
 
-  public Placowka(int pID, String adr) {
-    this.id.set(pID);
+  public Placowka(int pid, String adr) {
+    this.id.set(pid);
     this.Adres.set(adr);
   }
 
