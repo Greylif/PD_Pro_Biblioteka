@@ -22,6 +22,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+/**
+ * Komponent odpowiadający za logikę okna rejestracji,
+ */
 @Component
 public class Register {
 
@@ -39,6 +42,12 @@ public class Register {
   @FXML
   private TextField userpassword;
 
+  /**
+   * Logika przycisku, tworzy zapytanie (dodanie konta do bazy) i wysyła je do serwera,
+   * potem odpowiednio reaguje na odpowiedź serwera.
+   *
+   * @param actionEvent Parametr odpowiedzialny za zamknięcię okna.
+   */
   @FXML
   public void regact(javafx.event.ActionEvent actionEvent) {
     try {

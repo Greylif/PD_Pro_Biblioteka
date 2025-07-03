@@ -2,6 +2,10 @@ package com.example.pdprobibliotekaclient.model;
 
 import lombok.Data;
 
+/**
+ * Klasa reprezentująca żądanie logowania użytkownika.
+ * Zawiera dane potrzebne do uwierzytelnienia: nazwę użytkownika, hasło oraz opcjonalny kod TOTP (2FA).
+ */
 @Data
 public class LoginRequest {
 

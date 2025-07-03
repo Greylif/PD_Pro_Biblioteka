@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa pomocnicza przechowująca podstawowe dane administratora.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

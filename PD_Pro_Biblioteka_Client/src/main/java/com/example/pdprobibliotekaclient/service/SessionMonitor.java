@@ -20,16 +20,34 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Klasa odpowiedzialna za monitorowanie sesji użytkownika.
+ * Sprawdza ważność tokenów JWT użytkownika i administratora
+ * poprzez okresowe wysyłanie zapytań HTTP do serwera.
+ * W przypadku nieważnego tokena automatycznie wylogowuje użytkownika
+ * i wyświetla ekran logowania.
+ */
 public class SessionMonitor {
 
   private static final Logger logger = Logger.getLogger(SessionMonitor.class.getName());
   public final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
   private final Stage stage;
 
+
+  /**
+   * Konstruktor tworzący monitor sesji powiązany z konkretnym oknem (Stage).
+   *
+   * @param stage główne okno aplikacji, które może zostać zamknięte przy wylogowaniu
+   */
   public SessionMonitor(Stage stage) {
     this.stage = stage;
   }
 
+  /**
+   * Wymusza wylogowanie użytkownika, zamyka obecne okno i wyświetla okno logowania.
+   *
+   * @param stage obecne okno do zamknięcia
+   */
   public static void forceLogout(Stage stage) {
     try {
       stage.close();
@@ -48,10 +66,18 @@ public class SessionMonitor {
     }
   }
 
+
+  /**
+   * Uruchamia okresowe sprawdzanie ważności tokenów co 70 sekund (z opóźnieniem 1 sekundy przed pierwszym wywołaniem).
+   */
   public void start() {
     scheduler.scheduleAtFixedRate(this::checkToken, 1, 70, TimeUnit.SECONDS);
   }
 
+  /**
+   * Sprawdza ważność tokenów JWT użytkownika i administratora poprzez wysłanie zapytań HTTP.
+   * Jeśli oba tokeny są nieważne, wywołuje wymuszone wylogowanie.
+   */
   public void checkToken() {
     @SuppressWarnings("java:S2095")
     HttpClient client = HttpClient.newHttpClient();
@@ -98,6 +124,9 @@ public class SessionMonitor {
     }
   }
 
+  /**
+   * Zatrzymuje monitorowanie sesji, czyści tokeny i wyłącza harmonogram.
+   */
   public void stop() {
     LogAdmin.clearAdmin();
     LogUser.clearUser();

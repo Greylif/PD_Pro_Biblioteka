@@ -13,6 +13,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Klasa reprezentująca karę nałożoną na użytkownika.
+ * Zawiera informacje o kwocie, datach, statusie zapłaty oraz przypisanym użytkowniku.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,5 +1,9 @@
 package com.example.pdprobibliotekaclient.model;
 
+/**
+ * Data Transfer Object (DTO) reprezentujący książkę.
+ * Używany do przesyłania danych o książce między warstwami aplikacji.
+ */
 public class KsiazkaDto {
 
   public int id;

@@ -1,6 +1,8 @@
 package com.example.pdprobibliotekaclient.model;
 
-
+/**
+ * Reprezentuje dane administratora w aplikacji.
+ */
 public class AdminDto {
 
   public int id;

@@ -8,11 +8,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Klasa testowa dla klasy modeli.
+ * Wykorzystuje bibliotekę JUnit 5 do testowania.
+ */
 class ModelTest {
     Gson gson = new Gson();
 
     /**
-     * Testy dla klasy modelu wypoąyczenia
+     * Testy dla klasy modelu wypozyczenia
      */
     private Wypozyczenia wypozyczenie;
 

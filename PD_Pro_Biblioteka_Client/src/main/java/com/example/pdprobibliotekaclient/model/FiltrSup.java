@@ -5,6 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Klasa pomocnicza przechowująca podstawowe informacje o filtrze książki.
+ * Zawiera informacje o rezerwacji, wypożyczeniu, gatunku oraz id autora.
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -8,6 +8,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Klasa modelu reprezentująca książkę z filtrem danych.
+ * Używa właściwości JavaFX do powiązań z GUI oraz adnotacji Gson do mapowania JSON.
+ */
 public class Filtr {
 
   @SerializedName("id")

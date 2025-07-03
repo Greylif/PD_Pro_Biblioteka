@@ -21,7 +21,12 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
+/**
+ * Komponent służący do dodawania kar dla użytkownika.
+ */
+@Component
 public class Addpenalty {
 
   private static final Logger logger = Logger.getLogger(Addpenalty.class.getName());
@@ -34,6 +39,13 @@ public class Addpenalty {
   @FXML
   private DatePicker pendate;
 
+  /**
+   * Funkcja reagująca na kliknięcie przycisku.
+   * Przygotowywuje ona dane podane przez użytkownika, formuułuje zapytanie, wysyła je do serwera i reaguje na odpowiedź serwera.
+   *
+   * @param actionEvent Pozwala na zamknięcie podanego okna
+   */
+  @FXML
   public void buttonact(ActionEvent actionEvent) {
     try {
       @SuppressWarnings("java:S2095")

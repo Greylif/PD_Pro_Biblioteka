@@ -12,6 +12,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Model administratora używany w aplikacji klienckiej.
+ * Używa właściwości JavaFX (Property), co pozwala na łatwe powiązania z GUI.
+ * Zawiera dane takie jak imię, nazwisko, login, hasło, ID placówki oraz informacje o MFA.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

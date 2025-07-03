@@ -24,6 +24,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+/**
+ * Komponent służący do dodawania wypożyczeń do bazy danych
+ */
 @Component
 public class Addborow {
 
@@ -37,6 +40,12 @@ public class Addborow {
   @FXML
   private Button badd;
 
+  /**
+   * Funkcja reagująca na kliknięcie przycisku.
+   * Przygotowywuje ona dane podane przez użytkownika, formuułuje zapytanie, wysyła je do serwera i reaguje na odpowiedź serwera.
+   *
+   * @param actionEvent Pozwala na zamknięcie podanego okna
+   */
   @FXML
   public void buttonact(ActionEvent actionEvent) {
     try {

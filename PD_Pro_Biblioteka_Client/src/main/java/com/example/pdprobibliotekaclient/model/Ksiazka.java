@@ -12,6 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Klasa reprezentująca książkę w systemie bibliotecznym.
+ * Zawiera informacje o tytule, gatunku, dacie wydania, autorze oraz stanie rezerwacji i wypożyczenia.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

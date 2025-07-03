@@ -1,5 +1,9 @@
 package com.example.pdprobibliotekaclient.model;
 
+/**
+ * Klasa DTO (Data Transfer Object) reprezentująca dane książki z filtrem.
+ * Używana do przesyłania danych między klientem a serwerem.
+ */
 public class FiltrDto {
 
   public int id;

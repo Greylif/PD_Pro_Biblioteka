@@ -10,6 +10,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Model autora wykorzystywany w aplikacji.
+ * Zawiera podstawowe dane: ID, imię, nazwisko oraz rok urodzenia.
+ * Używa właściwości JavaFX (Property) do łatwego wiązania z GUI.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -13,7 +13,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Klasa reprezentująca użytkownika systemu bibliotecznego.
+ * Używa właściwości JavaFX do powiązania danych z UI.
+ * Zawiera podstawowe informacje takie jak ID, imię, nazwisko, dane logowania, adres e-mail oraz
+ * informacje o blokadzie konta i uwierzytelnianiu wieloskładnikowym (MFA).
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

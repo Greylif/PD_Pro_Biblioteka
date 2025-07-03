@@ -53,6 +53,9 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Komponent główny odpowiadający za logikę głównego panelu dla admina.
+ */
 @Slf4j
 @Component
 public class Admin {
@@ -151,6 +154,9 @@ public class Admin {
   private TableColumn<Kary, String> pdate;
   private SessionMonitor sessionMonitor;
 
+  /**
+   * Funkcja inicjalizująca, pobiera dane z serwera, ustawia dane do tabel oraz kart.
+   */
   @FXML
   public void initialize() {
     fetchAllData();
@@ -198,47 +204,13 @@ public class Admin {
     userTable.setEditable(true);
 
     uname.setCellFactory(TextFieldTableCell.forTableColumn());
-    uname.setOnEditCommit(event -> {
-      Uzytkownik user = event.getRowValue();
-      user.setImie(event.getNewValue());
-      sendUpdate(user);
-    });
-
     usurname.setCellFactory(TextFieldTableCell.forTableColumn());
-    usurname.setOnEditCommit(event -> {
-      Uzytkownik user = event.getRowValue();
-      user.setNazwisko(event.getNewValue());
-      sendUpdate(user);
-    });
-
     uyear.setCellFactory(TextFieldTableCell.forTableColumn());
-    uyear.setOnEditCommit(event -> {
-      Uzytkownik user = event.getRowValue();
-      user.setDataUrodzenia(event.getNewValue());
-      sendUpdate(user);
-    });
-
     ulogin.setCellFactory(TextFieldTableCell.forTableColumn());
-    ulogin.setOnEditCommit(event -> {
-      Uzytkownik user = event.getRowValue();
-      user.setNazwaUzytkownika(event.getNewValue());
-      sendUpdate(user);
-    });
-
     upassword.setCellFactory(TextFieldTableCell.forTableColumn());
-    upassword.setOnEditCommit(event -> {
-      Uzytkownik user = event.getRowValue();
-      user.setHaslo(event.getNewValue());
-      sendUpdate(user);
-    });
-
     ustatus.setCellFactory(ComboBoxTableCell.forTableColumn(true, false));
     ustatus.setEditable(true);
-    ustatus.setOnEditCommit(event -> {
-      Uzytkownik user = event.getRowValue();
-      user.setZablokowany(event.getNewValue());
-      sendUpdate(user);
-    });
+
 
     AdminModel adm = LogAdmin.get();
     adminname.setText(String.valueOf(adm.getImie().get()));
@@ -249,7 +221,10 @@ public class Admin {
     adminid.setText(String.valueOf(adm.getId().get()));
   }
 
-
+  /**
+   * Funkcja wywołująca pobieranie danych z serwera i integracja danych do map i list.
+   * Integruje ona 2 inne funkcje.
+   */
   private void fetchAllData() {
     @SuppressWarnings("java:S2095")
     HttpClient client = HttpClient.newHttpClient();
@@ -290,6 +265,17 @@ public class Admin {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za wykonanie zapytania do serwera.
+   *
+   * @param client                Zainicjowany w fetchAllData clientHTTP
+   * @param gson                  Zainicjowany w fetchAllData clientHTTP
+   * @param endpoint              Fragment zapytania
+   * @param token                 Token związany z listą
+   * @return                      Zwracana lista, body gdy zapytanie się uda
+   * @throws IOException          w przypadku problemu z clientemHTTP
+   * @throws InterruptedException w przypadku problemu z clientemHTTP
+   */
   private <T> List<T> fetchData(HttpClient client, Gson gson, String endpoint,
                                 TypeToken<List<T>> token) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
@@ -301,10 +287,26 @@ public class Admin {
     return gson.fromJson(response.body(), token.getType());
   }
 
+  /**
+   * Funkcja odpowiedzalna za zmapowanie danych z klasą modelu Data Transfer Object.
+   *
+   * @param list        Lista DTO, w której będą zapisane dane.
+   * @param keyMapper   Typ mapy jest przekazywany
+   * @return            Zwracana jest lista, w której
+   */
   private <K, V> Map<K, V> getDtoMap(List<V> list, Function<V, K> keyMapper) {
     return list.stream().collect(Collectors.toMap(keyMapper, Function.identity()));
   }
 
+  /**
+   * Funkcja łącząca ze sobą mapy z klasą WypozyczeniaDto, aby utworzyć połączenia zgodne z wypożyczeniami.
+   *
+   * @param dtos            parametr związany z klasą WypozyczeniaDto.
+   * @param ksiazkaMap      parametr związany z mapą ksiązek.
+   * @param autorMap        parametr związany z mapą autorów.
+   * @param uzytkownikMap   parametr związany z mapą użytkowników.
+   * @return                Zwracana jest uzupełniona lista do klasy Wypozyczenia.
+   */
   private List<Wypozyczenia> convertWypozyczenia(List<WypozyczeniaDto> dtos,
                                                  Map<Integer, KsiazkaDto> ksiazkaMap,
                                                  Map<Integer, AutorzyDto> autorMap,
@@ -328,6 +330,15 @@ public class Admin {
     return list;
   }
 
+  /**
+   * Funkcja łącząca ze sobą mapy z klasą KaryDto, aby utworzyć połączenia zgodne z karami.
+   *
+   * @param dtos        parametr związany z klasą KaryDto.
+   * @param wypoDtos    parametr związany z klasą WypozyczeniaDto.
+   * @param ksiazkaMap  parametr związany z mapą ksiązek.
+   * @param autorMap    parametr związany z mapą autorów.
+   * @return            Zwracana jest uzupełniona lista do klasy Kary.
+   */
   private List<Kary> convertKary(List<KaryDto> dtos,
                                  List<WypozyczeniaDto> wypoDtos,
                                  Map<Integer, KsiazkaDto> ksiazkaMap,
@@ -353,6 +364,13 @@ public class Admin {
     return list;
   }
 
+  /**
+   * Funkcja łącząca ze sobą mapę Autorów z klasą KsiazkaDto, aby utworzyć pełną listę książek.
+   *
+   * @param dtos      parametr związany z klasą KsiazkaDto.
+   * @param autorMap  parametr związany z mapą autorów.
+   * @return          zwracana jest pełna lista do klasy Ksiazka.
+   */
   private List<Ksiazka> convertKsiazki(List<KsiazkaDto> dtos, Map<Integer, AutorzyDto> autorMap) {
     List<Ksiazka> list = new ArrayList<>();
     for (KsiazkaDto dto : dtos) {
@@ -364,10 +382,24 @@ public class Admin {
     return list;
   }
 
+  /**
+   * Funkcja konwertująca dane z DTO do klasy modelu Uzytkownik.
+   *
+   * @param dtos  Lista DTO, która ma zostać przekonwertowana
+   * @return      Zwracana jest lista do klasy Uzytkownik.
+   */
   private List<Uzytkownik> convertUzytkownicy(List<UzytkownikDto> dtos) {
     return dtos.stream().map(this::convertDtoToUzytkownik).toList();
   }
 
+  /**
+   * Funkcja odpowiedzalna za aktualizowanie danych w tabelach.
+   *
+   * @param karyList          Lista kar, która ma być wyświetlona.
+   * @param ksiazkaList       Lista książek, która ma być wyświetlona.
+   * @param uzytkownikList    Lista użytkowników, która ma być wyświetlona.
+   * @param wypozyczeniaList  Lista wypożyczeń, która ma być wyświetlona.
+   */
   private void updateTables(List<Kary> karyList, List<Ksiazka> ksiazkaList,
                             List<Uzytkownik> uzytkownikList, List<Wypozyczenia> wypozyczeniaList) {
     Platform.runLater(() -> {
@@ -378,77 +410,11 @@ public class Admin {
     });
   }
 
-
-  public void sendUpdate(Uzytkownik user) {
-    try {
-
-      StringBuilder bodyBuilder = new StringBuilder();
-
-      if (user.getImie() != null) {
-        bodyBuilder.append("imie=")
-                .append(URLEncoder.encode(user.getImie(), StandardCharsets.UTF_8)).append("&");
-      }
-
-      if (user.getNazwisko() != null) {
-        bodyBuilder.append("nazwisko=")
-                .append(URLEncoder.encode(user.getNazwisko(), StandardCharsets.UTF_8)).append("&");
-      }
-
-      if (user.getDataUrodzenia() != null) {
-        bodyBuilder.append("dataUrodzenia=")
-                .append(URLEncoder.encode(user.getDataUrodzenia(), StandardCharsets.UTF_8)).append("&");
-      }
-
-      if (user.getNazwaUzytkownika() != null) {
-        bodyBuilder.append("nazwaUzytkownika=")
-                .append(URLEncoder.encode(user.getNazwaUzytkownika(), StandardCharsets.UTF_8))
-                .append("&");
-      }
-
-      if (user.getHaslo() != null) {
-        bodyBuilder.append("haslo=")
-                .append(URLEncoder.encode(user.getHaslo(), StandardCharsets.UTF_8)).append("&");
-      }
-
-      if (user.getEmail() != null) {
-        bodyBuilder.append("email=")
-                .append(URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8)).append("&");
-      }
-
-      bodyBuilder.append("zablokowany=").append(user.isZablokowany()).append("&");
-      bodyBuilder.append("mfaEnabled=").append(user.isMfaEnabled()).append("&");
-
-      if (user.getMfaSecret() != null) {
-        bodyBuilder.append("mfaSecret=")
-                .append(URLEncoder.encode(user.getMfaSecret(), StandardCharsets.UTF_8)).append("&");
-      }
-
-      if (bodyBuilder.length() > 0 && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
-        bodyBuilder.deleteCharAt(bodyBuilder.length() - 1);
-      }
-
-      @SuppressWarnings("java:S2095")
-      HttpClient client = HttpClient.newHttpClient();
-
-      String url = String.format("https://localhost:8443/library/uzytkownicy/%d",
-              user.idProperty().get());
-
-      HttpRequest request = HttpRequest.newBuilder()
-              .uri(URI.create(url))
-              .header(CONTENTTYPE, APPURL)
-              .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
-              .build();
-
-      client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-              .thenAccept(response -> {
-              });
-
-    } catch (Exception e) {
-      logger.log(Level.SEVERE, e.getMessage());
-      Thread.currentThread().interrupt();
-    }
-  }
-
+  /**
+   * Funkcja odpowiedzalna za aktualizowanie danych w zakładce "Kary"
+   *
+   * @param kary Kara, która jest przekazywana do serwera.
+   */
   private void sendUpdateKary(Kary kary) {
     try {
 
@@ -512,6 +478,12 @@ public class Admin {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Uzytkownik.
+   *
+   * @param dto Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Uzytkownik .
+   */
   private Uzytkownik convertDtoToUzytkownik(UzytkownikDto dto) {
     return new Uzytkownik(
             dto.id,
@@ -527,6 +499,12 @@ public class Admin {
     );
   }
 
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Kary.
+   *
+   * @param dtoK Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Kary .
+   */
   private Kary convertDtoToKary(KaryDto dtoK) {
     return new Kary(
             dtoK.id,
@@ -539,6 +517,12 @@ public class Admin {
     );
   }
 
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Ksiazka.
+   *
+   * @param dto Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Ksiazka.
+   */
   private Ksiazka convertDtoToKsiazka(KsiazkaDto dto) {
     KsiazkaSup ksup = new KsiazkaSup(dto.Tytul, dto.Gatunek, dto.Data_Wydania);
     return new Ksiazka(
@@ -552,6 +536,12 @@ public class Admin {
     );
   }
 
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Wypozyczenia.
+   *
+   * @param dto Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Wypozyczenia.
+   */
   private Wypozyczenia convertDtoToWypozyczenia(WypozyczeniaDto dto) {
     return new Wypozyczenia(
             dto.id,
@@ -563,13 +553,11 @@ public class Admin {
     );
   }
 
-  void setPenaltyTable(TableView<Kary> table) {
-    this.penaltyTable = table;
-  }
-
-
+  /**
+   * Funckja odpowiedzalna za logikę przycisku wypożyczeń, przekierowywuje do okna addBorrow.fxml.
+   */
   @FXML
-  public void borrow(ActionEvent actionEvent) {
+  public void borrow() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addBorrow.fxml"));
       Parent logRoot = fxmlLoader.load();
@@ -585,6 +573,11 @@ public class Admin {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za logikę przycisku wylogowania się, przekierowywuje do okna login.fxml,
+   * czyści dane zalogowanego oraz wyłącza monitor sesji.
+   */
+  @FXML
   public void logout(ActionEvent actionEvent) {
     try {
       LogAdmin.clearAdmin();
@@ -610,6 +603,10 @@ public class Admin {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za logikę przycisku wypożyczeń, przekierowywuje do okna addbook_modal.fxml.
+   */
+  @FXML
   public void addbook() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addbook_modal.fxml"));
@@ -625,6 +622,10 @@ public class Admin {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za zapis nowych danych administratora.
+   * Przekierowywuje do funkcji, która wykonuje zapytanie do serwera.
+   */
   public void save() {
     String id = adminid.getText();
     String imie = adminname.getText();
@@ -637,6 +638,17 @@ public class Admin {
 
   }
 
+  /**
+   * Funkcja przygotowywuje wiadomość do serwera. Zapytanie zmienia dane zalogowanego administratora na serwerze.
+   *
+   * @param id          ID administratora.
+   * @param imie        Imię administratora.
+   * @param nazwisko    Nazwisko administratora.
+   * @param login       Login administratora.
+   * @param haslo       Hasło administratora.
+   * @param locationId  ID placówki w której jest dany administrator.
+   */
+  @FXML
   private void sendAdminUpdate(String id, String imie, String nazwisko, String login, String haslo,
                                String locationId) {
     try {
@@ -673,56 +685,17 @@ public class Admin {
     }
   }
 
-  public void deleteacc(ActionEvent actionEvent) throws IOException, InterruptedException {
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Potwierdzenie");
-    alert.setHeaderText("Czy jesteś pewny?");
-    alert.setContentText("Tej operacji nie można cofnąć.");
-
-    Optional<ButtonType> result = alert.showAndWait();
-    if (result.isPresent() && result.get() == ButtonType.OK) {
-
-      @SuppressWarnings("java:S2095")
-      HttpClient client = HttpClient.newHttpClient();
-      String url = "https://localhost:8443/library/admini/" + LogAdmin.getAdmIdStr();
-
-      HttpRequest request = HttpRequest.newBuilder()
-              .uri(URI.create(url))
-              .header(CONTENTTYPE, APPURL)
-              .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
-              .DELETE()
-              .build();
-
-      HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-      if (response.statusCode() == 200) {
-        LogAdmin.clearAdmin();
-        logger.info("Użytkownik zatwierdził.");
-
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.close();
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/login.fxml"));
-        Parent logRoot = fxmlLoader.load();
-
-        Stage logStage = new Stage();
-        logStage.initModality(Modality.APPLICATION_MODAL);
-        logStage.setTitle(LOGOWANIE);
-        logStage.setScene(new Scene(logRoot));
-        logStage.show();
-      }
-
-
-    } else {
-      logger.info("Użytkownik anulował.");
-    }
-  }
-
-
+  /**
+   * Funkcja odpowiedzialna za odświeżanie danych.
+   */
+  @FXML
   public void refresh() {
     fetchAllData();
   }
 
+  /**
+   * Funkcja odpowiedzalna za widoczność hasła w zakładce ustawień.
+   */
   @FXML
   private void togglePasswordVisibility() {
     if (showPassword.isSelected()) {
@@ -740,6 +713,10 @@ public class Admin {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za logikę przycisku przyznawania kar, przekierowywuje do okna addPenalty.fxml.
+   */
+  @FXML
   public void addPenalty() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/addPenalty.fxml"));
@@ -755,7 +732,10 @@ public class Admin {
     }
   }
 
-
+  /**
+   * Funkcja odpowiedzalna za logikę przycisku konfiguracji 2FA, przekierowywuje do okna setup_totp.fxml.
+   */
+  @FXML
   public void on2fa() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/setup_totp.fxml"));

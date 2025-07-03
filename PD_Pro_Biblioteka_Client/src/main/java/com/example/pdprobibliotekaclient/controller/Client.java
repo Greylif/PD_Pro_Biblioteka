@@ -60,6 +60,9 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+/**
+ * Komponent główny odpowiadający za logikę głównego panelu dla klienta.
+ */
 @Slf4j
 @Component
 public class Client {
@@ -179,6 +182,9 @@ public class Client {
   private SessionMonitor sessionMonitor;
 
 
+  /**
+   * Funkcja inicjalizująca, pobiera dane z serwera, ustawia dane do tabel oraz kart.
+   */
   @FXML
   public void initialize() {
     fetchData();
@@ -228,7 +234,10 @@ public class Client {
     userdate.setText(String.valueOf(u.getData_urodzenia().get()));
   }
 
-
+  /**
+   * Funkcja odpowiedzalna za logikę przycisku wylogowania się, przekierowywuje do okna login.fxml,
+   * czyści dane zalogowanego oraz wyłącza monitor sesji.
+   */
   public void logout(ActionEvent actionEvent) {
     try {
       LogUser.clearUser();
@@ -253,6 +262,10 @@ public class Client {
   }
 
 
+  /**
+   * Funkcja odpowiedzalna za zapis nowych danych użytkownika.
+   * Przekierowywuje do funkcji, która wykonuje zapytanie do serwera.
+   */
   public void save() {
     String id = userId.getText();
     String imie = username.getText();
@@ -263,6 +276,15 @@ public class Client {
     sendUserUpdate(id, imie, nazwisko, login, haslo);
   }
 
+  /**
+   * Funkcja przygotowywuje wiadomość do serwera. Zapytanie zmienia dane zalogowanego użytkownika na serwerze.
+   *
+   * @param id          ID użytkownika.
+   * @param imie        Imię użytkownika.
+   * @param nazwisko    Nazwisko użytkownika.
+   * @param login       Login użytkownika.
+   * @param haslo       Hasło użytkownika.
+   */
   private void sendUserUpdate(String id, String imie, String nazwisko, String login, String haslo) {
     try {
       String url = "https://localhost:8443/library/uzytkownicy/" + id + "?";
@@ -292,6 +314,13 @@ public class Client {
     }
   }
 
+  /**
+   * Funkcja obsługująca logikę przycisku usuwania konta. Po zatwierdzeniu tworzone jest zapytanie, które usuwa konto i przekierowywuje do panelu logowania
+   *
+   * @param actionEvent             Parametr odpowiedzialny za zamykanie okna.
+   * @throws IOException            W przypadku problemu z clientemHTTP.
+   * @throws InterruptedException   W przypadku problemu z clientemHTTP.
+   */
   public void deleteacc(ActionEvent actionEvent) throws IOException, InterruptedException {
     Alert alert = new Alert(AlertType.CONFIRMATION);
     alert.setTitle("Potwierdzenie");
@@ -336,6 +365,9 @@ public class Client {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za widoczność hasła w zakładce ustawień.
+   */
   @FXML
   private void togglePasswordVisibility() {
     if (showPassword.isSelected()) {
@@ -353,6 +385,10 @@ public class Client {
     }
   }
 
+  /**
+   * Funkcja wywołująca pobieranie danych z serwera i integracja danych do map i list.
+   * Integruje ona 2 inne funkcje.
+   */
   private void fetchData() {
     Uzytkownik u = LogUser.get();
     @SuppressWarnings("java:S2095")
@@ -399,6 +435,16 @@ public class Client {
     }
   }
 
+  /**
+   * Funkcja odpowiedzalna za wykonanie zapytania do serwera.
+   *
+   * @param client                Zainicjowany w fetchAllData clientHTTP
+   * @param gson                  Zainicjowany w fetchAllData clientHTTP
+   * @param endpoint              Fragment zapytania
+   * @return                      Zwracana lista, body gdy zapytanie się uda
+   * @throws IOException          w przypadku problemu z clientemHTTP
+   * @throws InterruptedException w przypadku problemu z clientemHTTP
+   */
   private <T> List<T> fetchDtoList(HttpClient client, Gson gson,
                                    String endpoint, Type type) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
@@ -410,6 +456,13 @@ public class Client {
     return gson.fromJson(response.body(), type);
   }
 
+  /**
+   * Funkcja łącząca ze sobą mapę Autorów z klasą KsiazkaDto, aby utworzyć pełną listę książek.
+   *
+   * @param dtos      parametr związany z klasą KsiazkaDto.
+   * @param autorMap  parametr związany z mapą autorów.
+   * @return          zwracana jest pełna lista do klasy Ksiazka.
+   */
   private List<Ksiazka> buildKsiazkaList(List<KsiazkaDto> dtos, Map<Integer, AutorzyDto> autorMap) {
     List<Ksiazka> list = new ArrayList<>();
     for (KsiazkaDto dto : dtos) {
@@ -423,6 +476,14 @@ public class Client {
     return list;
   }
 
+  /**
+   * Funkcja łącząca ze sobą mapy z klasą WypozyczeniaDto, aby utworzyć połączenia zgodne z wypożyczeniami tylko dla danego użytkownika.
+   *
+   * @param dtos            parametr związany z klasą WypozyczeniaDto.
+   * @param ksiazkaMap      parametr związany z mapą ksiązek.
+   * @param autorMap        parametr związany z mapą autorów.
+   * @return                Zwracana jest uzupełniona lista do klasy Wypozyczenia.
+   */
   private List<Wypozyczenia> buildWypozyczeniaList(List<WypozyczeniaDto> dtos,
                                                    Map<Integer, KsiazkaDto> ksiazkaMap, Map<Integer, AutorzyDto> autorMap, Uzytkownik u) {
     List<Wypozyczenia> list = new ArrayList<>();
@@ -443,6 +504,15 @@ public class Client {
     return list;
   }
 
+  /**
+   * Funkcja łącząca ze sobą mapy z klasą KaryDto, aby utworzyć połączenia zgodne z karami dla danego użytkownika.
+   *
+   * @param dtos        parametr związany z klasą KaryDto.
+   * @param wypoDtos    parametr związany z klasą WypozyczeniaDto.
+   * @param ksiazkaMap  parametr związany z mapą ksiązek.
+   * @param autorMap    parametr związany z mapą autorów.
+   * @return            Zwracana jest uzupełniona lista do klasy Kary.
+   */
   private List<Kary> buildKaryList(List<KaryDto> dtos, List<WypozyczeniaDto> wypoDtos,
                                    Map<Integer, KsiazkaDto> ksiazkaMap, Map<Integer, AutorzyDto> autorMap) {
     List<Kary> list = new ArrayList<>();
@@ -467,6 +537,12 @@ public class Client {
   }
 
 
+  /**
+   * Zamienia obiekt FiltrDto na obiekt Filtr.
+   *
+   * @param dto obiekt z danymi wejściowymi
+   * @return nowy obiekt Filtr z danymi z dto
+   */
   public Filtr convertDtoToFiltr(FiltrDto dto) {
     String autorName = (dto.Imie != null && dto.Nazwisko != null) ? dto.Imie + " " + dto.Nazwisko
             : "Nieznany autor";
@@ -487,7 +563,12 @@ public class Client {
     );
   }
 
-
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Ksiazka.
+   *
+   * @param dto Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Ksiazka.
+   */
   private Ksiazka convertDtoToKsiazka(KsiazkaDto dto) {
     KsiazkaSup ksup = new KsiazkaSup(
             dto.Tytul,
@@ -504,6 +585,12 @@ public class Client {
     );
   }
 
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Wypozyczenia.
+   *
+   * @param dto Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Wypozyczenia.
+   */
   private Wypozyczenia convertDtoToWypozyczenia(WypozyczeniaDto dto) {
     return new Wypozyczenia(
             dto.id,
@@ -515,6 +602,12 @@ public class Client {
     );
   }
 
+  /**
+   * Funkcja odpowiedzalna za konwertowanie DTO do modelu Kary.
+   *
+   * @param dtoK Przekazywana klasa DTO.
+   * @return    Zwraca nową element w modelu Kary .
+   */
   private Kary convertDtoToKary(KaryDto dtoK) {
     return new Kary(
             dtoK.id,
@@ -527,10 +620,18 @@ public class Client {
     );
   }
 
+  /**
+   * Funkcja odpowiedzialna za odświeżanie danych.
+   */
   public void refresh() {
     fetchData();
   }
 
+  /**
+   * Wysyła żądanie filtrujące książki na podstawie wybranych kryteriów.
+   * Pobiera dane z dwóch pól wyboru i dwóch pól tekstowych. Tworzy zapytanie HTTP GET
+   * do serwera z odpowiednimi parametrami. Odbiera odpowiedź i przetwarza wynik.
+   */
   public void filtrbutton() {
     try {
       String param1 = "";
@@ -588,6 +689,14 @@ public class Client {
   }
 
 
+  /**
+   * Przetwarza odpowiedź JSON i wyświetla dane w tabeli.
+   * Konwertuje JSON na listę obiektów FiltrDto, zamienia je na Filtr
+   * i ustawia w tabeli na interfejsie użytkownika.
+   *
+   * @param responseBody treść odpowiedzi z serwera
+   * @param gson obiekt Gson do konwersji JSON
+   */
   private void handleJsonResponse(String responseBody, Gson gson) {
     try {
       Type listType = new TypeToken<List<FiltrDto>>() {
@@ -604,6 +713,10 @@ public class Client {
     }
   }
 
+  /**
+   * Obsługuje błąd serwera.
+   * Zapisuje ostrzeżenie w logach. Jeśli wystąpi błąd przy logowaniu, zapisuje go jako błąd.
+   */
   private void handleServerError() {
     try {
       logger.log(Level.WARNING, "Błąd z serwera ");
@@ -613,6 +726,9 @@ public class Client {
   }
 
 
+  /**
+   * Funkcja odpowiedzalna za logikę przycisku konfiguracji 2FA, przekierowywuje do okna setup_totp.fxml.
+   */
   public void on2fa() {
     try {
       FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/setup_totp.fxml"));

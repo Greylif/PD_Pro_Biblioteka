@@ -16,12 +16,20 @@ import org.testfx.util.WaitForAsyncUtils;
 
 import static org.testfx.assertions.api.Assertions.assertThat;
 
-
+/**
+ * Klasa testowa dla kontrolera logowania i rejestracji w aplikacji JavaFX.
+ * Wykorzystuje bibliotekę TestFX do symulowania interakcji użytkownika oraz JUnit 5 do testowania.
+ * Testy obejmują scenariusze:
+ * <ul>
+ *     <li>Logowanie użytkownika i administratora</li>
+ *     <li>Błędne dane logowania</li>
+ *     <li>Rejestracja nowego użytkownika</li>
+ *     <li>Usuwanie konta użytkownika</li>
+ * </ul>
+ */
 @DisplayName("Testy Logowania")
 @ExtendWith(ApplicationExtension.class)
 class LoginControlTest extends ApplicationTest {
-
-
 
     @Override
     public void start(Stage stage) throws Exception {

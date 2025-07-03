@@ -26,7 +26,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
+/**
+ * Komponent odpowiedzialny za logikę rozpoczęcia konfiguracji TOTP.
+ */
+@Component
 public class SetupTotp {
 
   private static final Logger logger = Logger.getLogger(SetupTotp.class.getName());
@@ -41,12 +46,18 @@ public class SetupTotp {
   @FXML
   private Label infoLabel;
 
+  /**
+   * Funkcja inicjalizująca w oknie.
+   */
   @FXML
   public void initialize() {
     totpConfig();
-
   }
 
+  /**
+   *  Funkcja inicjalizująca proces aktywacji TOTP, generuje kod QR, dzięki zapytaniu do serwera.
+   *  Wymaga od użytkownika użycia aplikacji zewnętrznej (np. na telefonie) do weryfikacji TOTP.
+   */
   private void totpConfig() {
     try {
       Uzytkownik u = LogUser.get();
@@ -101,6 +112,11 @@ public class SetupTotp {
     }
   }
 
+  /**
+   * Funkcja odpowiedzialna za logikę, gdy użytkownik potwierdzi dalszą konfiguracje TOTP.
+   *
+   * @param actionEvent Parametr pozwala na zamknięcie danego okna.
+   */
   @FXML
   public void onConfirmClicked(ActionEvent actionEvent) {
     try {
@@ -168,6 +184,11 @@ public class SetupTotp {
     }
   }
 
+  /**
+   * Funkcja odpowiedzialna za logikę, gdy użytkownik anuluje dalszą konfiguracje TOTP.
+   *
+   * @param actionEvent Parametr pozwala na zamknięcie danego okna.
+   */
   @FXML
   public void onCancelClicked(ActionEvent actionEvent) {
     Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

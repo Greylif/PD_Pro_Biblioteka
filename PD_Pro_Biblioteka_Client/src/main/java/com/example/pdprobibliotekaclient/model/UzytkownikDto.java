@@ -1,6 +1,10 @@
 package com.example.pdprobibliotekaclient.model;
 
-
+/**
+ * Data Transfer Object (DTO) reprezentujący użytkownika.
+ * Służy do przesyłania danych użytkownika pomiędzy warstwami aplikacji,
+ * bez powiązania z implementacją JavaFX.
+ */
 public class UzytkownikDto {
 
   public int id;

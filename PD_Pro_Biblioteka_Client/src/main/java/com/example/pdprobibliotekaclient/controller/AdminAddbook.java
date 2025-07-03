@@ -22,6 +22,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+/**
+ * Komponent odpowiedzialny za dodawanie książki przez administratora
+ */
 @Component
 public class AdminAddbook {
 
@@ -37,6 +40,9 @@ public class AdminAddbook {
   @FXML
   private TextField aidplac;
 
+  /**
+   * Funkcja inicjalizacyjna okno dodawania książki
+   */
   @FXML
   public void initialize() {
     UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -51,6 +57,11 @@ public class AdminAddbook {
     aidauthor.setTextFormatter(new TextFormatter<>(filter));
   }
 
+  /**
+   * Funkcja odpowiedzialna za logikę przycisku dodawania książki, tworzy zapytanie do serwera i odpowiednio reaguje na odpowiedź od serwera.
+   *
+   * @param actionEvent Parametr służący do wyłączania odpowiedniego okna.
+   */
   @FXML
   public void addact(ActionEvent actionEvent) {
 

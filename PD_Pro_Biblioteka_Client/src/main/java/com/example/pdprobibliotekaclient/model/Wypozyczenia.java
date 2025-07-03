@@ -9,7 +9,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+/**
+ * Klasa reprezentująca wypożyczenie książki przez użytkownika.
+ * Używa właściwości JavaFX do powiązania z UI.
+ * Zawiera dane dotyczące użytkownika, książki oraz terminu wypożyczenia i zwrotu.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

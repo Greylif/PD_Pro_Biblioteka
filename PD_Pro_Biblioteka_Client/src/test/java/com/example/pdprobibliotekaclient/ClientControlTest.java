@@ -17,6 +17,9 @@ import java.net.URL;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * Test jednostkowy klasy {@link Client}, testujący logikę wylogowania użytkownika.
+ */
 public class ClientControlTest {
 
     private Client client;

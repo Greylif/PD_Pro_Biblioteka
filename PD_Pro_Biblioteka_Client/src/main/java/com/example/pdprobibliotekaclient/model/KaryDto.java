@@ -1,5 +1,9 @@
 package com.example.pdprobibliotekaclient.model;
 
+/**
+ * Klasa DTO reprezentująca dane kary.
+ * Używana do transferu danych między warstwami aplikacji.
+ */
 public class KaryDto {
 
   public int id;

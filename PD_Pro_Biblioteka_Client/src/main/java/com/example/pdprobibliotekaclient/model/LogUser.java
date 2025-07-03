@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Klasa przechowująca informacje o zalogowanym użytkowniku.
+ * Zawiera dane takie jak token, identyfikator użytkownika, rolę oraz czas ważności tokenu.
+ * Umożliwia również przechowywanie i zarządzanie obiektem {@link Uzytkownik}.
+ */
 public class LogUser {
 
   @Getter

@@ -11,6 +11,18 @@ import org.springframework.context.ConfigurableApplicationContext;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Klasa testowa dla aplikacji, testująca metody cyklu życia aplikacji JavaFX
+ * w połączeniu z kontekstem Spring Boota.
+ * Testy obejmują metody:
+ * <ul>
+ *     <li>inicjalizacja Spring Boot</li>
+ *     <li>ustawienie sceny startowej</li>
+ *     <li>zamknięcie kontekstu Spring</li>
+ * </ul>
+ *
+ * Zawiera testy jednostkowe i GUI z wykorzystaniem JUnit 5 i Mockito.
+ */
 public class MainTest {
 
     private MainApp mainApp;

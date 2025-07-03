@@ -7,6 +7,10 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Test integracyjny uruchamiający kontekst aplikacji Spring Boot
+ * w celu sprawdzenia, czy aplikacja startuje poprawnie.
+ */
 @SpringBootTest
 class PdProBibliotekaClientApplicationTests {
 
