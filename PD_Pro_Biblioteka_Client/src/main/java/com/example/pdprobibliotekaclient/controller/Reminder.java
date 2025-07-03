@@ -19,6 +19,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
+/**
+ * Komponent odpowiedzialny za logikę okna, które pozwla na restart hasła lub 2FA.
+ */
 @Component
 public class Reminder {
 
@@ -27,9 +30,13 @@ public class Reminder {
   @FXML
   private TextField useremail;
 
+  /**
+   * Funkcja odpowiedzialna za logikę przycisku, wysyła zapytanie do serwera (które restartuje hasło) i odpowiednio reaguje na odpowiedź serwera.
+   *
+   * @param actionEvent Parametr odpowiedzalny za zamknięcię danego okna
+   */
   @FXML
   public void reminderact(javafx.event.ActionEvent actionEvent) {
-
     try {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
@@ -73,6 +80,11 @@ public class Reminder {
     }
   }
 
+  /**
+   * Funkcja odpowiedzialna za logikę przycisku, wysyła zapytanie do serwera (które restartuje TOTP) i przekierowywuje do okna TotpRestart.fxml.
+   *
+   * @param actionEvent Parametr odpowiedzalny za zamknięcię danego okna
+   */
   public void reminderactTotp(ActionEvent actionEvent) {
     try {
       LogUser.setUserEmail(useremail.getText());

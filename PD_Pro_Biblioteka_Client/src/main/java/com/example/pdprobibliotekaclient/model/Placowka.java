@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Klasa reprezentująca placówkę biblioteczną.
+ * Zawiera identyfikator oraz adres placówki.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

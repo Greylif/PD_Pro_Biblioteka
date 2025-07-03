@@ -10,10 +10,18 @@ import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Klasa służąca jako okno modalne.
+ */
 public class Addbookmodal {
 
   private static final Logger logger = Logger.getLogger(Addbookmodal.class.getName());
 
+  /**
+   * Obsługa przycisku dodania autora
+   *
+   * @param actionEvent parametr pozwalający na zamknięcie danego okna
+   */
   public void onDodajAutora(ActionEvent actionEvent) {
     try {
       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -30,6 +38,11 @@ public class Addbookmodal {
     }
   }
 
+  /**
+   * Obsługa przycisku dodania książki
+   *
+   * @param actionEvent parametr pozwalający na zamknięcie danego okna
+   */
   public void onDodajKsiazke(ActionEvent actionEvent) {
     try {
       Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();

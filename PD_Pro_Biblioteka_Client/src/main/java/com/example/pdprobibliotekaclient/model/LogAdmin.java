@@ -5,6 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Klasa reprezentująca dane logowania administratora.
+ * Zawiera informacje o tożsamości, roli, tokenie oraz czasie ważności sesji.
+ * Wykorzystuje Jackson do deserializacji JSON.
+ */
 public class LogAdmin {
 
   @Getter

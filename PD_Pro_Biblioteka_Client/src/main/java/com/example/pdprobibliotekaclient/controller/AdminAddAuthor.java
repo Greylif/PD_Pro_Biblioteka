@@ -20,7 +20,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
+/**
+ * Komponent odpowiedzialny za dodawanie autorów do bazy danych.
+ */
+@Component
 public class AdminAddAuthor {
 
   private static final Logger logger = Logger.getLogger(AdminAddAuthor.class.getName());
@@ -31,6 +36,9 @@ public class AdminAddAuthor {
   @FXML
   private TextField auyear;
 
+  /**
+   * Funkcja inicjalizacyjna okno dodawania autora
+   */
   @FXML
   public void initialize() {
     UnaryOperator<TextFormatter.Change> filter = change -> {
@@ -43,9 +51,13 @@ public class AdminAddAuthor {
     auyear.setTextFormatter(new TextFormatter<>(filter));
   }
 
+  /**
+   * Funkcja odpowiedzialna za logikę przycisku dodawania autora, tworzy zapytanie do serwera i odpowiednio reaguje na odpowiedź od serwera.
+   *
+   * @param actionEvent Parametr służący do wyłączania odpowiedniego okna.
+   */
   @FXML
   public void addact(ActionEvent actionEvent) {
-
     try {
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();

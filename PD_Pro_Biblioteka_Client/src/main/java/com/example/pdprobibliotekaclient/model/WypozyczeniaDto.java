@@ -1,6 +1,10 @@
 package com.example.pdprobibliotekaclient.model;
 
-
+/**
+ * Data Transfer Object (DTO) reprezentujący wypożyczenie książki.
+ * Służy do przenoszenia danych pomiędzy warstwami aplikacji (np. klient-serwer).
+ * Zawiera podstawowe informacje o wypożyczeniu, takie jak daty i identyfikatory.
+ */
 public class WypozyczeniaDto {
 
   public int id;

@@ -18,7 +18,9 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * Testy Service.
+ * Klasa testowa dla komponentów serwisowych aplikacji klienta.
+ * Skupia się na testowaniu zachowania klasy {@link SessionMonitor},
+ * odpowiedzialnej za nadzorowanie ważności sesji użytkownika.
  */
 @DisplayName("Testy dla Service")
 public class ServiceTest {

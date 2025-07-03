@@ -10,6 +10,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testy jednostkowe klasy, odpowiedzialnej
+ * za obsługę wyjątków po stronie klienta aplikacji.
+ * Klasa wykorzystuje bibliotekę Mockito do mockowania obiektów Model i RedirectAttributes
+ * oraz JUnit 5 do wykonywania testów jednostkowych.
+ */
 @DisplayName("Testy wyjątków po stronie klienta")
 class ExceptionTest {
 

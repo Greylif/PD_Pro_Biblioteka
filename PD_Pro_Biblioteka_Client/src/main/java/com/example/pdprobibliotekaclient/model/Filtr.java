@@ -8,6 +8,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+/**
+ * Klasa modelu reprezentująca książkę z filtrem danych.
+ * Używa właściwości JavaFX do powiązań z GUI oraz adnotacji Gson do mapowania JSON.
+ */
 public class Filtr {
 
   @SerializedName("id")
@@ -31,12 +35,12 @@ public class Filtr {
 
   private final StringProperty autorName = new SimpleStringProperty();
 
-  public Filtr(boolean rez, boolean wypo, String gat, int idA, int year, int idB, int idP,
-      String dodano, String tyt, String autorName) {
-    this.rezerwacja.set(rez);
-    this.czyWypozyczono.set(wypo);
-    this.gatunek.set(gat);
-    this.idAutora.set(idA);
+  public Filtr(FiltrSup sup, int year, int idB, int idP,
+               String dodano, String tyt, String autorName) {
+    this.rezerwacja.set(sup.isRez());
+    this.czyWypozyczono.set(sup.isWypo());
+    this.gatunek.set(sup.getGat());
+    this.idAutora.set(sup.getIdA());
     this.dataWydania.set(year);
     this.id.set(idB);
     this.idPlacowki.set(idP);
@@ -169,15 +173,15 @@ public class Filtr {
   @Override
   public String toString() {
     return "Filtr{"
-        + "id=" + id
-        + ", tytul='" + tytul + '\''
-        + ", id_autora=" + idAutora
-        + ", gatunek='" + gatunek + '\''
-        + ", data_Wydania=" + dataWydania
-        + ", czy_wypozyczono=" + czyWypozyczono
-        + ", rezerwacja=" + rezerwacja
-        + ", id_placowki=" + idPlacowki
-        + ", dodano='" + dodano + '\''
-        + '}';
+            + "id=" + id
+            + ", tytul='" + tytul + '\''
+            + ", id_autora=" + idAutora
+            + ", gatunek='" + gatunek + '\''
+            + ", data_Wydania=" + dataWydania
+            + ", czy_wypozyczono=" + czyWypozyczono
+            + ", rezerwacja=" + rezerwacja
+            + ", id_placowki=" + idPlacowki
+            + ", dodano='" + dodano + '\''
+            + '}';
   }
 }

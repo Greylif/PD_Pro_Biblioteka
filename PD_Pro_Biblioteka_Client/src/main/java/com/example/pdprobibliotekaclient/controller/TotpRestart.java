@@ -16,13 +16,25 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.springframework.stereotype.Component;
 
+/**
+ * Komponent odpowiedzialny za restart TOTP.
+ */
+@Component
 public class TotpRestart {
 
   private static final Logger logger = Logger.getLogger(TotpRestart.class.getName());
   @FXML
   private TextField codeField;
 
+  /**
+   * Funkcja obsługująca logikę przycisku.
+   * Wysyła zapytanie do serwera i osbługuje od odpowiedź.
+   *
+   * @param actionEvent Pozwala na zamknięcie okna.
+   */
+  @FXML
   public void onClick(ActionEvent actionEvent) {
     try {
       @SuppressWarnings("java:S2095")
