@@ -129,7 +129,7 @@ class LoginControlTest extends ApplicationTest {
         clickOn("#userpassword").write("123456");
         clickOn("#register");
 
-        popupRoot = lookup("#DonePopup").queryAs(Parent.class);
+        popupRoot = lookup("#UndonePopup").queryAs(Parent.class);
         assertThat(popupRoot).isVisible();
     }
 
