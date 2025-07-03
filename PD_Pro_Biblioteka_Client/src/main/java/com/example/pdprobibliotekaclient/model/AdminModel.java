@@ -39,11 +39,11 @@ public class AdminModel {
   private StringProperty Mfa_Secret = new SimpleStringProperty();
 
 
-  public AdminModel(int id, String imie, String nazwisko, String nazwaUzytkownika, String haslo,
-      int idPlacowki, Boolean mfaenabled, String mfaSecret) {
-    this.id.set(id);
-    this.Imie.set(imie);
-    this.Nazwisko.set(nazwisko);
+  public AdminModel(AdminSup asup, String nazwaUzytkownika, String haslo,
+                    int idPlacowki, Boolean mfaenabled, String mfaSecret) {
+    this.id.set(asup.getId());
+    this.Imie.set(asup.getImie());
+    this.Nazwisko.set(asup.getNazwisko());
     this.Nazwa_Uzytkownika.set(nazwaUzytkownika);
     this.Haslo.set(haslo);
     this.id_placowki.set(idPlacowki);
@@ -86,7 +86,7 @@ public class AdminModel {
   @Override
   public String toString() {
     return "Admin{id=" + id + ", Imie='" + Imie + "', Nazwisko='" + Nazwisko
-        + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', id_placowki=" + id_placowki
-        + "', mfa_enable=" + mfa_EnabledProperty() + "', mfa_enable=" + mfa_EnabledProperty() + "}";
+            + "', Nazwa_Uzytkownika='" + Nazwa_Uzytkownika + "', id_placowki=" + id_placowki
+            + "', mfa_enable=" + mfa_EnabledProperty() + "', mfa_enable=" + mfa_EnabledProperty() + "}";
   }
 }

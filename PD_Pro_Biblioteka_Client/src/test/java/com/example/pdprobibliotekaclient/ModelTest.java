@@ -159,11 +159,10 @@ class ModelTest {
 
     @BeforeEach
     void setUpBook() {
+        KsiazkaSup ksup = new KsiazkaSup("Pan Tadeusz", "Epopeja",1834);
         ksiazka = new Ksiazka(
                 1,
-                "Pan Tadeusz",
-                "Epopeja",
-                1834,
+                ksup,
                 "2024-06-15",
                 10,
                 5,
@@ -263,11 +262,13 @@ class ModelTest {
 
     @BeforeEach
     void setUpFiltr() {
-        filtr = new Filtr(
+        FiltrSup filtrSup = new FiltrSup(
                 true,
                 false,
                 "Fantasy",
-                10,
+                10);
+        filtr = new Filtr(
+                filtrSup,
                 2001,
                 1,
                 5,
@@ -386,10 +387,12 @@ class ModelTest {
 
     @BeforeEach
     void setUpAdmin() {
-        admin = new AdminModel(
+        AdminSup asup = new AdminSup(
                 1,
                 "Jan",
-                "Kowalski",
+                "Kowalski");
+        admin = new AdminModel(
+                asup,
                 "j.kowalski",
                 "tajneHaslo123",
                 101,

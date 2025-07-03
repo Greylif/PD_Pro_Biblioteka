@@ -44,12 +44,12 @@ public class Ksiazka {
 
   private StringProperty autorName = new SimpleStringProperty();
 
-  public Ksiazka(int id, String tytul, String gatunek, int dataWydania, String dodano, int idAutora,
-      int idPlacowki, Boolean rezerwacja, Boolean wypozyczenia) {
+  public Ksiazka(int id, KsiazkaSup ksup, String dodano, int idAutora,
+                 int idPlacowki, Boolean rezerwacja, Boolean wypozyczenia) {
     this.id.set(id);
-    this.tytul.set(tytul);
-    this.gatunek.set(gatunek);
-    this.dataWydania.set(dataWydania);
+    this.tytul.set(ksup.getTytul());
+    this.gatunek.set(ksup.getGatunek());
+    this.dataWydania.set(ksup.getDataWydania());
     this.dodano.set(dodano);
     this.idAutora.set(idAutora);
     this.idPlacowki.set(idPlacowki);

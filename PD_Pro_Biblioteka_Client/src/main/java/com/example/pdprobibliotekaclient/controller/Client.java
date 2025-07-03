@@ -4,10 +4,12 @@ package com.example.pdprobibliotekaclient.controller;
 import com.example.pdprobibliotekaclient.model.AutorzyDto;
 import com.example.pdprobibliotekaclient.model.Filtr;
 import com.example.pdprobibliotekaclient.model.FiltrDto;
+import com.example.pdprobibliotekaclient.model.FiltrSup;
 import com.example.pdprobibliotekaclient.model.Kary;
 import com.example.pdprobibliotekaclient.model.KaryDto;
 import com.example.pdprobibliotekaclient.model.Ksiazka;
 import com.example.pdprobibliotekaclient.model.KsiazkaDto;
+import com.example.pdprobibliotekaclient.model.KsiazkaSup;
 import com.example.pdprobibliotekaclient.model.LogUser;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
 import com.example.pdprobibliotekaclient.model.Wypozyczenia;
@@ -171,6 +173,8 @@ public class Client {
   @FXML
   private TableColumn<Ksiazka, String> sIdautor;
   @FXML
+  private TableColumn<Ksiazka, String> sgenre;
+  @FXML
   private TableView<Ksiazka> serachTable;
   private SessionMonitor sessionMonitor;
 
@@ -183,6 +187,7 @@ public class Client {
     sIdautor.setCellValueFactory(cellData -> cellData.getValue().idAutoraProperty().asString());
     stitle.setCellValueFactory(cellData -> cellData.getValue().tytulProperty());
     sautor.setCellValueFactory(cellData -> cellData.getValue().autorNameProperty());
+    sgenre.setCellValueFactory(cellData -> cellData.getValue().gatunekProperty());
     sborrow.setEditable(false);
     sborrow.setCellValueFactory(cellData -> cellData.getValue().WypozyczenieProperty());
     sborrow.setCellFactory(CheckBoxTableCell.forTableColumn(sborrow));
@@ -206,7 +211,7 @@ public class Client {
 
     pid.setCellValueFactory(cellData -> cellData.getValue().idProperty().asString());
     puserid.setCellValueFactory(
-        cellData -> cellData.getValue().id_uzytkownikaProperty().asString());
+            cellData -> cellData.getValue().id_uzytkownikaProperty().asString());
     pdesc.setCellValueFactory(cellData -> cellData.getValue().OpisProperty());
     pdate.setCellValueFactory(cellData -> cellData.getValue().Data_Wydania_Kary_Property());
     ppaymentdate.setCellValueFactory(cellData -> cellData.getValue().Termin_Zaplaty_Property());
@@ -263,19 +268,19 @@ public class Client {
       String url = "https://localhost:8443/library/uzytkownicy/" + id + "?";
 
       String body = String.format(
-          "imie=%s&nazwisko=%s&nazwaUzytkownika=%s&haslo=%s",
-          URLEncoder.encode(imie, StandardCharsets.UTF_8),
-          URLEncoder.encode(nazwisko, StandardCharsets.UTF_8),
-          URLEncoder.encode(login, StandardCharsets.UTF_8),
-          URLEncoder.encode(haslo, StandardCharsets.UTF_8)
+              "imie=%s&nazwisko=%s&nazwaUzytkownika=%s&haslo=%s",
+              URLEncoder.encode(imie, StandardCharsets.UTF_8),
+              URLEncoder.encode(nazwisko, StandardCharsets.UTF_8),
+              URLEncoder.encode(login, StandardCharsets.UTF_8),
+              URLEncoder.encode(haslo, StandardCharsets.UTF_8)
       );
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
-          .PUT(BodyPublishers.ofString(body))
-          .build();
+              .uri(URI.create(url))
+              .header(CONTENTTYPE, APPURL)
+              .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
+              .PUT(BodyPublishers.ofString(body))
+              .build();
 
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
@@ -301,11 +306,11 @@ public class Client {
       String url = "https://localhost:8443/library/uzytkownicy/" + LogUser.getUserIdStr();
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
-          .DELETE()
-          .build();
+              .uri(URI.create(url))
+              .header(CONTENTTYPE, APPURL)
+              .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
+              .DELETE()
+              .build();
 
       HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
@@ -356,29 +361,29 @@ public class Client {
 
     try {
       List<KsiazkaDto> ksiazkiDtos = fetchDtoList(client, gson, "ksiazki",
-          new TypeToken<List<KsiazkaDto>>() {
-          }.getType());
+              new TypeToken<List<KsiazkaDto>>() {
+              }.getType());
       List<AutorzyDto> autorzyDtos = fetchDtoList(client, gson, "autorzy",
-          new TypeToken<List<AutorzyDto>>() {
-          }.getType());
+              new TypeToken<List<AutorzyDto>>() {
+              }.getType());
       List<WypozyczeniaDto> wypoDtos = fetchDtoList(client, gson, "wypozyczenia/"
-              + Integer.parseInt(LogUser.userIdStr),
-          new TypeToken<List<WypozyczeniaDto>>() {
-          }.getType());
+                      + Integer.parseInt(LogUser.userIdStr),
+              new TypeToken<List<WypozyczeniaDto>>() {
+              }.getType());
       List<KaryDto> karyDtos = fetchDtoList(client, gson, "kary/"
-          + Integer.parseInt(LogUser.userIdStr), new TypeToken<List<KaryDto>>() {
-          }.getType());
+              + Integer.parseInt(LogUser.userIdStr), new TypeToken<List<KaryDto>>() {
+      }.getType());
 
       Map<Integer, KsiazkaDto> ksiazkaMap = ksiazkiDtos.stream()
-          .collect(Collectors.toMap(k -> k.id, k -> k));
+              .collect(Collectors.toMap(k -> k.id, k -> k));
       Map<Integer, AutorzyDto> autorMap = autorzyDtos.stream()
-          .collect(Collectors.toMap(a -> a.id, a -> a));
+              .collect(Collectors.toMap(a -> a.id, a -> a));
 
       List<Ksiazka> ksiazkaList = buildKsiazkaList(ksiazkiDtos, autorMap);
       List<Wypozyczenia> wypozyczeniaList = buildWypozyczeniaList(wypoDtos,
-          ksiazkaMap, autorMap, u);
+              ksiazkaMap, autorMap, u);
       List<Kary> karyList = buildKaryList(karyDtos, wypoDtos,
-          ksiazkaMap, autorMap);
+              ksiazkaMap, autorMap);
 
       Platform.runLater(() -> {
         penaltyTable.setItems(FXCollections.observableArrayList(karyList));
@@ -395,12 +400,12 @@ public class Client {
   }
 
   private <T> List<T> fetchDtoList(HttpClient client, Gson gson,
-      String endpoint, Type type) throws IOException, InterruptedException {
+                                   String endpoint, Type type) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create("https://localhost:8443/library/" + endpoint))
-        .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
-        .GET()
-        .build();
+            .uri(URI.create("https://localhost:8443/library/" + endpoint))
+            .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
+            .GET()
+            .build();
     HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
     return gson.fromJson(response.body(), type);
   }
@@ -419,7 +424,7 @@ public class Client {
   }
 
   private List<Wypozyczenia> buildWypozyczeniaList(List<WypozyczeniaDto> dtos,
-      Map<Integer, KsiazkaDto> ksiazkaMap, Map<Integer, AutorzyDto> autorMap, Uzytkownik u) {
+                                                   Map<Integer, KsiazkaDto> ksiazkaMap, Map<Integer, AutorzyDto> autorMap, Uzytkownik u) {
     List<Wypozyczenia> list = new ArrayList<>();
     for (WypozyczeniaDto dto : dtos) {
       Wypozyczenia wyp = convertDtoToWypozyczenia(dto);
@@ -439,23 +444,23 @@ public class Client {
   }
 
   private List<Kary> buildKaryList(List<KaryDto> dtos, List<WypozyczeniaDto> wypoDtos,
-      Map<Integer, KsiazkaDto> ksiazkaMap, Map<Integer, AutorzyDto> autorMap) {
+                                   Map<Integer, KsiazkaDto> ksiazkaMap, Map<Integer, AutorzyDto> autorMap) {
     List<Kary> list = new ArrayList<>();
     for (KaryDto dto : dtos) {
       Kary kara = convertDtoToKary(dto);
       wypoDtos.stream()
-          .filter(w -> w.id_uzytkownika == dto.id_uzytkownika)
-          .findFirst()
-          .ifPresent(wyp -> {
-            KsiazkaDto ksiazka = ksiazkaMap.get(wyp.id_ksiazki);
-            if (ksiazka != null) {
-              kara.setBookTitle(ksiazka.Tytul);
-              AutorzyDto autor = autorMap.get(ksiazka.id_autora);
-              if (autor != null) {
-                kara.setAutorName(autor.Imie + " " + autor.Nazwisko);
-              }
-            }
-          });
+              .filter(w -> w.id_uzytkownika == dto.id_uzytkownika)
+              .findFirst()
+              .ifPresent(wyp -> {
+                KsiazkaDto ksiazka = ksiazkaMap.get(wyp.id_ksiazki);
+                if (ksiazka != null) {
+                  kara.setBookTitle(ksiazka.Tytul);
+                  AutorzyDto autor = autorMap.get(ksiazka.id_autora);
+                  if (autor != null) {
+                    kara.setAutorName(autor.Imie + " " + autor.Nazwisko);
+                  }
+                }
+              });
       list.add(kara);
     }
     return list;
@@ -464,56 +469,61 @@ public class Client {
 
   public Filtr convertDtoToFiltr(FiltrDto dto) {
     String autorName = (dto.Imie != null && dto.Nazwisko != null) ? dto.Imie + " " + dto.Nazwisko
-        : "Nieznany autor";
+            : "Nieznany autor";
+    FiltrSup filtrSup = new FiltrSup(
+            dto.Rezerwacja,
+            dto.czy_wypozyczono,
+            dto.Gatunek,
+            dto.id_autora
+    );
     return new Filtr(
-        dto.Rezerwacja,
-        dto.czy_wypozyczono,
-        dto.Gatunek,
-        dto.id_autora,
-        dto.Data_Wydania,
-        dto.id,
-        dto.id_placowki,
-        dto.Dodano,
-        dto.Tytul,
-        autorName
+            filtrSup,
+            dto.Data_Wydania,
+            dto.id,
+            dto.id_placowki,
+            dto.Dodano,
+            dto.Tytul,
+            autorName
     );
   }
 
 
   private Ksiazka convertDtoToKsiazka(KsiazkaDto dto) {
+    KsiazkaSup ksup = new KsiazkaSup(
+            dto.Tytul,
+            dto.Gatunek,
+            dto.Data_Wydania);
     return new Ksiazka(
-        dto.id,
-        dto.Tytul,
-        dto.Gatunek,
-        dto.Data_Wydania,
-        dto.Dodano,
-        dto.id_autora,
-        dto.id_placowki,
-        dto.Rezerwacja,
-        dto.czy_wypozyczono
+            dto.id,
+            ksup,
+            dto.Dodano,
+            dto.id_autora,
+            dto.id_placowki,
+            dto.Rezerwacja,
+            dto.czy_wypozyczono
     );
   }
 
   private Wypozyczenia convertDtoToWypozyczenia(WypozyczeniaDto dto) {
     return new Wypozyczenia(
-        dto.id,
-        dto.Data_Wypozyczenia,
-        dto.Data_Oddania,
-        dto.Termin_Oddania,
-        dto.id_ksiazki,
-        dto.id_uzytkownika
+            dto.id,
+            dto.Data_Wypozyczenia,
+            dto.Data_Oddania,
+            dto.Termin_Oddania,
+            dto.id_ksiazki,
+            dto.id_uzytkownika
     );
   }
 
   private Kary convertDtoToKary(KaryDto dtoK) {
     return new Kary(
-        dtoK.id,
-        dtoK.Kwota,
-        dtoK.Data_Wydania_Kary,
-        dtoK.Termin_Zaplaty,
-        Boolean.valueOf(dtoK.Czy_Zaplacono),
-        dtoK.id_uzytkownika,
-        dtoK.opis
+            dtoK.id,
+            dtoK.Kwota,
+            dtoK.Data_Wydania_Kary,
+            dtoK.Termin_Zaplaty,
+            Boolean.valueOf(dtoK.Czy_Zaplacono),
+            dtoK.id_uzytkownika,
+            dtoK.opis
     );
   }
 
@@ -527,14 +537,14 @@ public class Client {
       String param2 = "";
 
       if (fcombo1.getValue() != null && !fcombo1.getValue().isEmpty()
-          && fsearch1.getText() != null && !fsearch1.getText().isEmpty()) {
+              && fsearch1.getText() != null && !fsearch1.getText().isEmpty()) {
         String klucz1 = URLEncoder.encode(fcombo1.getValue(), StandardCharsets.UTF_8);
         String wartosc1 = URLEncoder.encode(fsearch1.getText(), StandardCharsets.UTF_8);
         param1 = klucz1 + "=" + wartosc1;
       }
 
       if (fcombo2.getValue() != null && !fcombo2.getValue().isEmpty()
-          && fsearch2.getText() != null && !fsearch2.getText().isEmpty()) {
+              && fsearch2.getText() != null && !fsearch2.getText().isEmpty()) {
         String klucz2 = URLEncoder.encode(fcombo2.getValue(), StandardCharsets.UTF_8);
         String wartosc2 = URLEncoder.encode(fsearch2.getText(), StandardCharsets.UTF_8);
         param2 = klucz2 + "=" + wartosc2;
@@ -553,11 +563,11 @@ public class Client {
       HttpClient client = HttpClient.newHttpClient();
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create("https://localhost:8443/library/ksiazki/filtr?" + form))
-          .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
-          .GET()
-          .build();
+              .uri(URI.create("https://localhost:8443/library/ksiazki/filtr?" + form))
+              .header(CONTENTTYPE, APPURL)
+              .header(AUTHORIZATION, BEARER + LogUser.getUserToken())
+              .GET()
+              .build();
 
       HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
@@ -585,8 +595,8 @@ public class Client {
       List<FiltrDto> dtoList = gson.fromJson(responseBody, listType);
 
       List<Filtr> filtrList = dtoList.stream()
-          .map(this::convertDtoToFiltr)
-          .toList();
+              .map(this::convertDtoToFiltr)
+              .toList();
 
       Platform.runLater(() -> fitrTable.setItems(FXCollections.observableArrayList(filtrList)));
     } catch (JsonSyntaxException ex) {

@@ -1,10 +1,11 @@
 package com.example.pdprobibliotekaclient;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -97,7 +98,7 @@ class LoginControlTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
 
-      popupRoot = lookup("#DonePopup").queryAs(Parent.class);
+        popupRoot = lookup("#DonePopup").queryAs(Parent.class);
         assertThat(popupRoot).isVisible();
 
         clickOn("#exit");
@@ -121,6 +122,32 @@ class LoginControlTest extends ApplicationTest {
         clickOn("#register");
 
         popupRoot = lookup("#DonePopup").queryAs(Parent.class);
+        assertThat(popupRoot).isVisible();
+    }
+
+
+    @Test
+    @DisplayName("Logowanie z poprawnymi danymi dla usera i usuwanie")
+    public void shouldSuccessLoginAndDelete() {
+        clickOn("#userlogin").write("JuanII");
+        clickOn("#userpass").write("123456");
+
+        clickOn("#login");
+
+        Parent popupRoot = lookup("#client").queryAs(Parent.class);
+        assertThat(popupRoot).isVisible();
+
+        clickOn("#settings");
+        clickOn("#del_button");
+
+        DialogPane dialogPane = lookup(".dialog-pane").queryAs(DialogPane.class);
+        assertThat(dialogPane).isNotNull();
+
+        Button okButton = (Button) dialogPane.lookupButton(ButtonType.OK);
+        clickOn(okButton);
+
+
+        popupRoot = lookup("#login").queryAs(Parent.class);
         assertThat(popupRoot).isVisible();
     }
 }

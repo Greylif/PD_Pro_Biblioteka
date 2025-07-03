@@ -6,6 +6,7 @@ import com.example.pdprobibliotekaclient.model.Kary;
 import com.example.pdprobibliotekaclient.model.KaryDto;
 import com.example.pdprobibliotekaclient.model.Ksiazka;
 import com.example.pdprobibliotekaclient.model.KsiazkaDto;
+import com.example.pdprobibliotekaclient.model.KsiazkaSup;
 import com.example.pdprobibliotekaclient.model.LogAdmin;
 import com.example.pdprobibliotekaclient.model.Uzytkownik;
 import com.example.pdprobibliotekaclient.model.UzytkownikDto;
@@ -175,7 +176,7 @@ public class Admin {
     ppaymentdate.setCellValueFactory(cellData -> cellData.getValue().getTermin_Zaplaty());
     pdesc.setCellValueFactory(cellData -> cellData.getValue().getOpis());
     puserid.setCellValueFactory(
-        cellData -> cellData.getValue().id_uzytkownikaProperty().asString());
+            cellData -> cellData.getValue().id_uzytkownikaProperty().asString());
 
     pstatus.setCellValueFactory(cellData -> cellData.getValue().CzyZaplaconoProperty());
     pstatus.setCellFactory(ComboBoxTableCell.forTableColumn(true, false));
@@ -256,27 +257,27 @@ public class Admin {
 
     try {
       List<KsiazkaDto> ksiazkiDtos = fetchData(client, gson, "ksiazki",
-          new TypeToken<List<KsiazkaDto>>() {
-          });
+              new TypeToken<List<KsiazkaDto>>() {
+              });
       List<AutorzyDto> autorzyDtos = fetchData(client, gson, "autorzy",
-          new TypeToken<List<AutorzyDto>>() {
-          });
+              new TypeToken<List<AutorzyDto>>() {
+              });
       List<WypozyczeniaDto> wypoDtos = fetchData(client, gson, "wypozyczenia",
-          new TypeToken<List<WypozyczeniaDto>>() {
-          });
+              new TypeToken<List<WypozyczeniaDto>>() {
+              });
       List<KaryDto> karyDtos = fetchData(client, gson, "kary",
-          new TypeToken<List<KaryDto>>() {
-          });
+              new TypeToken<List<KaryDto>>() {
+              });
       List<UzytkownikDto> uzytkownicyDtos = fetchData(client, gson, "uzytkownicy",
-          new TypeToken<List<UzytkownikDto>>() {
-          });
+              new TypeToken<List<UzytkownikDto>>() {
+              });
 
       Map<Integer, KsiazkaDto> ksiazkaMap = getDtoMap(ksiazkiDtos, k -> k.id);
       Map<Integer, AutorzyDto> autorMap = getDtoMap(autorzyDtos, a -> a.id);
       Map<Integer, UzytkownikDto> uzytkownikMap = getDtoMap(uzytkownicyDtos, u -> u.id);
 
       List<Wypozyczenia> wypozyczeniaList = convertWypozyczenia(wypoDtos,
-          ksiazkaMap, autorMap, uzytkownikMap);
+              ksiazkaMap, autorMap, uzytkownikMap);
       List<Kary> karyList = convertKary(karyDtos, wypoDtos, ksiazkaMap, autorMap);
       List<Ksiazka> ksiazkaList = convertKsiazki(ksiazkiDtos, autorMap);
       List<Uzytkownik> uzytkownikList = convertUzytkownicy(uzytkownicyDtos);
@@ -290,11 +291,11 @@ public class Admin {
   }
 
   private <T> List<T> fetchData(HttpClient client, Gson gson, String endpoint,
-      TypeToken<List<T>> token) throws IOException, InterruptedException {
+                                TypeToken<List<T>> token) throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
-        .uri(URI.create("https://localhost:8443/library/" + endpoint))
-        .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
-        .GET().build();
+            .uri(URI.create("https://localhost:8443/library/" + endpoint))
+            .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
+            .GET().build();
 
     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
     return gson.fromJson(response.body(), token.getType());
@@ -305,21 +306,21 @@ public class Admin {
   }
 
   private List<Wypozyczenia> convertWypozyczenia(List<WypozyczeniaDto> dtos,
-      Map<Integer, KsiazkaDto> ksiazkaMap,
-      Map<Integer, AutorzyDto> autorMap,
-      Map<Integer, UzytkownikDto> uzytkownikMap) {
+                                                 Map<Integer, KsiazkaDto> ksiazkaMap,
+                                                 Map<Integer, AutorzyDto> autorMap,
+                                                 Map<Integer, UzytkownikDto> uzytkownikMap) {
     List<Wypozyczenia> list = new ArrayList<>();
     for (WypozyczeniaDto dto : dtos) {
       Wypozyczenia wyp = convertDtoToWypozyczenia(dto);
 
       Optional.ofNullable(uzytkownikMap.get(dto.id_uzytkownika))
-          .ifPresent(user -> wyp.setUserData(user.Imie + " " + user.Nazwisko));
+              .ifPresent(user -> wyp.setUserData(user.Imie + " " + user.Nazwisko));
 
       KsiazkaDto ksiazka = ksiazkaMap.get(dto.id_ksiazki);
       if (ksiazka != null) {
         wyp.setBookTitle(ksiazka.Tytul);
         Optional.ofNullable(autorMap.get(ksiazka.id_autora))
-            .ifPresent(autor -> wyp.setAutorName(autor.Imie + " " + autor.Nazwisko));
+                .ifPresent(autor -> wyp.setAutorName(autor.Imie + " " + autor.Nazwisko));
       }
 
       list.add(wyp);
@@ -328,24 +329,24 @@ public class Admin {
   }
 
   private List<Kary> convertKary(List<KaryDto> dtos,
-      List<WypozyczeniaDto> wypoDtos,
-      Map<Integer, KsiazkaDto> ksiazkaMap,
-      Map<Integer, AutorzyDto> autorMap) {
+                                 List<WypozyczeniaDto> wypoDtos,
+                                 Map<Integer, KsiazkaDto> ksiazkaMap,
+                                 Map<Integer, AutorzyDto> autorMap) {
     List<Kary> list = new ArrayList<>();
     for (KaryDto dto : dtos) {
       Kary kara = convertDtoToKary(dto);
 
       wypoDtos.stream()
-          .filter(w -> w.id_uzytkownika == dto.id_uzytkownika)
-          .findFirst()
-          .ifPresent(wyp -> {
-            KsiazkaDto ksiazka = ksiazkaMap.get(wyp.id_ksiazki);
-            if (ksiazka != null) {
-              kara.setBookTitle(ksiazka.Tytul);
-              Optional.ofNullable(autorMap.get(ksiazka.id_autora))
-                  .ifPresent(autor -> kara.setAutorName(autor.Imie + " " + autor.Nazwisko));
-            }
-          });
+              .filter(w -> w.id_uzytkownika == dto.id_uzytkownika)
+              .findFirst()
+              .ifPresent(wyp -> {
+                KsiazkaDto ksiazka = ksiazkaMap.get(wyp.id_ksiazki);
+                if (ksiazka != null) {
+                  kara.setBookTitle(ksiazka.Tytul);
+                  Optional.ofNullable(autorMap.get(ksiazka.id_autora))
+                          .ifPresent(autor -> kara.setAutorName(autor.Imie + " " + autor.Nazwisko));
+                }
+              });
 
       list.add(kara);
     }
@@ -357,7 +358,7 @@ public class Admin {
     for (KsiazkaDto dto : dtos) {
       Ksiazka ksiazka = convertDtoToKsiazka(dto);
       Optional.ofNullable(autorMap.get(dto.id_autora))
-          .ifPresent(autor -> ksiazka.setAutorName(autor.Imie + " " + autor.Nazwisko));
+              .ifPresent(autor -> ksiazka.setAutorName(autor.Imie + " " + autor.Nazwisko));
       list.add(ksiazka);
     }
     return list;
@@ -368,7 +369,7 @@ public class Admin {
   }
 
   private void updateTables(List<Kary> karyList, List<Ksiazka> ksiazkaList,
-      List<Uzytkownik> uzytkownikList, List<Wypozyczenia> wypozyczeniaList) {
+                            List<Uzytkownik> uzytkownikList, List<Wypozyczenia> wypozyczeniaList) {
     Platform.runLater(() -> {
       penaltyTable.setItems(FXCollections.observableArrayList(karyList));
       searachTable.setItems(FXCollections.observableArrayList(ksiazkaList));
@@ -385,33 +386,33 @@ public class Admin {
 
       if (user.getImie() != null) {
         bodyBuilder.append("imie=")
-            .append(URLEncoder.encode(user.getImie(), StandardCharsets.UTF_8)).append("&");
+                .append(URLEncoder.encode(user.getImie(), StandardCharsets.UTF_8)).append("&");
       }
 
       if (user.getNazwisko() != null) {
         bodyBuilder.append("nazwisko=")
-            .append(URLEncoder.encode(user.getNazwisko(), StandardCharsets.UTF_8)).append("&");
+                .append(URLEncoder.encode(user.getNazwisko(), StandardCharsets.UTF_8)).append("&");
       }
 
       if (user.getDataUrodzenia() != null) {
         bodyBuilder.append("dataUrodzenia=")
-            .append(URLEncoder.encode(user.getDataUrodzenia(), StandardCharsets.UTF_8)).append("&");
+                .append(URLEncoder.encode(user.getDataUrodzenia(), StandardCharsets.UTF_8)).append("&");
       }
 
       if (user.getNazwaUzytkownika() != null) {
         bodyBuilder.append("nazwaUzytkownika=")
-            .append(URLEncoder.encode(user.getNazwaUzytkownika(), StandardCharsets.UTF_8))
-            .append("&");
+                .append(URLEncoder.encode(user.getNazwaUzytkownika(), StandardCharsets.UTF_8))
+                .append("&");
       }
 
       if (user.getHaslo() != null) {
         bodyBuilder.append("haslo=")
-            .append(URLEncoder.encode(user.getHaslo(), StandardCharsets.UTF_8)).append("&");
+                .append(URLEncoder.encode(user.getHaslo(), StandardCharsets.UTF_8)).append("&");
       }
 
       if (user.getEmail() != null) {
         bodyBuilder.append("email=")
-            .append(URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8)).append("&");
+                .append(URLEncoder.encode(user.getEmail(), StandardCharsets.UTF_8)).append("&");
       }
 
       bodyBuilder.append("zablokowany=").append(user.isZablokowany()).append("&");
@@ -419,7 +420,7 @@ public class Admin {
 
       if (user.getMfaSecret() != null) {
         bodyBuilder.append("mfaSecret=")
-            .append(URLEncoder.encode(user.getMfaSecret(), StandardCharsets.UTF_8)).append("&");
+                .append(URLEncoder.encode(user.getMfaSecret(), StandardCharsets.UTF_8)).append("&");
       }
 
       if (bodyBuilder.length() > 0 && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
@@ -430,17 +431,17 @@ public class Admin {
       HttpClient client = HttpClient.newHttpClient();
 
       String url = String.format("https://localhost:8443/library/uzytkownicy/%d",
-          user.idProperty().get());
+              user.idProperty().get());
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .header(CONTENTTYPE, APPURL)
-          .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
-          .build();
+              .uri(URI.create(url))
+              .header(CONTENTTYPE, APPURL)
+              .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
+              .build();
 
       client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-          .thenAccept(response -> {
-          });
+              .thenAccept(response -> {
+              });
 
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.getMessage());
@@ -455,34 +456,34 @@ public class Admin {
 
       if (kary.getKwota() != null) {
         bodyBuilder.append("kwota=").append(
-                URLEncoder.encode(String.valueOf(kary.getKwota().get()), StandardCharsets.UTF_8))
-            .append("&");
+                        URLEncoder.encode(String.valueOf(kary.getKwota().get()), StandardCharsets.UTF_8))
+                .append("&");
       }
 
       if (kary.getData_Wydania_Kary() != null) {
         bodyBuilder.append("dataWydaniaKary=").append(
-            URLEncoder.encode(String.valueOf(kary.getData_Wydania_Kary().get()),
-                StandardCharsets.UTF_8)).append("&");
+                URLEncoder.encode(String.valueOf(kary.getData_Wydania_Kary().get()),
+                        StandardCharsets.UTF_8)).append("&");
       }
 
       if (kary.getTermin_Zaplaty() != null) {
         bodyBuilder.append("terminZaplaty=").append(
-            URLEncoder.encode(String.valueOf(kary.getTermin_Zaplaty().get()),
-                StandardCharsets.UTF_8)).append("&");
+                URLEncoder.encode(String.valueOf(kary.getTermin_Zaplaty().get()),
+                        StandardCharsets.UTF_8)).append("&");
       }
 
       bodyBuilder.append("czyZaplacono=").append(kary.getCzy_Zaplacono().get()).append("&");
 
       if (kary.getId_uzytkownika() != null) {
         bodyBuilder.append("idUzytkownika=").append(
-            URLEncoder.encode(String.valueOf(kary.getId_uzytkownika().get()),
-                StandardCharsets.UTF_8)).append("&");
+                URLEncoder.encode(String.valueOf(kary.getId_uzytkownika().get()),
+                        StandardCharsets.UTF_8)).append("&");
       }
 
       if (kary.getOpis() != null) {
         bodyBuilder.append("opis=")
-            .append(URLEncoder.encode(String.valueOf(kary.getOpis().get()), StandardCharsets.UTF_8))
-            .append("&");
+                .append(URLEncoder.encode(String.valueOf(kary.getOpis().get()), StandardCharsets.UTF_8))
+                .append("&");
       }
 
       if (!bodyBuilder.isEmpty() && bodyBuilder.charAt(bodyBuilder.length() - 1) == '&') {
@@ -495,15 +496,15 @@ public class Admin {
       String url = String.format("https://localhost:8443/library/kary/%d", kary.idProperty().get());
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
-          .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
-          .build();
+              .uri(URI.create(url))
+              .header(CONTENTTYPE, APPURL)
+              .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
+              .PUT(HttpRequest.BodyPublishers.ofString(bodyBuilder.toString()))
+              .build();
 
       client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-          .thenAccept(response -> {
-          });
+              .thenAccept(response -> {
+              });
 
     } catch (Exception e) {
       logger.log(Level.SEVERE, e.getMessage());
@@ -513,53 +514,52 @@ public class Admin {
 
   private Uzytkownik convertDtoToUzytkownik(UzytkownikDto dto) {
     return new Uzytkownik(
-        dto.id,
-        dto.Imie,
-        dto.Nazwisko,
-        dto.Nazwa_Uzytkownika,
-        dto.Haslo,
-        dto.Email,
-        dto.Data_Urodzenia,
-        dto.Zablokowany,
-        dto.Mfa_Enabled,
-        dto.Mfa_Secret
+            dto.id,
+            dto.Imie,
+            dto.Nazwisko,
+            dto.Nazwa_Uzytkownika,
+            dto.Haslo,
+            dto.Email,
+            dto.Data_Urodzenia,
+            dto.Zablokowany,
+            dto.Mfa_Enabled,
+            dto.Mfa_Secret
     );
   }
 
   private Kary convertDtoToKary(KaryDto dtoK) {
     return new Kary(
-        dtoK.id,
-        dtoK.Kwota,
-        dtoK.Data_Wydania_Kary,
-        dtoK.Termin_Zaplaty,
-        Boolean.valueOf(dtoK.Czy_Zaplacono),
-        dtoK.id_uzytkownika,
-        dtoK.opis
+            dtoK.id,
+            dtoK.Kwota,
+            dtoK.Data_Wydania_Kary,
+            dtoK.Termin_Zaplaty,
+            Boolean.valueOf(dtoK.Czy_Zaplacono),
+            dtoK.id_uzytkownika,
+            dtoK.opis
     );
   }
 
   private Ksiazka convertDtoToKsiazka(KsiazkaDto dto) {
+    KsiazkaSup ksup = new KsiazkaSup(dto.Tytul, dto.Gatunek, dto.Data_Wydania);
     return new Ksiazka(
-        dto.id,
-        dto.Tytul,
-        dto.Gatunek,
-        dto.Data_Wydania,
-        dto.Dodano,
-        dto.id_autora,
-        dto.id_placowki,
-        dto.Rezerwacja,
-        dto.czy_wypozyczono
+            dto.id,
+            ksup,
+            dto.Dodano,
+            dto.id_autora,
+            dto.id_placowki,
+            dto.Rezerwacja,
+            dto.czy_wypozyczono
     );
   }
 
   private Wypozyczenia convertDtoToWypozyczenia(WypozyczeniaDto dto) {
     return new Wypozyczenia(
-        dto.id,
-        dto.Data_Wypozyczenia,
-        dto.Data_Oddania,
-        dto.Termin_Oddania,
-        dto.id_ksiazki,
-        dto.id_uzytkownika
+            dto.id,
+            dto.Data_Wypozyczenia,
+            dto.Data_Oddania,
+            dto.Termin_Oddania,
+            dto.id_ksiazki,
+            dto.id_uzytkownika
     );
   }
 
@@ -638,25 +638,25 @@ public class Admin {
   }
 
   private void sendAdminUpdate(String id, String imie, String nazwisko, String login, String haslo,
-      String locationId) {
+                               String locationId) {
     try {
       String url = "https://localhost:8443/library/admini/" + id;
 
       String body = String.format(
-          "imie=%s&nazwisko=%s&login=%s&haslo=%s&locationId=%s",
-          URLEncoder.encode(imie, StandardCharsets.UTF_8),
-          URLEncoder.encode(nazwisko, StandardCharsets.UTF_8),
-          URLEncoder.encode(login, StandardCharsets.UTF_8),
-          URLEncoder.encode(haslo, StandardCharsets.UTF_8),
-          URLEncoder.encode(locationId, StandardCharsets.UTF_8)
+              "imie=%s&nazwisko=%s&login=%s&haslo=%s&locationId=%s",
+              URLEncoder.encode(imie, StandardCharsets.UTF_8),
+              URLEncoder.encode(nazwisko, StandardCharsets.UTF_8),
+              URLEncoder.encode(login, StandardCharsets.UTF_8),
+              URLEncoder.encode(haslo, StandardCharsets.UTF_8),
+              URLEncoder.encode(locationId, StandardCharsets.UTF_8)
       );
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
-          .PUT(HttpRequest.BodyPublishers.ofString(body))
-          .build();
+              .uri(URI.create(url))
+              .header(CONTENTTYPE, APPURL)
+              .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
+              .PUT(HttpRequest.BodyPublishers.ofString(body))
+              .build();
 
       @SuppressWarnings("java:S2095")
       HttpClient client = HttpClient.newHttpClient();
@@ -687,11 +687,11 @@ public class Admin {
       String url = "https://localhost:8443/library/admini/" + LogAdmin.getAdmIdStr();
 
       HttpRequest request = HttpRequest.newBuilder()
-          .uri(URI.create(url))
-          .header(CONTENTTYPE, APPURL)
-          .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
-          .DELETE()
-          .build();
+              .uri(URI.create(url))
+              .header(CONTENTTYPE, APPURL)
+              .header(AUTHORIZATION, BEARER + LogAdmin.getAdminToken())
+              .DELETE()
+              .build();
 
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
