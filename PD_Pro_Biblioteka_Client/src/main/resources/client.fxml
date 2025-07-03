@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<AnchorPane fx:id="client" prefHeight="1000.0" prefWidth="1000.0" style="-fx-background-color: #726C6C;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pdprobibliotekaclient.controller.Client">
+
+    <!-- TabPane zajmuje całą powierzchnię -->
+    <TabPane fx:id="tabPane" style="-fx-background-color: #726C6C;" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+        <Tab style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Książki">
+            <HBox alignment="TOP_CENTER" spacing="30">
+                <TableView fx:id="serachTable" editable="true" prefHeight="1300.0" prefWidth="1200.0" style="-fx-background-color: #726C6C; -fx-text-fill: #F5F5F5; -fx-table-cell-border-color: #2C2C2C">
+                    <columns>
+                        <TableColumn fx:id="sId" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID" />
+                        <TableColumn fx:id="stitle" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Tytuł" />
+                        <TableColumn fx:id="sautor" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Autor" />
+                        <TableColumn fx:id="sgenre" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Gatunek" />
+                        <TableColumn fx:id="sIdautor" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID autora" />
+                        <TableColumn fx:id="sborrow" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="Wypożyczone" />
+                    </columns>
+                </TableView>
+            </HBox>
+        </Tab>
+
+        <Tab fx:id="filtr" style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Filtry">
+            <VBox alignment="CENTER_LEFT" spacing="30">
+                <VBox alignment="CENTER_LEFT" spacing="30">
+                    <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Filtr:" />
+                    <HBox spacing="10">
+                        <ComboBox fx:id="fcombo1" prefWidth="200"/>
+                        <TextField fx:id="fsearch1" prefWidth="600" style="-fx-font-size: 13px;" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <ComboBox fx:id="fcombo2" prefWidth="200"/>
+                        <TextField fx:id="fsearch2" prefWidth="600" style="-fx-font-size: 13px;" />
+                    </HBox>
+                    <Button fx:id="filtrbutton" onAction="#filtrbutton" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Zatwierdź" />
+                    <Region prefHeight="0" />
+                </VBox>
+                <HBox>
+                    <TableView fx:id="fitrTable" prefHeight="1000.0" style="-fx-background-color: #726C6C; -fx-text-fill: #F5F5F5; -fx-table-cell-border-color: #2C2C2C">
+                        <columns>
+                            <TableColumn fx:id="fidbook" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID Książki" />
+                            <TableColumn fx:id="ftitle" prefWidth="300" style="-fx-text-fill: #2C2C2C;" text="Tytul" />
+                            <TableColumn fx:id="fidautor" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID Książki" />
+                            <TableColumn fx:id="fautor" prefWidth="200" style="-fx-text-fill: #2C2C2C;" text="Autor" editable="false" />
+                            <TableColumn fx:id="fgenre" prefWidth="200" style="-fx-text-fill: #2C2C2C;" text="Gatunek" editable="false" />
+                            <TableColumn fx:id="fyear" prefWidth="150" style="-fx-text-fill: #2C2C2C;" text="Rok wydania" editable="false" />
+                            <TableColumn fx:id="fidplace" prefWidth="150" style="-fx-text-fill: #2C2C2C;" text="ID placówki" editable="false" />
+                        </columns>
+                    </TableView>
+                </HBox>
+            </VBox>
+        </Tab>
+
+        <Tab style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Wypożyczenia">
+            <HBox alignment="TOP_CENTER" spacing="30">
+                <TableView fx:id="borrowTable" prefHeight="1200.0" style="-fx-background-color: #726C6C; -fx-text-fill: #F5F5F5; -fx-table-cell-border-color: #2C2C2C">
+                    <columns>
+                        <TableColumn fx:id="bid" prefWidth="100" style="-fx-text-fill: #2C2C2C;" text="ID" />
+                        <TableColumn fx:id="btitle" prefWidth="338.0" style="-fx-text-fill: #2C2C2C;" text="Tutuł" />
+                        <TableColumn fx:id="bautor" prefWidth="316.0" style="-fx-text-fill: #2C2C2C;" text="Autor" />
+                        <TableColumn fx:id="borrowdate" prefWidth="377" style="-fx-text-fill: #2C2C2C;" text="Data wypożyczenia" />
+                        <TableColumn fx:id="returndate" prefWidth="379.0" style="-fx-text-fill: #2C2C2C;" text="Data oddania" />
+                    </columns>
+                </TableView>
+            </HBox>
+        </Tab>
+
+        <Tab style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Kary">
+            <HBox alignment="CENTER" spacing="10">
+                <TableView fx:id="penaltyTable" prefHeight="971.0" prefWidth="1653.0" style="-fx-background-color: #726C6C; -fx-text-fill: #F5F5F5; -fx-table-cell-border-color: #2C2C2C">
+                    <columns>
+                        <TableColumn fx:id="pid" prefWidth="131.0" style="-fx-text-fill: #2C2C2C;" text="ID kary" />
+                        <TableColumn fx:id="puserid" prefWidth="168.0" style="-fx-text-fill: #2C2C2C;" text="ID użytkownika" />
+                        <TableColumn fx:id="pdesc" prefWidth="464.0" style="-fx-text-fill: #2C2C2C;" text="Tytuł kary" />
+                        <TableColumn fx:id="pdate" prefWidth="247.0" style="-fx-text-fill: #2C2C2C;" text="Data wydania" />
+                        <TableColumn fx:id="ppaymentdate" prefWidth="217.0" style="-fx-text-fill: #2C2C2C;" text="Termin do zapłaty" />
+                        <TableColumn fx:id="pvalue" prefWidth="179.0" style="-fx-text-fill: #2C2C2C;" text="Wartość kary" />
+                        <TableColumn fx:id="pstatus" prefWidth="249.0" style="-fx-text-fill: #2C2C2C;" text="Opłacono" />
+                    </columns>
+                </TableView>
+            </HBox>
+        </Tab>
+
+        <Tab fx:id="settings" style="-fx-background-color: #2C2C2C; -fx-text-base-color: #F5F5F5;" text="Ustawienia konta">
+            <VBox alignment="TOP_CENTER" spacing="10" style="-fx-padding: 20;">
+                <Region prefHeight="0" />
+                <HBox spacing="50">
+                    <VBox alignment="CENTER_LEFT" spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Imię" />
+                        <TextField fx:id="username" prefWidth="300" style="-fx-font-size: 16px;" />
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Nazwisko" />
+                        <TextField fx:id="usersurname" prefWidth="300" style="-fx-font-size: 16px;" />
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="ID" />
+                        <TextField fx:id="userId" editable="false" prefWidth="300" style="-fx-font-size: 16px;" />
+                    </VBox>
+
+                </HBox>
+
+                <Region prefHeight="20" />
+
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <VBox spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Data urodzenia" />
+                        <TextField fx:id="userdate" prefHeight="35.0" prefWidth="800.0" style="-fx-font-size: 16px;" />
+                    </VBox>
+                </HBox>
+
+                <Region prefHeight="20" />
+
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <VBox spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="E-Mail" />
+                        <TextField fx:id="useremail" prefWidth="800" style="-fx-font-size: 16px;" />
+                    </VBox>
+                </HBox>
+
+                <Region prefHeight="20" />
+
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <VBox spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Login" />
+                        <TextField fx:id="userlogin" prefWidth="800" style="-fx-font-size: 16px;" />
+                    </VBox>
+                </HBox>
+
+                <Region prefHeight="20" />
+
+                <HBox alignment="CENTER_LEFT" spacing="5">
+                    <VBox spacing="5">
+                        <Label style="-fx-font-size: 16px; -fx-text-fill: #F5F5F5" text="Hasło" />
+                        <PasswordField fx:id="userpassword" prefWidth="800" style="-fx-font-size: 16px;" />
+                        <TextField fx:id="textField" editable="false" managed="false" prefWidth="800" promptText="Hasło" style="-fx-font-size: 16px;" visible="false" />
+                        <CheckBox fx:id="showPassword" onAction="#togglePasswordVisibility" text="Pokaż hasło" />
+                    </VBox>
+                </HBox>
+
+                <Region prefHeight="20" />
+                <HBox spacing="10">
+                    <Button fx:id="2FA_button" onAction="#on2fa" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Włącz składnik 2-etapowy" />
+                    <Region prefHeight="20" />
+                    <Button fx:id="savebutton" onAction="#save" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Zapisz zmiany" />
+                    <Region prefHeight="20" />
+                    <Button fx:id="del_button" onAction="#deleteacc" style="-fx-font-size: 16px; -fx-background-radius: 20px; -fx-border-radius: 20px;                        -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Usuń konto" />
+                </HBox>
+            </VBox>
+        </Tab>
+    </TabPane>
+
+    <Button fx:id="test" layoutX="1810" layoutY="2" onAction="#logout" style="-fx-font-size: 12px; -fx-background-radius: 10px; -fx-border-radius: 10px;                    -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Wyloguj się" />
+    <Button fx:id="refrbutton" layoutX="1710" layoutY="2" onAction="#refresh" style="-fx-font-size: 12px; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Odśwież" />
+
+</AnchorPane>

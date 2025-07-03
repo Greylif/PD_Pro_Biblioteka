@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="addbook_Modal" alignment="CENTER" prefHeight="150" prefWidth="250" spacing="20" style="-fx-padding: 20; -fx-background-color: #726C6C;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pdprobibliotekaclient.controller.Addbookmodal">
+
+    <Button fx:id="addAuthor" onAction="#onDodajAutora" style="-fx-font-size: 14px; -fx-background-radius: 10; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj autora" />
+    <Button fx:id="addBook" onAction="#onDodajKsiazke" style="-fx-font-size: 14px; -fx-background-radius: 10; -fx-background-color: #2C2C2C; -fx-text-fill: #F5F5F5" text="Dodaj książkę" />
+</VBox>
